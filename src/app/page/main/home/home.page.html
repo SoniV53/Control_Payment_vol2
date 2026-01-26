@@ -1,0 +1,56 @@
+<ion-content [fullscreen]="true" class="content">
+
+    <div class="container card-content">
+        <div>
+            <ion-item class="item-title">
+                <img src="../../../../assets/images/icon-title.png" alt="icon" slot="start" width="70" height="75">
+                <div>
+                    <h1>Plantilla Control de Gastos</h1>
+                    <p>Gestiona tus gastos y realiza diferentes acciones segun tus necesidades </p>
+                </div>
+            </ion-item>
+        </div>
+
+        <div class="sub-item center-grid">
+            <h3 id="h3-title">{{dateSelect}}</h3>
+        </div>
+        <br>
+        <!-- <div class="">
+            <app-category-payment></app-category-payment>
+            <br>
+            <app-category-payment></app-category-payment>
+        </div> -->
+
+
+        <div id="card-items" class="center-grid">
+            <div>
+                <h3 style="font-size: 20px; margin-left: 8px;">Mis Opciones: </h3>
+                <ion-grid style="padding: 0; ">
+                    <ion-row class="ion-justify-content-center">
+                        <ion-col size="6" *ngFor="let col of ionRow">
+                            <app-card-option [dataCard]="col" [routerLink]="[col?.routerLink || '/tabs/home']"></app-card-option>
+                        </ion-col>
+                    </ion-row>
+                    <!-- <ion-row class="ion-justify-content-center">
+                        <ion-col size="6">
+                            <app-card-option [dataCard]="dataCard[0]" [routerLink]="['/list-payments-month']"></app-card-option>
+                        </ion-col>
+                        <ion-col size="6">
+                            <app-card-option [dataCard]="dataCard[1]" (click)="onClickAction()"></app-card-option>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="6">
+                            <app-card-option [dataCard]="dataCard[2]" (click)="onClickAction()"></app-card-option>
+                        </ion-col>
+                        <ion-col size="6">
+                            <app-card-option [dataCard]="dataCard[3]" (click)="onClickAction()"></app-card-option>
+                        </ion-col>
+                    </ion-row> -->
+                </ion-grid>
+            </div>
+
+        </div>
+
+    </div>
+</ion-content>

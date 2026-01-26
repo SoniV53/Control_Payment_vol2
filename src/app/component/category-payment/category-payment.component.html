@@ -1,0 +1,14 @@
+<div class="category-main">
+    <div class="nav-cat" (click)="onClickMostrar()">
+        <div class="item-cat-title">
+            <h3>En Proceso</h3>
+        </div>
+        <div class="item-cat-action">
+            <p>{{textMostrar}}</p>
+        </div>
+    </div>
+
+    <div *ngIf="mostrar">
+        <app-details-payment></app-details-payment>
+    </div>
+</div>

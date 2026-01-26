@@ -1,0 +1,31 @@
+.nav-cat {
+    display: flex;
+    margin-top: 4px;
+
+    .item-cat-title {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .item-cat-action {
+        width: auto;
+        margin-right: 8px;
+        
+        p{
+            font-size: 24px;
+        }
+    }
+}
+
+.category-main {
+    background-color: var(--color-gray-primary);
+    box-shadow: 10px 10px 5px -6px rgba(0, 0, 0, 0.33);
+    -webkit-box-shadow: 10px 10px 5px -6px rgba(0, 0, 0, 0.33);
+    -moz-box-shadow: 10px 10px 5px -6px rgba(0, 0, 0, 0.33);
+    border-radius: 8px;
+    padding: 8px;
+}

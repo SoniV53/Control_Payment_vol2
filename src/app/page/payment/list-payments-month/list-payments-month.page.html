@@ -1,0 +1,46 @@
+<ion-content [fullscreen]="true">
+    <app-banner-top [toolBarData]="toolBar"></app-banner-top>
+
+    <div class="content-background">
+        <ion-item class="trans-item">
+            <p slot="start">Cantidad Gastos (24):</p>
+            <p slot="end" style="text-align: end; font-weight: bold;">Q8000</p>
+        </ion-item>
+
+        <ion-item class="trans-item">
+            <p slot="start">Presupuesto:</p>
+            <p slot="end" style="text-align: end; font-weight: bold;">Q8000</p>
+        </ion-item>
+
+        <ion-item class="trans-item">
+            <p slot="start">Total de Gastos:</p>
+            <p slot="end" style="text-align: end; font-weight: bold;">Q8000</p>
+        </ion-item>
+
+        <div style="height: 1px; background-color: #EFF2F6; margin: 0.4rem 1rem;"></div>
+
+        <ion-item class="trans-item">
+            <p slot="start">Restante:</p>
+            <p slot="end" style="text-align: end; font-weight: bold;">Q8000</p>
+        </ion-item>
+
+
+        <div class="chip-scroll">
+            <ion-chip>Default</ion-chip>
+            <ion-chip>Default</ion-chip>
+            <ion-chip>Default</ion-chip>
+            <ion-chip>Default</ion-chip>
+            <ion-chip>Default</ion-chip>
+            <ion-chip>Default</ion-chip>
+            <ion-chip>Default</ion-chip>
+            <ion-chip>Default</ion-chip>
+            <ion-chip>Default</ion-chip>
+        </div>
+
+        <div class="listado-gastos">
+            <app-category-payment></app-category-payment>
+            <br>
+            <app-category-payment></app-category-payment>
+        </div>
+    </div>
+</ion-content>

@@ -1,0 +1,33 @@
+:root.md {
+    --ion-color-primary: #636ce6;
+    /* Color principal */
+    --ion-color-secondary: #0d2f3f;
+    /* Color secundario */
+    --ion-color-tertiary: #5260ff;
+    --ion-color-success: #2dd36f;
+    --ion-color-warning: #ffc409;
+    --ion-color-danger: #eb445a;
+    --ion-color-light: #f4f5f8;
+    --ion-color-dark: #a6b0c2;
+
+    /* Fondo general */
+    --ion-background-color: #323339;
+    --ion-text-color: #fcfcfc;
+}
+
+.center-grid {
+    display: grid;
+    place-items: center;
+}
+
+.wrap-content {
+    display: fit-content;
+    background-color: lightblue;
+    padding: 10px;
+    align-items: center;
+}
+
+.trans-item {
+    --background: none;
+    --inner-border-width: 0px;
+}

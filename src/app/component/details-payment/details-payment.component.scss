@@ -1,0 +1,35 @@
+.detl-main {
+    width: 100%;
+    margin: 4px 0px;
+
+}
+
+
+
+.box-details {
+    display: flex;
+    margin-top: 4px;
+    background-color: var(--color-gray-primary);
+    border-bottom: 2px solid rgb(26, 25, 25);
+    color: rgb(255, 250, 250);
+    padding: 8px;
+
+
+    .status {
+        width: 4px;
+        height: auto;
+        margin-right: 6px;
+        background-color: var(--color-blue-primary);
+
+    }
+}
+
+
+.detl-title:last-child {
+    text-align: center;
+    margin: 0;
+}
+
+.col-item-right {
+    text-align: right;
+}

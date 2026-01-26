@@ -1,0 +1,104 @@
+$size-toolbar: 60px;
+$size-margin-toolbar: 1rem;
+$color-primary: #323339;
+
+
+.card-content {
+    min-height: 100%;
+    height: 100vh;
+    background: url(../../../../assets/images/fondo.png) center center/cover no-repeat padding-box local;
+    padding: 0.5rem;
+    
+}
+
+@media (min-height: 752px) {
+    .card-content {
+        height: calc(100vh - $size-toolbar);
+    }
+}
+
+
+.grided {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    max-width: 100%; /* Para asegurarse de que no se desborde */
+    overflow: hidden; /* Para evitar que el contenido se salga */
+    box-sizing: border-box;
+  }
+  
+
+.item-title {
+    --background: none;
+    --inner-border-width: 0px;
+    margin-top: 3rem;
+}
+
+.parent-card-item {
+    min-height: calc(100% - $size-toolbar - $size-margin-toolbar);
+    height: calc(100% - $size-toolbar - $size-margin-toolbar);
+    background: #182127;
+}
+
+.item-title h1 {
+    font-size: 20px;
+    font-family: Georgia, serif;
+    margin: 0px;
+}
+
+.item-title p {
+    font-size: 14px;
+    font-family: Georgia, serif;
+    margin: 8px 0px 0px 0px;
+}
+
+.sub-item {
+    text-align: center;
+    background-color: #182127;
+    position: relative;
+    left: -0.5rem;
+    height: 50px;
+    min-height: 50px;
+    margin-top: 2rem;
+    margin-right: 1rem;
+    border-radius: 0px 16px 16px 0px;
+    box-shadow: 8px 5px 26px -4px rgba(0, 0, 0, 0.58);
+}
+
+.sub-item h3 {
+    margin: 0px;
+}
+
+.content {
+    --background: #323339;
+}
+
+ion-col {
+    padding: 0px;
+}
+
+.tab-icon {
+    margin: 4px;
+    margin-left: 1.5rem;
+}
+
+.tab-card-title {
+    margin-top: 2px;
+    font-size: 12px;
+    color: white;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto; 
+}
+
+#card-items {
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+.button-card{
+    background: none !important;
+}
