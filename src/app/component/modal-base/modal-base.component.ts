@@ -2,17 +2,18 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
 import { IonContent, IonIcon } from "@ionic/angular/standalone";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modal-base',
   templateUrl: './modal-base.component.html',
   styleUrls: ['./modal-base.component.scss'],
   standalone: true,
-  imports: [IonIcon, IonContent]
+  imports: [IonIcon, IonContent,CommonModule]
 })
 export class ModalBaseComponent implements OnInit, OnChanges {
   @Input() showPopup: boolean = false;
-  @Input() isButtonClsHidden: boolean = false;
+  @Input() isButtonClsHidden: boolean = true;
   @Input() sheetBottom: boolean = false;
   @Output() closePopupClick = new EventEmitter<void>();
 

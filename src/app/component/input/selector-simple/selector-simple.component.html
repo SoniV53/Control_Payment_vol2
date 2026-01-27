@@ -1,0 +1,7 @@
+<div *ngIf="list">
+    <ion-select interface="action-sheet" [placeholder]="placeholder" fill="outline" [name]="name" [label]="required ? label+' *':label" label-placement="floating" (ionChange)="onIonChange($event)">
+
+        <ion-select-option *ngFor="let select of list" [value]="select.code">{{select.value}}</ion-select-option>
+
+    </ion-select>
+</div>

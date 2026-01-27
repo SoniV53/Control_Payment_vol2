@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormsModule, NG_VALUE_ACCESSOR, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
 import Swal from 'sweetalert2';
@@ -8,6 +8,7 @@ import { BasePage } from '../../main/base/base.page';
 import { IonToolbar, IonSegmentButton, IonLabel, IonSegment, IonContent, IonSelectOption, IonToggle, IonButton, IonDatetime, IonHeader } from "@ionic/angular/standalone";
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
 import { InputSimpleComponent } from 'src/app/component/input/input-simple/input-simple.component';
+import { SelectorSimpleComponent } from "src/app/component/input/selector-simple/selector-simple.component";
 
 export default Swal;
 @Component({
@@ -24,20 +25,15 @@ export default Swal;
     IonLabel,
     IonSegment,
     IonContent,
-    IonSelectOption,
     IonToggle,
     IonButton,
     IonDatetime,
     IonHeader,
     ModalBaseComponent,
-    InputSimpleComponent
+    InputSimpleComponent,
+    IonSelectOption,
+    SelectorSimpleComponent
 ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: NewPaymentPage,
-    multi: true
-  }]
 })
 export class NewPaymentPage extends BasePage implements OnInit {
   toolBar = {
@@ -54,7 +50,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
   showPopup = false;
   listaFormularioMain: ItemInputData[] = [
-    { id: 'titulo', titulo: 'Titulo', isError: false, placeholder: 'Ingrese el titulo del gasto', tipo: 'text', required: true },
+    { id: 'titulo', titulo: 'Titulo', isError: false, placeholder: 'Ingrese el titulo del gasto', tipo: 'text', required: true,valueSelect: 'asd' },
     { id: 'descripcion', titulo: 'Descripcion', isError: false, placeholder: 'Ingrese la descripcion del gasto', tipo: 'text', required: false },
     { id: 'monto', titulo: 'Monto', isError: false, placeholder: 'Ingrese el monto del gasto', tipo: 'number', required: true },
     {
