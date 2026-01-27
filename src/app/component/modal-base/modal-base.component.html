@@ -1,4 +1,23 @@
-<ion-content>
+<ion-content *ngIf="sheetBottom">
+    <div>
+        <div class="popup-backdrop" (click)="closePopup()">
+
+            <div class="popup-content" #popupContent (click)="$event.stopPropagation()">
+
+                <div class="upper-part">
+                    <div class="close-button-container" *ngIf="!isButtonClsHidden">
+                        <ion-icon class="close-button" name="close-outline" (click)="closePopup()"></ion-icon>
+                    </div>
+                    <ng-content></ng-content>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</ion-content>
+
+<ion-content *ngIf="!sheetBottom">
     <div>
         <div class="popup-backdrop" (click)="closePopup()">
 

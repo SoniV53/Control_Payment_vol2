@@ -9,16 +9,20 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
+
 /* Core CSS required for Ionic components to work properly */
+
 @import "@ionic/angular/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
+
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
+
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
@@ -32,11 +36,13 @@
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
+
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
+
+
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
+
 @import '@ionic/angular/css/palettes/dark.system.css';
-
-
 :root {
     --color-blue-primary: rgb(39, 39, 110);
     --color-gray-primary: #4F5359;
@@ -57,4 +63,17 @@ h3 {
     font-size: 16px;
     font-weight: 600;
     margin: 0;
+}
+
+.swal-title-small {
+    font-size: 16px !important;
+}
+
+.swal-text-small {
+    font-size: 14px !important;
+}
+
+ion-toolbar {
+    --background: var(--ion-background-color);
+    --color: var(--ion-text-color);
 }

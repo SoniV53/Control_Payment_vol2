@@ -11,6 +11,7 @@ import { closeOutline } from 'ionicons/icons';
 export class ModalBaseComponent implements OnInit, OnChanges {
   @Input() showPopup: boolean = false;
   @Input() isButtonClsHidden: boolean = false;
+  @Input() sheetBottom: boolean = false;
   @Output() closePopupClick = new EventEmitter<void>();
 
   constructor() {
