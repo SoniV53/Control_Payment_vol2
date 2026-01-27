@@ -1,18 +1,19 @@
 :root.md {
-    --ion-color-primary: #636ce6;
-    /* Color principal */
-    --ion-color-secondary: #0d2f3f;
-    /* Color secundario */
-    --ion-color-tertiary: #5260ff;
-    --ion-color-success: #2dd36f;
-    --ion-color-warning: #ffc409;
-    --ion-color-danger: #eb445a;
-    --ion-color-light: #f4f5f8;
-    --ion-color-dark: #a6b0c2;
-
+    --ion-background-color: rgb(64, 64, 68);
+    --ion-text-color: rgb(245, 246, 250);
+    --ion-color-primary: #4C8DFF;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-success: #dfdfdf;
+    --ion-color-danger: #EF4444;
     /* Fondo general */
-    --ion-background-color: #323339;
     --ion-text-color: #fcfcfc;
+    --color-black-text-opacity70: rgba(63, 67, 87, 0.7);
+    --Efectosefectos-elevancin-01: 4px;
+    --Efectosefectos-elevancin-03: 12px;
+    --esquina-04: 16px;
+    --color-tag-white: #FFFFFF;
+    --color-black-text: #051510;
+    font-size: 16px;
 }
 
 .center-grid {

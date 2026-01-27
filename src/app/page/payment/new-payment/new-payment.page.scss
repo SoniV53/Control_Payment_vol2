@@ -1,0 +1,26 @@
+.inputs-form {
+    margin: 16px;
+    overflow-y: scroll;
+    height: fit-content;
+    max-height: calc(100vh - 250px);
+    box-sizing: content-box;
+}
+
+.inputs-ion {
+    .input:first-child {
+        margin-top: 0 !important;
+    }
+    .input {
+        margin-top: 24px;
+    }
+}
+
+.custom-date {
+    --background: var(--ion-background-color);
+    --title-color: var(--ion-color-primary-contrast);
+    --wheel-highlight-background: rgb(245, 246, 250);
+    --background-rgb: 64, 64, 68;
+    --color: var(--ion-color-primary-contrast);
+    max-width: 100% !important;
+    margin: 8px;
+}

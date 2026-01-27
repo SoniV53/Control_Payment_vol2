@@ -1,0 +1,46 @@
+<ion-content [fullscreen]="true" scrollY="false">
+    <app-banner-top [toolBarData]="toolBar"></app-banner-top>
+
+    <div class="content-background">
+        <ion-segment [value]="valueSegment">
+            <ion-segment-button value="normal" (click)="clickSegment('normal')">
+                <ion-label>Mensual</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="cuota" (click)="clickSegment('cuota')">
+                <ion-label>Cuota</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+
+        <div class="inputs-form">
+            <div class="inputs-ion">
+
+                <div class="input" *ngFor="let form of listaFormulario">
+                    <div [ngSwitch]="form.tipo">
+
+                        <div *ngSwitchCase="'select'">
+                            <ion-select interface="action-sheet" [placeholder]="form.placeholder" fill="outline" [(ngModel)]="form.valueSelect" [label]="form.titulo" label-placement="floating">
+                                <ion-select-option *ngFor="let select of form.list" [value]="select.code">{{select.value}}</ion-select-option>
+                            </ion-select>
+                        </div>
+                        <div *ngSwitchCase="'date'">
+                            <ion-input (click)="clickDateModal(form)" [label]="form.titulo" label-placement="floating" fill="outline" type="date" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect" readonly="true"></ion-input>
+                        </div>
+
+                        <div *ngSwitchDefault>
+                            <ion-input [type]="form.tipo" [label]="form.titulo" label-placement="floating" fill="outline" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect"></ion-input>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</ion-content>
+
+<app-modal-base *ngIf="showPopup && dataSelect" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
+    <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="dataSelect?.valueSelect" [max]="maxYear">
+    </ion-datetime>
+</app-modal-base>

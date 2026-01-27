@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent } from '@ionic/angular/standalone';
+import { IonContent, IonInput } from '@ionic/angular/standalone';
 import { BannerTopComponent } from "../../../component/card/banner-top/banner-top.component";
 
 @Component({
@@ -9,7 +9,7 @@ import { BannerTopComponent } from "../../../component/card/banner-top/banner-to
   templateUrl: './add-payment.page.html',
   styleUrls: ['./add-payment.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, BannerTopComponent]
+  imports: [IonInput, IonContent, CommonModule, FormsModule, BannerTopComponent]
 })
 export class AddPaymentPage implements OnInit {
   toolBar = {

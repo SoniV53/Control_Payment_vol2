@@ -12,8 +12,8 @@ export const routes: Routes = [
       },
 
       {
-        path: 'create-payment',
-        loadComponent: () => import('../../payment/create-payment/create-payment.page').then(m => m.CreatePaymentPage)
+        path: 'new-payment',
+        loadComponent: () => import('../../payment/new-payment/new-payment.page').then(m => m.NewPaymentPage)
       },
       {
         path: 'add-payment',

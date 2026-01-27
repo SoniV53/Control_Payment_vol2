@@ -1,23 +1,24 @@
-.item-toolbar, ion-header{
+.item-toolbar,
+ion-header {
     border-radius: 0px 0px 21px 21px;
     min-height: 80px;
-    --background: #323339;
+    --background: var(--ion-background-color);
     margin-bottom: 1rem;
 }
 
-.item-toolbar h1{
+.item-toolbar h1 {
     font-size: 24px;
     font-family: Georgia, serif;
     margin: 0;
     margin-bottom: 0.5rem;
 }
 
-.item-toolbar p{
+.item-toolbar p {
     font-size: 14px;
     margin: 0;
     margin-bottom: 1rem;
 }
 
-.center-grid{
-   align-items: center;
+.center-grid {
+    align-items: center;
 }

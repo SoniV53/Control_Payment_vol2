@@ -24,9 +24,9 @@ export class HomePage implements OnInit {
   showKeyboard = true;
   ionRow: any = [
     { title: 'Gastos', description: 'Opcion para visualizar mis gastos por mes',routerLink:'/list-payments-month' },
-    { title: 'Gestionar', description: 'Opcion para crear un gasto o agregar, ya se para  mes o en el mes seleccionado' },
-    { title: 'Resumen', description: 'Opcion para visualizar un resumen de los gastos mensuales' },
-    { title: 'Historial', description: 'Opcion para visualizar un Historial cuanto gasto en cada mes' }
+    { title: 'Gestiones', description: 'Opcion para crear un gasto o agregar, ya se para  mes o en el mes seleccionado' },
+    //{ title: 'Resumen', description: 'Opcion para visualizar un resumen de los gastos mensuales' },
+    //{ title: 'Historial', description: 'Opcion para visualizar un Historial cuanto gasto en cada mes' }
   ];
 
   constructor(private router: Router) {
