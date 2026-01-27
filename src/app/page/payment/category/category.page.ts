@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, } from '@ionic/angular/standalone';
+import { IonContent, IonSegmentButton, IonSegment, IonLabel } from '@ionic/angular/standalone';
 import { BannerTopComponent } from "../../../component/card/banner-top/banner-top.component";
+import { IonicModule } from "@ionic/angular";
 
 @Component({
   selector: 'app-category',
   templateUrl: './category.page.html',
   styleUrls: ['./category.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, BannerTopComponent]
+  imports: [IonSegmentButton, IonContent, CommonModule, FormsModule, BannerTopComponent, IonSegment, IonLabel]
 })
 export class CategoryPage implements OnInit {
   toolBar = {

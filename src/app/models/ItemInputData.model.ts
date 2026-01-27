@@ -6,11 +6,11 @@ export interface ItemInputData {
   required: boolean;
   isError: boolean;
   list?: ItemInputListData[];
-  valueSelect?: string;
+  valueSelect?: any;
 }
 
 
 export interface ItemInputListData {
-  code: string;
+  code: number | string;
   value: string;
 }

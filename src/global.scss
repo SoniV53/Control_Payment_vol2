@@ -108,3 +108,8 @@ ion-toggle::part(track) {
     max-width: 100% !important;
     margin: 8px;
 }
+
+ion-item {
+    --border-style: none !important;
+    --border-color: none !important;
+}

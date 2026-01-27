@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true">
-    <app-banner-top [toolBarData]="toolBar"></app-banner-top>
+    <app-banner-top [toolBarData]="toolBar" (onActionTitle)="onActionTitle()"></app-banner-top>
 
     <div class="content-background">
         <ion-item class="trans-item">
@@ -44,3 +44,9 @@
         </div>
     </div>
 </ion-content>
+
+
+<app-modal-base *ngIf="showPopup && this.myApp.dateSelected" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
+    <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="this.myApp.dateSelected" [max]="maxYear || ''">
+    </ion-datetime>
+</app-modal-base>

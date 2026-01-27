@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
+import { GastoServiceService } from 'src/app/services/gasto-service.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-base',
@@ -33,7 +35,7 @@ export class BasePage {
 
   maxYear = '';
 
-  constructor(public router: Router, public myApp: AppComponent) {
+  constructor(public router: Router, public myApp: AppComponent, public gastoService: GastoServiceService,public fb: FormBuilder) {
     const date = new Date();
     const year = date.getFullYear();
 
@@ -45,5 +47,39 @@ export class BasePage {
     const numMes = this.myApp.getFragmentDate()[1];
     const mes = this.meses.find(m => m.id === numMes)?.nombre;
     return `${mes} | ${this.myApp.getFragmentDate()[0]}`;
+  }
+
+  getAlertError(error: any) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: error instanceof Error ? error.message : 'Ha ocurrido un error intente nuevamente',
+      heightAuto: false,
+      width: 500,
+      padding: "3em",
+      color: "var(--ion-background-color)",
+      customClass: {
+        title: 'swal-title-small',
+        htmlContainer: 'swal-text-small'
+      },
+    });
+  }
+
+  getAlertSuccess(message: string) {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: message,
+      showConfirmButton: false,
+      timer: 1500,
+      heightAuto: false,
+      width: 500,
+      padding: "3em",
+      color: "var(--ion-background-color)",
+      customClass: {
+        title: 'swal-title-small',
+        htmlContainer: 'swal-text-small'
+      },
+    });
   }
 }

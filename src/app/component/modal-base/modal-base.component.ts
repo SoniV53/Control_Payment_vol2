@@ -1,12 +1,14 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
+import { IonContent, IonIcon } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-modal-base',
   templateUrl: './modal-base.component.html',
   styleUrls: ['./modal-base.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonIcon, IonContent]
 })
 export class ModalBaseComponent implements OnInit, OnChanges {
   @Input() showPopup: boolean = false;

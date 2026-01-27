@@ -24,6 +24,10 @@ export const routes: Routes = [
         loadComponent: () => import('../../payment/category/category.page').then(m => m.CategoryPage)
       },
       {
+        path: 'list-payments-month',
+        loadComponent: () => import('../../payment/list-payments-month/list-payments-month.page').then(m => m.ListPaymentsMonthPage)
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full',

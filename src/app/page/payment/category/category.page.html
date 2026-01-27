@@ -1,7 +1,17 @@
 <ion-content [fullscreen]="true">
-  <app-banner-top [toolBarData]="toolBar" ></app-banner-top>
+    <app-banner-top [toolBarData]="toolBar"></app-banner-top>
 
-  <div class="content-background">  
-    <div>asd</div>
-  </div>
+    <div class="content-background">
+        <div>asd</div>
+
+
+        <ion-segment value="normal">
+            <ion-segment-button value="normal">
+                <ion-label>Mensual</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="cuota">
+                <ion-label>Cuota</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+    </div>
 </ion-content>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { IonHeader, IonItem } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { NavController } from '@ionic/angular';
@@ -14,6 +14,9 @@ export class BannerTopComponent implements OnInit {
     title: "",
     description: ""
   }
+
+  @Output() onActionTitle:EventEmitter<any> = new EventEmitter<any>(); 
+
   @ViewChild('h1_id') h1Class: ElementRef | undefined;
   viewParr = false;
 
@@ -26,6 +29,10 @@ export class BannerTopComponent implements OnInit {
 
   goBack() {
     this.navCtrl.back();
+  }
+
+  actionTitle() {
+    this.onActionTitle.emit();
   }
 
 }

@@ -8,7 +8,7 @@ import { DetailsPaymentComponent } from "src/app/component/details-payment/detai
 import { CategoryPaymentComponent } from "src/app/component/category-payment/category-payment.component";
 import { BasePage } from '../base/base.page';
 import { AppComponent } from 'src/app/app.component';
-import { ComponentModule } from "src/app/component/components.module";
+import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
 
 @Component({
   selector: 'app-home',
@@ -16,7 +16,7 @@ import { ComponentModule } from "src/app/component/components.module";
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [IonDatetime, IonLabel, IonInput, IonCol, IonRow, IonGrid, IonItem, IonContent, IonButton,
-    CommonModule, FormsModule, CardOptionComponent, RouterLink, DetailsPaymentComponent, CategoryPaymentComponent, ComponentModule]
+    CommonModule, FormsModule, CardOptionComponent, RouterLink, DetailsPaymentComponent, CategoryPaymentComponent, ModalBaseComponent]
 })
 export class HomePage extends BasePage implements OnInit {
 
@@ -27,13 +27,17 @@ export class HomePage extends BasePage implements OnInit {
 
   showKeyboard = true;
   ionRow: any = [
-    { title: 'Gastos', description: 'Opcion para visualizar mis gastos por mes', routerLink: '/list-payments-month' },
+    { title: 'Gastos', description: 'Opcion para visualizar mis gastos por mes', routerLink: '/tabs/list-payments-month' },
     { title: 'Gestiones', description: 'Opcion para crear un gasto o agregar, ya se para  mes o en el mes seleccionado' },
     //{ title: 'Resumen', description: 'Opcion para visualizar un resumen de los gastos mensuales' },
     //{ title: 'Historial', description: 'Opcion para visualizar un Historial cuanto gasto en cada mes' }
   ];
 
   ngOnInit() {
+    // this.dateSelect = this.getFormatDate();
+  }
+
+  ionViewWillEnter() {
     this.dateSelect = this.getFormatDate();
   }
 
@@ -43,7 +47,6 @@ export class HomePage extends BasePage implements OnInit {
 
   closePopupClick() {
     this.showPopup = false;
-    console.log('Cerrar popup');
   }
 
   onMonthYearChange(event: any) {

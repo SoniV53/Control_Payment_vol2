@@ -9,11 +9,13 @@ export class GastoServiceService {
 
   constructor(private dbService: DatabaseServiceService) { }
 
-  async addGasto(g: Gasto) {
-    const db = this.dbService.getDB();
+  async addGasto(g: Gasto): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = this.dbService.getDB();
 
-    await db.run(
-      `INSERT INTO gasto (
+        await db.run(
+          `INSERT INTO gasto (
       titulo,
       monto,
       descripcion,
@@ -24,18 +26,28 @@ export class GastoServiceService {
       categoria_id,
       estado_cuota
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        g.titulo,
-        g.monto,
-        g.descripcion ?? null,
-        g.cuotas ?? 0,
-        g.fecha,
-        g.tipo,
-        g.etiquetas ?? null,
-        g.categoria_id,
-        g.estado_cuota ?? 0
-      ]
-    );
+          [
+            g.titulo,
+            g.monto,
+            g.descripcion ?? null,
+            g.cuotas ?? 0,
+            g.fecha,
+            g.tipo,
+            g.etiquetas ?? null,
+            g.categoria_id,
+            g.estado_cuota ?? 0
+          ]
+        );
+
+
+
+      }
+      catch (error) {
+        reject(error);
+        console.log('Error:', error);
+      }
+      resolve();
+    });
   }
 
 
