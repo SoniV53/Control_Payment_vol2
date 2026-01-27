@@ -8,6 +8,8 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 })
 export class AppComponent {
   dateToday = '';
+  dateSelected = '';
+
   constructor() {
     this.toggleTheme(false)
 
@@ -16,6 +18,11 @@ export class AppComponent {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     this.dateToday = `${year}-${month}-${day}`;
+
+    const nombre = localStorage.getItem('date');
+    this.dateSelected = !nombre ? this.dateToday : nombre;
+
+    localStorage.setItem('date', this.dateSelected);
   }
 
   toggleTheme(isDark: boolean) {
@@ -26,4 +33,27 @@ export class AppComponent {
       body.classList.remove('md');
     }
   }
+
+  getDateSelected() {
+    const nombre = localStorage.getItem('date');
+    if (nombre) {
+      this.dateSelected = nombre;
+    }
+    return this.dateSelected;
+  }
+
+  setDateSelected(date: string) {
+    this.dateSelected = date;
+    localStorage.setItem('date', date);
+  }
+
+  getFragmentDate(): string[] {
+    const selected = new Date(this.dateSelected);
+    const year = selected.getFullYear().toString();
+    const month = String(selected.getMonth() + 1).padStart(2, '0');
+    const day = String(selected.getDate()).padStart(2, '0');
+
+    return [year, month, day];
+  }
+  
 }

@@ -13,6 +13,10 @@ export const routes: Routes = [
     path: 'new-payment',
     loadComponent: () => import('./page/payment/new-payment/new-payment.page').then( m => m.NewPaymentPage)
   },
+  {
+    path: 'base',
+    loadComponent: () => import('./page/main/base/base.page').then( m => m.BasePage)
+  },
 
   
 

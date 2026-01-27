@@ -11,7 +11,7 @@
             </ion-item>
         </div>
 
-        <div class="sub-item center-grid">
+        <div class="sub-item center-grid" (click)="selectDate()">
             <h3 id="h3-title">{{dateSelect}}</h3>
         </div>
         <br>
@@ -54,3 +54,8 @@
 
     </div>
 </ion-content>
+
+<app-modal-base *ngIf="showPopup && this.myApp.dateSelected" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
+    <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="this.myApp.dateSelected" [max]="maxYear">
+    </ion-datetime>
+</app-modal-base>

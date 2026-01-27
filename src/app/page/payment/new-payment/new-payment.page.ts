@@ -8,6 +8,7 @@ import { ComponentModule } from "src/app/component/components.module";
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
+import { BasePage } from '../../main/base/base.page';
 export default Swal;
 @Component({
   selector: 'app-new-payment',
@@ -22,14 +23,14 @@ export default Swal;
     ComponentModule
   ]
 })
-export class NewPaymentPage implements OnInit {
+export class NewPaymentPage extends BasePage implements OnInit {
   toolBar = {
     title: "Crear Gasto ",
     description: "Puedes crear un nuevo gasto llenando el siguiente formulario",
   }
 
   valueSegment = 'normal';
-  maxYear = '';
+  
   disabledButton = true;
   dataSelect: ItemInputData | null = null;
 
@@ -56,13 +57,8 @@ export class NewPaymentPage implements OnInit {
 
   listaFormulario: ItemInputData[] = [...this.listaFormularioMain];
 
-  constructor(private router: Router, public myApp: AppComponent) { }
-
   ngOnInit() {
-    const date = new Date();
-    const year = date.getFullYear();
-
-    this.maxYear = Number(year.toString()) + 10 + '';
+ 
     console.log('Fecha actual formateada (YYYY-MM-DD):', this.myApp.dateToday);
     const fechaForm = this.listaFormulario.find(item => item.id === 'fecha');
     if (fechaForm) {
