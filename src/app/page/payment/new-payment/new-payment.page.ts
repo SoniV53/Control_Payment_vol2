@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
@@ -31,7 +31,6 @@ export default Swal;
     IonHeader,
     ModalBaseComponent,
     InputSimpleComponent,
-    IonSelectOption,
     SelectorSimpleComponent
 ],
 })
