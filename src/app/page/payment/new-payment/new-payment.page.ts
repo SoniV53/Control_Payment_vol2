@@ -5,10 +5,12 @@ import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
 import Swal from 'sweetalert2';
 import { BasePage } from '../../main/base/base.page';
-import { IonToolbar, IonSegmentButton, IonLabel, IonSegment, IonContent, IonSelectOption, IonToggle, IonButton, IonDatetime, IonHeader } from "@ionic/angular/standalone";
+import { IonToolbar, IonSegmentButton, IonLabel, IonSegment, IonContent, IonSelectOption, IonToggle, IonButton, IonDatetime, IonHeader, IonFooter } from "@ionic/angular/standalone";
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
 import { InputSimpleComponent } from 'src/app/component/input/input-simple/input-simple.component';
 import { SelectorSimpleComponent } from "src/app/component/input/selector-simple/selector-simple.component";
+import { Gasto } from 'src/app/core/models/gasto.model';
+import { Capacitor } from '@capacitor/core';
 
 export default Swal;
 @Component({
@@ -31,8 +33,9 @@ export default Swal;
     IonHeader,
     ModalBaseComponent,
     InputSimpleComponent,
-    SelectorSimpleComponent
-],
+    SelectorSimpleComponent,
+    IonFooter
+  ],
 })
 export class NewPaymentPage extends BasePage implements OnInit {
   toolBar = {
@@ -49,7 +52,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
   showPopup = false;
   listaFormularioMain: ItemInputData[] = [
-    { id: 'titulo', titulo: 'Titulo', isError: false, placeholder: 'Ingrese el titulo del gasto', tipo: 'text', required: true,valueSelect: 'asd' },
+    { id: 'titulo', titulo: 'Titulo', isError: false, placeholder: 'Ingrese el titulo del gasto', tipo: 'text', required: true },
     { id: 'descripcion', titulo: 'Descripcion', isError: false, placeholder: 'Ingrese la descripcion del gasto', tipo: 'text', required: false },
     { id: 'monto', titulo: 'Monto', isError: false, placeholder: 'Ingrese el monto del gasto', tipo: 'number', required: true },
     {
@@ -71,6 +74,9 @@ export class NewPaymentPage extends BasePage implements OnInit {
   listaFormulario: ItemInputData[] = [...this.listaFormularioMain];
 
   ngOnInit() {
+    this.obtenerGastos();
+
+
     this.myForm = this.fb.group({
       etiqueta: ['', Validators.required],
       // otros controles
@@ -89,6 +95,15 @@ export class NewPaymentPage extends BasePage implements OnInit {
         { id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.myApp.dateToday }
       )
     }
+  }
+
+  async obtenerGastos() {
+    this.baseService(async () => {
+      const gasto: Gasto[] = await this.gastoService.getAllGastos();
+      console.log('Gastos cargados:', gasto);
+    }, async () => {
+      this.getAlertError('No se pudieron cargar los gastos.');
+    });
   }
 
   clickSegment(value: string) {
@@ -127,6 +142,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
   closePopupClick() {
     this.showPopup = false;
+    this.validButton();
   }
 
   onMonthYearChange(event: any) {
@@ -147,7 +163,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
   }
 
   async saveNewPayment() {
-    try {
+    this.baseService(async () => {
       await this.gastoService.addGasto({
         titulo: this.listaFormulario.find(item => item.id === 'titulo')?.valueSelect || '',
         descripcion: this.listaFormulario.find(item => item.id === 'descripcion')?.valueSelect || '',
@@ -160,17 +176,11 @@ export class NewPaymentPage extends BasePage implements OnInit {
         estado_cuota: this.valueSegment === 'cuota' ? Number(this.listaFormulario.find(item => item.id === 'cuotaNum')?.valueSelect) || 0 : 0,
       });
       this.getAlertSuccess('El gasto se ha guardado correctamente.');
-    } catch (error) {
-      this.getAlertError(error);
-      return;
-    } finally {
+      this.router.navigate(['/tabs/home']);
+    }, async () => {
+      this.getAlertError('No se pudieron cargar los gastos.');
+    });
 
-    }
-
-
-
-
-    this.router.navigate(['/tabs/home']);
   }
 
   ionChangeInput(form: ItemInputData) {
@@ -189,7 +199,6 @@ export class NewPaymentPage extends BasePage implements OnInit {
   }
 
   blurInput(form: ItemInputData) {
-    console.log('Blur input:', form);
     switch (form.id) {
       case 'cuota':
         this.calculadoraFecha(form);

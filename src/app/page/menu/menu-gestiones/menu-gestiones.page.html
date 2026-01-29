@@ -1,0 +1,23 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <app-banner-top [toolBarData]="toolBar"></app-banner-top>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true">
+    <div>
+        <div *ngFor="let cat of categoriaRow" style="margin: 8px;">
+            <div class="label-title">
+                <p>{{cat.title}}</p>
+            </div>
+            <div *ngFor="let col of cat.listado">
+                <app-card-option [dataCard]="col" [routerLink]="[col?.routerLink || '/tabs/home']" [tipo]="'list'"></app-card-option>
+            </div>
+        </div>
+    </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+
+</ion-footer>

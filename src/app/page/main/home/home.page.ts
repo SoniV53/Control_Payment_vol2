@@ -3,11 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonItem, IonGrid, IonRow, IonCol, IonButton, IonInput, IonLabel, IonDatetime } from '@ionic/angular/standalone';
 import { CardOptionComponent } from "../../../component/card/card-option/card-option.component";
-import { Router, RouterLink } from '@angular/router';
-import { DetailsPaymentComponent } from "src/app/component/details-payment/details-payment.component";
-import { CategoryPaymentComponent } from "src/app/component/category-payment/category-payment.component";
+import { RouterLink } from '@angular/router';
 import { BasePage } from '../base/base.page';
-import { AppComponent } from 'src/app/app.component';
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
 
 @Component({
@@ -15,8 +12,8 @@ import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.comp
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonDatetime, IonLabel, IonInput, IonCol, IonRow, IonGrid, IonItem, IonContent, IonButton,
-    CommonModule, FormsModule, CardOptionComponent, RouterLink, DetailsPaymentComponent, CategoryPaymentComponent, ModalBaseComponent]
+  imports: [IonDatetime, IonCol, IonRow, IonGrid, IonItem, IonContent,
+    CommonModule, FormsModule, CardOptionComponent, RouterLink, ModalBaseComponent]
 })
 export class HomePage extends BasePage implements OnInit {
 
@@ -28,7 +25,7 @@ export class HomePage extends BasePage implements OnInit {
   showKeyboard = true;
   ionRow: any = [
     { title: 'Gastos', description: 'Opcion para visualizar mis gastos por mes', routerLink: '/tabs/list-payments-month' },
-    { title: 'Gestiones', description: 'Opcion para crear un gasto o agregar, ya se para  mes o en el mes seleccionado' },
+    { title: 'Gestiones', description: 'Opcion para crear un gasto o agregar, ya se para  mes o en el mes seleccionado', routerLink: '/tabs/gestiones' },
     //{ title: 'Resumen', description: 'Opcion para visualizar un resumen de los gastos mensuales' },
     //{ title: 'Historial', description: 'Opcion para visualizar un Historial cuanto gasto en cada mes' }
   ];

@@ -25,29 +25,14 @@
                         <div [ngSwitch]="form.tipo">
 
                             <div *ngSwitchCase="'select'">
-                                <!-- <ion-select interface="action-sheet" [placeholder]="form.placeholder" fill="outline" [name]="form.id" [(ngModel)]="form.valueSelect" [label]="form.required ? form.titulo+' *':form.titulo" label-placement="floating">
-                                    <ion-select-option *ngFor="let select of form.list" [value]="select.code">{{select.value}}</ion-select-option>
-                                </ion-select> -->
-
                                 <selector-simple [label]="form.titulo" [name]="form.id" [required]="form.required" [placeholder]="form.placeholder" [list]="form?.list || []" [(ngModel)]="form.valueSelect" (ionChange)="ionChangeInput(form)"></selector-simple>
                             </div>
                             <div *ngSwitchCase="'date'">
-                                <!-- <ion-input (click)="clickDateModal(form)" [label]="form.required ? form.titulo+' *':form.titulo" 
-                                 label-placement="floating" fill="outline" type="date" [placeholder]="form.placeholder"
-                                  [(ngModel)]="form.valueSelect" readonly="true" [name]="form.id"></ion-input> -->
-
                                 <input-simple (click)="clickDateModal(form)" [label]="form.titulo" [name]="form.id" [required]="form.required" type="date" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)" [readonly]="true"></input-simple>
-
                             </div>
 
                             <div *ngSwitchDefault>
                                 <input-simple [label]="form.titulo" [name]="form.id" [required]="form.required" [type]="form.tipo" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"></input-simple>
-
-                                <!-- <ion-input [required]="form.required" [type]="form.tipo"
-                                    [label]="form.required ? form.titulo+' *':form.id" label-placement="floating"
-                                    fill="outline" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect"
-                                    (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"
-                                    [name]="form.id"></ion-input> -->
                             </div>
 
                         </div>
@@ -57,7 +42,7 @@
 
 
                 <div style="margin-top: 24px;">
-                    <ion-toggle aria-label="Enable Notifications">Agregar a Favorito</ion-toggle>
+                    <ion-toggle aria-label="Enable Notifications"></ion-toggle>
                 </div>
 
 
@@ -67,9 +52,14 @@
         </div>
     </div>
 
-    <ion-button class="button-action" expand="block" (click)="saveNewPayment()" [disabled]="disabledButton">Aceptar</ion-button>
 
 </ion-content>
+
+<ion-footer class="ion-no-border" *ngIf="!showPopup">
+    <div class="footer-button">
+        <ion-button class="button-action" expand="block" (click)="saveNewPayment()" [disabled]="disabledButton">Aceptar</ion-button>
+    </div>
+</ion-footer>
 
 <app-modal-base *ngIf="showPopup && dataSelect" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
     <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="dataSelect.valueSelect || ''" [max]="maxYear">

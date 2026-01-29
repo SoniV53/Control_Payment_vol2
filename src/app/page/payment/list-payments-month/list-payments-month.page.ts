@@ -6,6 +6,7 @@ import { CategoryPaymentComponent } from "src/app/component/category-payment/cat
 import { BasePage } from '../../main/base/base.page';
 import { IonicModule } from "@ionic/angular";
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
+import { IonItem, IonContent, IonChip, IonDatetime } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-list-payments-month',
@@ -15,21 +16,28 @@ import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.comp
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
     BannerTopComponent,
     CategoryPaymentComponent,
-    ModalBaseComponent
+    ModalBaseComponent,
+    IonItem,
+    IonContent,
+    IonChip,
+    IonDatetime
 ]
 })
 export class ListPaymentsMonthPage extends BasePage implements OnInit {
   toolBar = {
     title: "Noviembre | 2024",
-    description: ""
+    description: "Visualiza los gastos realizados en el mes",
   }
   showPopup = false;
 
 
   ngOnInit() {
+    this.toolBar.title = this.getFormatDate();
+  }
+
+   ionViewWillEnter() {
     this.toolBar.title = this.getFormatDate();
   }
 

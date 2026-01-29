@@ -28,6 +28,14 @@ export const routes: Routes = [
         loadComponent: () => import('../../payment/list-payments-month/list-payments-month.page').then(m => m.ListPaymentsMonthPage)
       },
       {
+        path: 'gestiones',
+        loadComponent: () => import('../../menu/menu-gestiones/menu-gestiones.page').then(m => m.MenuGestionesPage)
+      },
+      {
+        path: 'categoria',
+        loadComponent: () => import('../../gestiones/categoria/categoria.page').then(m => m.CategoriaPage)
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full',

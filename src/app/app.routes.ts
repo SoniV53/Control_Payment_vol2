@@ -17,6 +17,14 @@ export const routes: Routes = [
     path: 'base',
     loadComponent: () => import('./page/main/base/base.page').then( m => m.BasePage)
   },
+  {
+    path: 'menu-gestiones',
+    loadComponent: () => import('./page/menu/menu-gestiones/menu-gestiones.page').then( m => m.MenuGestionesPage)
+  },
+  {
+    path: 'categoria',
+    loadComponent: () => import('./page/gestiones/categoria/categoria.page').then( m => m.CategoriaPage)
+  },
 
   
 

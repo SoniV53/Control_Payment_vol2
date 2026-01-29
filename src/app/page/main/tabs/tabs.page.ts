@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {IonTabs, IonIcon, IonTabBar, IonTabButton } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { homeOutline,clipboardOutline, library, fileTrayStackedOutline, search, starOutline } from 'ionicons/icons';
+import { homeOutline,clipboardOutline, library, fileTrayStackedOutline, search, starOutline, addCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tabs',
@@ -15,7 +15,7 @@ import { homeOutline,clipboardOutline, library, fileTrayStackedOutline, search, 
 export class TabsPage implements OnInit {
 
   constructor() { 
-    addIcons({homeOutline,clipboardOutline,starOutline,fileTrayStackedOutline,library,search});
+    addIcons({homeOutline,addCircleOutline,clipboardOutline,fileTrayStackedOutline,starOutline,library,search});
   }
 
   ngOnInit() {

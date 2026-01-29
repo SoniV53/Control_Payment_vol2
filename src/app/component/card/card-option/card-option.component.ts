@@ -1,21 +1,31 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol } from '@ionic/angular/standalone';
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol, IonItem, IonIcon } from '@ionic/angular/standalone';
+import { getIconPath } from 'src/app/utils/Utils';
 
 @Component({
   selector: 'app-card-option',
   templateUrl: './card-option.component.html',
   styleUrls: ['./card-option.component.scss'],
-  imports: [IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol],
+  imports: [IonIcon, IonItem, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol,CommonModule],
 })
 export class CardOptionComponent implements OnInit {
 
   @Input() dataCard = {
     title: "",
-    description: ""
+    description: "",
+    icon: ""
+  }
+  @Input() tipo: 'card'|'list' = 'card';
+
+  constructor() { 
+   // addIcons({arrowForwardOutline});
   }
 
-  constructor() { }
-
   ngOnInit() { }
+
+  getIcon() {
+    return getIconPath(this.dataCard.icon,'assets/ionicons/bar-chart-outline.svg');
+  }
 
 }

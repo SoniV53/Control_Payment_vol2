@@ -113,3 +113,11 @@ ion-item {
     --border-style: none;
     --border-color: none;
 }
+
+.chip-scroll {
+    overflow-x: auto;
+    height: auto;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-bottom: 0.5rem;
+}

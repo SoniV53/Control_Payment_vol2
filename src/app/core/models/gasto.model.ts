@@ -6,7 +6,7 @@ export interface Gasto {
   cuotas?: number;        
   fecha: string;         
   tipo: string;          
-  etiquetas?: string;     // guardadas como texto (ej: "comida,trabajo")
-  categoria_id: number;
+  etiquetas?: string;     
+  categoria_id?: number | null; // null si no tiene categoria
   estado_cuota?: number;  // 0 pendiente, 1 pagado (general)
 }

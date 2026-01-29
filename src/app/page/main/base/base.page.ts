@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonFooter } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 import { GastoServiceService } from 'src/app/services/gasto-service.service';
 import Swal from 'sweetalert2';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-base',
   templateUrl: './base.page.html',
   styleUrls: ['./base.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonFooter, 
     CommonModule,
     FormsModule,
   ]
@@ -82,4 +83,18 @@ export class BasePage {
       },
     });
   }
+
+
+  async baseService(callback: () => Promise<void>,callError?: () => Promise<void>,addCapasitorCheck: boolean = true) {
+      try {
+        if (Capacitor.getPlatform() === 'web' && addCapasitorCheck) return;
+          //throw new Error('Funcionalidad no disponible en la plataforma web.');
+        return await callback();
+      } catch (error) {
+        console.error('Error obteniendo gastos:', error);
+        if (callError) {
+         return await callError();
+        }
+      }
+    }
 }

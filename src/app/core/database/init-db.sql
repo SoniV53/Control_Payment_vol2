@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS gasto (
   estado_cuota INTEGER
 );
 
-
 CREATE TABLE IF NOT EXISTS gasto_cuota (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   gasto_id INTEGER,
@@ -45,5 +44,5 @@ CREATE TABLE IF NOT EXISTS gasto_fav (
   monto REAL,
   descripcion TEXT,
   etiquetas TEXT,
-  categoria_id INTEGER,
+  categoria_id INTEGER
 );

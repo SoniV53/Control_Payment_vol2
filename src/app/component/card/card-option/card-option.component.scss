@@ -13,7 +13,6 @@ ion-card-title {
     margin-top: 5px;
     color: white;
     font-weight: bold;
-
 }
 
 ion-card-content {
@@ -34,4 +33,10 @@ ion-card {
     background-color: rgba(134, 147, 171, 0.8);
     color: white;
     height: 160px;
+}
+
+ion-item {
+    --padding-start: 0px;
+    --inner-padding-end: 0px;
+    --background: transparent;
 }

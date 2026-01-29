@@ -1,19 +1,29 @@
 <div class="container">
-  <ion-card>
-    <ion-card-header>
-      <ion-grid [fixed]="true" style="padding: 0;">
-        <ion-row class="ion-justify-content-center">
-          <ion-col size="auto" class="center-grid">
-            <img src="../../../../assets/images/icon-title.png" alt="icon" width="55" height="55">
-            <ion-card-title >{{dataCard.title}}</ion-card-title>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-  
-    </ion-card-header>
-  
-    <ion-card-content>
-      {{dataCard.description}}
-    </ion-card-content>
-  </ion-card>
+    <ion-card [style]="{'height':tipo==='card' ? '160px' : 'auto'}">
+        <ion-card-header>
+            <ion-grid [fixed]="true" style="padding: 0;" *ngIf="tipo==='card'">
+                <ion-row class="ion-justify-content-center">
+                    <ion-col size="auto" class="center-grid">
+                        <div>
+                            <img src="../../../../assets/images/icon-title.png" alt="icon" width="55" height="55">
+                            <ion-card-title>{{dataCard.title}}</ion-card-title>
+                        </div>
+
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+            <div *ngIf="tipo==='list'">
+                <ion-item class="ion-no-border">
+                    <ion-icon [src]="getIcon()" slot="start"></ion-icon>
+                    <ion-card-title style="margin: 0;">{{dataCard.title}}</ion-card-title>
+                    <ion-icon [src]="'assets/ionicons/arrow-forward-outline.svg'" slot="end"></ion-icon>
+                </ion-item>
+            </div>
+        </ion-card-header>
+
+        <ion-card-content *ngIf="tipo==='card'">
+            {{dataCard.description}}
+        </ion-card-content>
+    </ion-card>
 </div>
