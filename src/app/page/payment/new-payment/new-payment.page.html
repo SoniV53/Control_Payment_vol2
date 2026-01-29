@@ -3,7 +3,7 @@
         <app-banner-top [toolBarData]="toolBar"></app-banner-top>
     </ion-toolbar>
 
-    <ion-toolbar>
+    <ion-toolbar class="segmet">
         <ion-segment [(ngModel)]="valueSegment" (ionChange)="clickSegment(valueSegment)">
             <ion-segment-button value="normal">
                 <ion-label>Mensual</ion-label>
@@ -51,15 +51,17 @@
 
         </div>
     </div>
-
-
-</ion-content>
-
-<ion-footer class="ion-no-border" *ngIf="!showPopup">
     <div class="footer-button">
         <ion-button class="button-action" expand="block" (click)="saveNewPayment()" [disabled]="disabledButton">Aceptar</ion-button>
     </div>
-</ion-footer>
+
+</ion-content>
+
+<!-- <ion-footer class="ion-no-border" *ngIf="!showPopup">
+    <div class="footer-button">
+        <ion-button class="button-action" expand="block" (click)="saveNewPayment()" [disabled]="disabledButton">Aceptar</ion-button>
+    </div>
+</ion-footer> -->
 
 <app-modal-base *ngIf="showPopup && dataSelect" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
     <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="dataSelect.valueSelect || ''" [max]="maxYear">

@@ -1,11 +1,9 @@
-<ion-header class="ion-no-border">
-    <ion-toolbar>
-        <app-banner-top [toolBarData]="toolBar"></app-banner-top>
-    </ion-toolbar>
-</ion-header>
-
-
 <ion-content [fullscreen]="true">
+    <ion-header class="ion-no-border">
+        <ion-toolbar>
+            <app-banner-top [toolBarData]="toolBar"></app-banner-top>
+        </ion-toolbar>
+    </ion-header>
     <div>
         <div *ngFor="let cat of categoriaRow" style="margin: 8px;">
             <div class="label-title">

@@ -2,8 +2,14 @@
 ion-header {
     border-radius: 0px 0px 21px 21px;
     min-height: 80px;
-    --background: var(--ion-background-color);
-    margin-bottom: 1rem;
+    --background: var(--ion-background-color-second);
+}
+
+.header-toolbar {
+    padding: 8px;
+    padding-top: 16px;
+    border-radius: 0px 0px 21px 21px;
+    background: var(--ion-background-color-second);
 }
 
 .item-toolbar h1 {

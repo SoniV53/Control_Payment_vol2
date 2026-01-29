@@ -38,6 +38,10 @@ export class HomePage extends BasePage implements OnInit {
     this.dateSelect = this.getFormatDate();
   }
 
+  ionViewDidLeave() {
+    this.closePopupClick();
+  }
+
   onClickAction() {
     this.router.navigate(['/tabs/category']);
   }

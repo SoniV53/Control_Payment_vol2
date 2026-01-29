@@ -6,8 +6,60 @@
 
 
 <ion-content [fullscreen]="true">
+    <div style="margin-bottom: 32px;">
+        <ion-item class="ion-item">
+            <div class="icon" slot="start">
+                <ion-icon *ngIf="formCat.icon" [src]="getIcon(formCat.icon)"></ion-icon>
+            </div>
+            <div style="width: 100%;">
+                <input-simple [label]="formCat.titulo" [name]="formCat.id" [required]="formCat.required" [type]="formCat.tipo" [placeholder]="formCat.placeholder" [(ngModel)]="formCat.valueSelect" (ionInput)="ionChangeInput(formCat)"></input-simple>
+            </div>
+            <div class="icon" slot="end" (click)="clickDateModal()">
+                <ion-icon [src]="getIcon('add-circle-outline')"></ion-icon>
+            </div>
+        </ion-item>
+
+        <ion-button class="button-action" expand="block" (click)="saveNewCategory()" [disabled]="disabledButton">{{tituloBotton}}</ion-button>
+        <!-- <p class="center-grid">agregue texto</p> -->
+    </div>
+
+    <div *ngIf="listCategoria.length">
+        <p style="margin-left: 16px !important;">Listado Categorias:</p>
+        <ion-grid>
+            <ion-row>
+                <ion-col *ngFor="let cat of listCategoria">
+                    <ion-item (click)="onItemCategoria(cat)">
+                        <div class="icon-list" slot="start">
+                            <ion-icon [src]="getIcon(cat.icono)"></ion-icon>
+                        </div>
+                        <ion-label>{{cat.nombre}}</ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+
+    <empty-base *ngIf="!listCategoria.length" [dataCard]="dataCard"></empty-base>
 </ion-content>
 
 <ion-footer class="ion-no-border">
 
 </ion-footer>
+
+<app-modal-base *ngIf="showPopup" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
+
+    <div *ngIf="listSim.length" style="margin-top: 16px;">
+        <p style="margin-left: 16px !important;">Símbolos:</p>
+        <ion-grid>
+            <ion-row>
+                <ion-col *ngFor="let cat of listSim">
+                    <ion-item (click)="onSimbolCLick(cat)">
+                        <div class="icon-list" slot="start">
+                            <ion-icon [src]="getIcon(cat)"></ion-icon>
+                        </div>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+</app-modal-base>

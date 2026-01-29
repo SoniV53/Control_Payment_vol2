@@ -1,3 +1,5 @@
-<div>
-    <ion-input [required]="required" [type]="type" [label]="required ? label+' *':label" label-placement="floating" fill="outline" [placeholder]="placeholder" [value]="value" (ionBlur)="onBlurInput(value)" (ionInput)="onInput($event)" [name]="name" [readonly]="readonly"></ion-input>
+<label [for]="name">{{label}} <span *ngIf="required">*</span></label>
+<div class="content-input">
+
+    <ion-input [required]="required" [type]="type" fill="outline" [placeholder]="placeholder" [value]="value" (ionBlur)="onBlurInput(value)" (ionInput)="onInput($event)" [name]="name" [readonly]="readonly"></ion-input>
 </div>

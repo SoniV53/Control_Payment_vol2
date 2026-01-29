@@ -7,6 +7,7 @@ export interface ItemInputData {
   isError: boolean;
   list?: ItemInputListData[];
   valueSelect?: any;
+  icon?: any;
 }
 
 

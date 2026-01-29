@@ -1,7 +1,10 @@
-<div *ngIf="list">
-    <ion-select interface="action-sheet" [placeholder]="placeholder" fill="outline" [name]="name" [label]="required ? label+' *':label" label-placement="floating" (ionChange)="onIonChange($event)">
+<label [for]="name">{{label}} <span *ngIf="required">*</span></label>
+<div class="content-input">
+    <div *ngIf="list">
+        <ion-select interface="action-sheet" [placeholder]="placeholder" fill="outline" [name]="name" label-placement="stacked" (ionChange)="onIonChange($event)">
 
-        <ion-select-option *ngFor="let select of list" [value]="select.code">{{select.value}}</ion-select-option>
+            <ion-select-option *ngFor="let select of list" [value]="select.code">{{select.value}}</ion-select-option>
 
-    </ion-select>
+        </ion-select>
+    </div>
 </div>

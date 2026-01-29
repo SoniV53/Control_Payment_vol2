@@ -14,7 +14,7 @@ export const SQLTABLES = [
     `CREATE TABLE IF NOT EXISTS categoria (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT,
-        color TEXT,
+        icono TEXT,
         tipo TEXT,
         activo INTEGER DEFAULT 1
     );`,

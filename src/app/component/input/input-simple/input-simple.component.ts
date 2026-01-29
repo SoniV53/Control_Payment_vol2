@@ -2,12 +2,13 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Input, OnInit, Output 
 import { IonInput } from "@ionic/angular/standalone";
 import { FormsModule, NG_VALUE_ACCESSOR} from '@angular/forms';
 import { ValueAccessorBase } from '../../form/value-accessor';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'input-simple',
   templateUrl: './input-simple.component.html',
   styleUrls: ['./input-simple.component.scss'],
-  imports: [IonInput,FormsModule],
+  imports: [IonInput,FormsModule,CommonModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

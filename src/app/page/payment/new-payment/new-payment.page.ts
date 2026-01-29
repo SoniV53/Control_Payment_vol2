@@ -53,7 +53,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
   showPopup = false;
   listaFormularioMain: ItemInputData[] = [
     { id: 'titulo', titulo: 'Titulo', isError: false, placeholder: 'Ingrese el titulo del gasto', tipo: 'text', required: true },
-    { id: 'descripcion', titulo: 'Descripcion', isError: false, placeholder: 'Ingrese la descripcion del gasto', tipo: 'text', required: false },
+    //{ id: 'descripcion', titulo: 'Descripcion', isError: false, placeholder: 'Ingrese la descripcion del gasto', tipo: 'text', required: false },
     { id: 'monto', titulo: 'Monto', isError: false, placeholder: 'Ingrese el monto del gasto', tipo: 'number', required: true },
     {
       id: 'categoria', titulo: 'Categoria', isError: false, placeholder: 'Seleccione la categoria del gasto', tipo: 'select', required: false, list: [
@@ -61,17 +61,21 @@ export class NewPaymentPage extends BasePage implements OnInit {
         { code: 2, value: 'Transporte' },
       ]
     },
-    {
-      id: 'etiqueta', titulo: 'Etiqueta', isError: false, placeholder: 'Seleccione la etiqueta del gasto', tipo: 'select', required: false, list: [
-        { code: 1, value: 'Urgente' },
-        { code: 2, value: 'Opcional' },
-      ]
-    },
+    // {
+    //   id: 'etiqueta', titulo: 'Etiqueta', isError: false, placeholder: 'Seleccione la etiqueta del gasto', tipo: 'select', required: false, list: [
+    //     { code: 1, value: 'Urgente' },
+    //     { code: 2, value: 'Opcional' },
+    //   ]
+    // },
     //{ id: 'fecha', titulo: 'Fecha', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: '2027-01-26' },
     // { id: 'fechaEnd', titulo: 'Fecha', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: '2027-01-26' },
   ];
 
   listaFormulario: ItemInputData[] = [...this.listaFormularioMain];
+
+  ionViewDidLeave() {
+    this.closePopupClick();
+  }
 
   ngOnInit() {
     this.obtenerGastos();
