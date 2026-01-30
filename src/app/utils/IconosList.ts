@@ -1,6 +1,35 @@
 export const getListIconCategoria = (): string[] => {
     const listado = [
-        'add-circle-outline'
+        "accessibility-outline",
+        "airplane-outline",
+        "alarm-outline",
+        "american-football-outline",
+        "bag-handle-outline",
+        "bandage-outline",
+        "barbell-outline",
+        "baseball-outline",
+        "basketball-outline",
+        "beer-outline",
+        "briefcase-outline",
+        "bus-outline",
+        "business-outline",
+        "car-outline",
+        "card-outline",
+        "cart-outline",
+        "cash-outline",
+        "construct-outline",
+        "desktop-outline",
+        "dice-outline",
+        "eye-outline",
+        "fast-food-outline",
+        "game-controller-outline",
+        "gift-outline",
+        "glasses-outline",
+        "home-outline",
+        "journal-outline",
+        "mail-outline",
+        "pizza-outline",
+        "restaurant-outline"
     ]
     return listado;
 };

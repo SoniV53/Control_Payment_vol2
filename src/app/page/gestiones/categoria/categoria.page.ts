@@ -41,7 +41,7 @@ export class CategoriaPage extends BasePage implements OnInit {
 
   listCategoria: Categoria[] = [
     { nombre: "Comida ajskdgahsdfhasdhfgajhsgdahgsfdg", icono: "file-tray-outline" },
-    { nombre: "Comida", icono: "add-circle-outline" },
+    { nombre: "Comida", icono: "barbell-outline" },
     { nombre: "Comida", icono: "file-tray-outline" },
     { nombre: "Comida", icono: "file-tray-outline" },
     { nombre: "Comida", icono: "file-tray-outline" },

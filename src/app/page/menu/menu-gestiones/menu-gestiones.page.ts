@@ -24,15 +24,16 @@ export class MenuGestionesPage extends BasePage implements OnInit {
 
   categoriaRow: any = [
     {
-      title: 'Categorías y Etiquetas:', listado: [
+      title: 'Categorías:', listado: [
         { title: 'Categorías', routerLink: '/tabs/categoria', icon: 'albums-outline' },
-        { title: 'Etiquetas', routerLink: '/tabs/gestiones' },
+       // { title: 'Etiquetas', routerLink: '/tabs/gestiones' },
       ]
     },
     {
       title: 'Gastos Recurrentes y Cuotas:', listado: [
         { title: 'Gastos', routerLink: '/tabs/list-payments-month' },
-        { title: 'Gestiones', routerLink: '/tabs/gestiones' },
+        { title: 'Gastos Recurrentes', routerLink: '/tabs/gestiones' },
+        { title: 'Gastos por Cuotas', routerLink: '/tabs/gestiones' },
       ]
     },
   ]

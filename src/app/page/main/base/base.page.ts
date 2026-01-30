@@ -7,13 +7,15 @@ import { AppComponent } from 'src/app/app.component';
 import { GastoServiceService } from 'src/app/services/gasto-service.service';
 import Swal from 'sweetalert2';
 import { Capacitor } from '@capacitor/core';
+import { addIcons } from 'ionicons';
+import { barbellOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-base',
   templateUrl: './base.page.html',
   styleUrls: ['./base.page.scss'],
   standalone: true,
-  imports: [IonFooter, 
+  imports: [IonFooter,
     CommonModule,
     FormsModule,
   ]
@@ -36,12 +38,13 @@ export class BasePage {
 
   maxYear = '';
 
-  constructor(public router: Router, public myApp: AppComponent, public gastoService: GastoServiceService,public fb: FormBuilder) {
+  constructor(public router: Router, public myApp: AppComponent, public gastoService: GastoServiceService, public fb: FormBuilder) {
     const date = new Date();
     const year = date.getFullYear();
 
     this.maxYear = Number(year.toString()) + 10 + '';
 
+    addIcons({ barbellOutline });
   }
 
   getFormatDate(): string {
@@ -85,16 +88,16 @@ export class BasePage {
   }
 
 
-  async baseService(callback: () => Promise<void>,callError?: () => Promise<void>,addCapasitorCheck: boolean = true) {
-      try {
-        if (Capacitor.getPlatform() === 'web' && addCapasitorCheck) return;
-          //throw new Error('Funcionalidad no disponible en la plataforma web.');
-        return await callback();
-      } catch (error) {
-        console.error('Error obteniendo gastos:', error);
-        if (callError) {
-         return await callError();
-        }
+  async baseService(callback: () => Promise<void>, callError?: () => Promise<void>, addCapasitorCheck: boolean = true) {
+    try {
+      if (Capacitor.getPlatform() === 'web' && addCapasitorCheck) return;
+      //throw new Error('Funcionalidad no disponible en la plataforma web.');
+      return await callback();
+    } catch (error) {
+      console.error('Error obteniendo gastos:', error);
+      if (callError) {
+        return await callError();
       }
     }
+  }
 }
