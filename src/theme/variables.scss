@@ -2,6 +2,7 @@
     --ion-background-color: rgb(64, 64, 68);
     --ion-background-color-second: rgb(37, 50, 59);
     --ion-background-color-second90: rgb(37, 50, 59, 0.8);
+    --ion-background-color-primary: rgb(24, 33, 39);
     --ion-text-color: rgb(156, 22, 22);
     --ion-color-primary: rgb(204, 228, 245);
     --ion-color-primary-contrast: #ffffff;
@@ -33,4 +34,18 @@
 .trans-item {
     --background: none;
     --inner-border-width: 0px;
+}
+
+.button-action {
+    --background: var(--ion-background-color-second);
+    --color: var(--ion-color-primary-contrast);
+    margin: 24px 16px;
+    margin-bottom: 8px;
+}
+
+.button-action-second {
+    --background: var(--ion-color-success);
+    --color: var(--ion-background-color);
+    margin: 24px 16px;
+    margin-bottom: 8px;
 }

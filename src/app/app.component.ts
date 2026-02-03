@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { updateParams } from './utils/update-params';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,8 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 export class AppComponent {
   dateToday = '';
   dateSelected = '';
+
+  writterParams = updateParams();
 
   constructor() {
     this.toggleTheme(false)
@@ -23,6 +26,7 @@ export class AppComponent {
     this.dateSelected = !nombre ? this.dateToday : nombre;
 
     localStorage.setItem('date', this.dateSelected);
+    
   }
 
   toggleTheme(isDark: boolean) {

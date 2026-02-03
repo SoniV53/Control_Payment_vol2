@@ -20,8 +20,7 @@ export class CategoryPage extends BasePage implements OnInit {
   }
 
   ngOnInit() {
-    const gasto = this.gastoService.getAllGastos();
-    console.log('Gastos cargados:', gasto);
+    
   }
 
 }

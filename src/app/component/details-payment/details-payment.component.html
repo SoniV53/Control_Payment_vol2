@@ -1,38 +1,47 @@
-<div class="box-details">
-    <div class="status"></div>
+<div class="box-details" *ngIf="dataGasto">
+    <div class="status" [style]="{'background-color': getStatusGasto()}"></div>
     <div class="detl-main">
         <div>
             <div class="detl-title">
-                <h3>Unidad</h3>
+                <h3>{{dataGasto.titulo}}</h3>
             </div>
         </div>
         <main>
 
             <ion-grid>
                 <ion-row>
-
                     <ion-col class="col-item-left">
                         <div class="col-amount">
-                            <p>Monto:</p>
+                            <p *ngIf="!isCuota">Monto:</p>
+                            <div *ngIf="isCuota">
+                                <!-- <p>Monto Total:</p> -->
+                                <p>Monto Mensual:</p>
+                                <!-- <p>Monto Faltante:</p> -->
+                            </div>
                         </div>
                         <!-- <div class="col-tipo">
                             <p>Tipo:</p>
                         </div> -->
                         <div class="col-tipo">
-                            <p>Cuota:</p>
+                            <p>{{isCuota?'Cuota':'Tipo'}}</p>
                         </div>
                     </ion-col>
 
                     <ion-col class="col-item-right">
                         <div class="col-amount-rg">
-                            <p>Q3000</p>
+                            <p *ngIf="!isCuota">{{formatoMonto(0)}}</p>
+                            <div *ngIf="isCuota">
+                                <!-- <p>{{formatoMonto(0)}}</p> -->
+                                <p>{{formatoMonto(1)}}</p>
+                                <!-- <p>{{formatoMonto(2)}}</p> -->
+                            </div>
                         </div>
                         <!-- <div>
                             <p>Normal</p>
                         </div> -->
 
                         <div>
-                            <p>2/12</p>
+                            <p>{{isCuota?formatoCuotas():'Mensual'}}</p>
                         </div>
                     </ion-col>
 
@@ -46,18 +55,9 @@
 
             </ion-grid>
 
-            <div class="chip chip-scroll">
+            <!-- <div class="chip chip-scroll">
                 <ion-chip>Default</ion-chip>
-                <ion-chip>Default</ion-chip>
-                <ion-chip>Default</ion-chip>
-                <ion-chip>Default</ion-chip>
-                <ion-chip>Default</ion-chip>
-                <ion-chip>Default</ion-chip>
-                <ion-chip>Default</ion-chip>
-                <ion-chip>Default</ion-chip>
-
-
-            </div>
+            </div> -->
         </main>
     </div>
 

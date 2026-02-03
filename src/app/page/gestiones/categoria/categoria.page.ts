@@ -36,19 +36,13 @@ export class CategoriaPage extends BasePage implements OnInit {
 
   tituloBotton: string = "Agregar"
   isUpdate: boolean = false
+  idCategoria: number = 0;
 
   formCat: ItemInputData = { id: 'categoria', titulo: '', isError: false, placeholder: 'Nombre Categoria', tipo: 'text', required: false, icon: "" };
 
-  listCategoria: Categoria[] = [
-    { nombre: "Comida ajskdgahsdfhasdhfgajhsgdahgsfdg", icono: "file-tray-outline" },
-    { nombre: "Comida", icono: "barbell-outline" },
-    { nombre: "Comida", icono: "file-tray-outline" },
-    { nombre: "Comida", icono: "file-tray-outline" },
-    { nombre: "Comida", icono: "file-tray-outline" },
-    { nombre: "Comida", icono: "file-tray-outline" },
-  ]
+  listCategoria: Categoria[] = []
 
-  listSim:any[] = getListIconCategoria()
+  listSim: any[] = getListIconCategoria()
 
   ngOnInit() {
   }
@@ -56,23 +50,58 @@ export class CategoriaPage extends BasePage implements OnInit {
   ionViewWillEnter() {
     this.disableButton();
     this.updateTitle();
+
+    this.getCategorias();
   }
 
 
-  getIcon(icon: string) {
-    return getIconPath(icon, 'assets/ionicons/file-tray-outline.svg');
+  getCategorias() {
+    this.baseService(async () => {
+      this.listCategoria = await this.categoriaService.getCategoriasActivas();
+      console.log('categorias cargados:', this.listCategoria);
+    }, async () => {
+      this.getAlertError('No se pudieron cargar.');
+    });
   }
 
   onItemCategoria(categoria: Categoria) {
     this.formCat.valueSelect = categoria.nombre;
     this.formCat.icon = categoria.icono;
     this.isUpdate = true;
+    this.idCategoria = categoria.id || 0;
     this.updateTitle()
   }
 
   saveNewCategory() {
+    this.baseService(async () => {
+      const data: Categoria = {
+        icono: this.formCat.icon,
+        nombre: this.formCat.valueSelect
+      };
+      if (this.isUpdate && this.idCategoria > 0) {
+        data.id = this.idCategoria;
+        data.activo = 1;
+        await this.categoriaService.updateCategoria(data);
+
+        const cate = this.listCategoria.find(res => res.id === data.id);
+        if (cate) {
+          cate.nombre = data.nombre;
+          cate.icono = data.icono;
+        }
+
+      } else {
+        const id = await this.categoriaService.addCategoria(data);
+        data.id = id;
+        this.listCategoria.push(data);
+      }
 
 
+      console.log('Se Agrego correctamente:', this.listCategoria);
+      this.resetData();
+      //this.getCategorias();
+    }, async () => {
+      this.getAlertError('Paso algo inesperado');
+    });
   }
 
   ionChangeInput(form: ItemInputData) {
@@ -83,8 +112,18 @@ export class CategoriaPage extends BasePage implements OnInit {
     this.tituloBotton = this.isUpdate ? "Actualizar" : "Agregar"
   }
 
+  resetData() {
+    this.formCat.valueSelect = '';
+    this.formCat.icon = '';
+    this.isUpdate = false;
+    this.idCategoria = 0;
+
+    this.updateTitle();
+    this.disableButton();
+  }
+
   disableButton() {
-    this.disabledButton = !this.formCat.valueSelect || this.formCat.icon === 'file-tray-outline'
+    this.disabledButton = !this.formCat.valueSelect || this.formCat.icon === 'file-tray-outline' || !this.formCat.icon
   }
 
   clickDateModal() {
@@ -96,8 +135,8 @@ export class CategoriaPage extends BasePage implements OnInit {
     this.disableButton()
   }
 
-  onSimbolCLick(sim:string){
+  onSimbolCLick(sim: string) {
     this.formCat.icon = sim;
-    this.closePopupClick(); 
+    this.closePopupClick();
   }
 }

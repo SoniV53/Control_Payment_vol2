@@ -6,6 +6,7 @@ export const SQLTABLES = [
         descripcion TEXT,
         cuotas INTEGER DEFAULT 0,
         fecha TEXT NOT NULL,
+        fechaEnd TEXT NOT NULL,
         tipo TEXT NOT NULL,
         etiquetas TEXT, 
         categoria_id INTEGER,
@@ -15,7 +16,6 @@ export const SQLTABLES = [
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT,
         icono TEXT,
-        tipo TEXT,
         activo INTEGER DEFAULT 1
     );`,
     `CREATE TABLE IF NOT EXISTS etiqueta (
@@ -32,7 +32,6 @@ export const SQLTABLES = [
     );`,
     `CREATE TABLE IF NOT EXISTS presupuesto (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        categoria_id INTEGER,
         monto REAL,
         fecha TEXT
     );`,

@@ -8,10 +8,12 @@ export interface ItemInputData {
   list?: ItemInputListData[];
   valueSelect?: any;
   icon?: any;
+  code?: number | string;
 }
 
 
 export interface ItemInputListData {
   code: number | string;
   value: string;
+  icon?: string;
 }

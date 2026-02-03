@@ -1,4 +1,17 @@
-.content-input {
+.content-input,
+ion-item {
     background-color: var(--ion-background-color-second90);
     border-radius: 4px;
+}
+
+.ion-item {
+    --background: var(--ion-background-color-second90) !important;
+    border-radius: 4px;
+    .icon {
+        font-size: 24px;
+        margin-right: 8px;
+    }
+    .icon-flecha {
+        font-size: 16px;
+    }
 }

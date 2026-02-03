@@ -2,17 +2,6 @@
     <ion-toolbar>
         <app-banner-top [toolBarData]="toolBar"></app-banner-top>
     </ion-toolbar>
-
-    <ion-toolbar class="segmet">
-        <ion-segment [(ngModel)]="valueSegment" (ionChange)="clickSegment(valueSegment)">
-            <ion-segment-button value="normal">
-                <ion-label>Mensual</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="cuota">
-                <ion-label>Cuota</ion-label>
-            </ion-segment-button>
-        </ion-segment>
-    </ion-toolbar>
 </ion-header>
 
 
@@ -25,7 +14,8 @@
                         <div [ngSwitch]="form.tipo">
 
                             <div *ngSwitchCase="'select'">
-                                <selector-simple [label]="form.titulo" [name]="form.id" [required]="form.required" [placeholder]="form.placeholder" [list]="form?.list || []" [(ngModel)]="form.valueSelect" (ionChange)="ionChangeInput(form)"></selector-simple>
+                                <selector-simple [defaultSelect]="false" [open]="this.showPopup && tipoModalUse === 'select'" [valueSelect]="form.valueSelect" [icon]="form.icon" (clickItem)="onClickItemAction(form)" [label]="form.titulo" [name]="form.id" [required]="form.required" [placeholder]="form.placeholder"
+                                    [list]="form?.list || []" [(ngModel)]="form.valueSelect" (ionChange)="ionChangeInput(form)"></selector-simple>
                             </div>
                             <div *ngSwitchCase="'date'">
                                 <input-simple (click)="clickDateModal(form)" [label]="form.titulo" [name]="form.id" [required]="form.required" type="date" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)" [readonly]="true"></input-simple>
@@ -42,7 +32,7 @@
 
 
                 <div style="margin-top: 24px;" *ngIf="valueSegment === 'normal'">
-                    <ion-toggle aria-label="Enable Notifications">Recurrente</ion-toggle>
+                    <ion-toggle aria-label="Enable Notifications">Agregar Recurrente:</ion-toggle>
                 </div>
 
 
@@ -52,18 +42,49 @@
         </div>
     </div>
     <div class="footer-button">
-        <ion-button class="button-action" expand="block" (click)="saveNewPayment()" [disabled]="disabledButton">Aceptar</ion-button>
+        <ion-button class="button-action-second" expand="block" (click)="saveNewPayment()" [disabled]="disabledButton">Aceptar</ion-button>
     </div>
 
 </ion-content>
 
-<!-- <ion-footer class="ion-no-border" *ngIf="!showPopup">
-    <div class="footer-button">
-        <ion-button class="button-action" expand="block" (click)="saveNewPayment()" [disabled]="disabledButton">Aceptar</ion-button>
-    </div>
-</ion-footer> -->
+<ion-footer class="ion-no-border footer" *ngIf="!showPopup">
+    <ion-toolbar class="segmet">
+        <ion-segment [(ngModel)]="valueSegment" (ionChange)="clickSegment(valueSegment)">
+            <ion-segment-button value="normal">
+                <ion-label>Mensual</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="cuota">
+                <ion-label>Cuota</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-footer>
 
-<app-modal-base *ngIf="showPopup && dataSelect" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
-    <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="dataSelect.valueSelect || ''" [max]="maxYear">
-    </ion-datetime>
+<app-modal-base *ngIf="showPopup" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="true">
+    <div *ngIf="tipoModalUse === 'date' && dataSelect">
+        <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="dataSelect.valueSelect || ''" [max]="maxYear">
+        </ion-datetime>
+    </div>
+
+    <div *ngIf="tipoModalUse === 'select'" class="modal-sheet">
+        <br>
+        <div *ngFor="let data of dataListaSelect">
+            <ion-item class="ion-item" (click)="onClickItem(data)">
+                <ion-icon [src]="getIcon(data.icon || '')" class="icon"></ion-icon>
+                <ion-label>{{data.value}}</ion-label>
+            </ion-item>
+        </div>
+
+        <div *ngIf="!dataListaSelect.length">
+            <empty-base [dataCard]="dataCard"></empty-base>
+
+
+            <br>
+        </div>
+        <ion-button class="button-action-second " expand="block" [routerLink]="['/tabs/categoria']">Crear Categoria
+        </ion-button>
+    </div>
+
+
+
 </app-modal-base>

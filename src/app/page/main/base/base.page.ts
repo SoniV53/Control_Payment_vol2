@@ -9,6 +9,10 @@ import Swal from 'sweetalert2';
 import { Capacitor } from '@capacitor/core';
 import { addIcons } from 'ionicons';
 import { barbellOutline } from 'ionicons/icons';
+import { CategoriaServiceService } from 'src/app/services/categoria-service.service';
+import { getIconPath } from 'src/app/utils/Utils';
+import { ItemInputData } from 'src/app/models/ItemInputData.model';
+import { UpdateListado, UpdateParamData } from 'src/app/utils/update-params';
 
 @Component({
   selector: 'app-base',
@@ -38,7 +42,9 @@ export class BasePage {
 
   maxYear = '';
 
-  constructor(public router: Router, public myApp: AppComponent, public gastoService: GastoServiceService, public fb: FormBuilder) {
+  constructor(public router: Router, public myApp: AppComponent,
+    public gastoService: GastoServiceService,
+    public fb: FormBuilder, public categoriaService: CategoriaServiceService) {
     const date = new Date();
     const year = date.getFullYear();
 
@@ -88,16 +94,35 @@ export class BasePage {
   }
 
 
-  async baseService(callback: () => Promise<void>, callError?: () => Promise<void>, addCapasitorCheck: boolean = true) {
+  async baseService(callback: (updateParams: Record<UpdateListado, UpdateParamData>) => Promise<void>, callError?: () => Promise<void>, addCapasitorCheck: boolean = true) {
     try {
       if (Capacitor.getPlatform() === 'web' && addCapasitorCheck) return;
       //throw new Error('Funcionalidad no disponible en la plataforma web.');
-      return await callback();
+      return await callback(this.myApp.writterParams);
     } catch (error) {
       console.error('Error obteniendo gastos:', error);
       if (callError) {
         return await callError();
       }
     }
+  }
+
+  getIcon(icon: string, def: string = 'assets/ionicons/bar-chart-outline.svg') {
+    return getIconPath(icon, def);
+  }
+
+  focusInputIdInput(form: ItemInputData) {
+    setTimeout(() => {
+      const inputSimple = document.getElementById(form.id);
+      inputSimple?.querySelector('input')?.focus();
+    })
+  }
+
+  loadUpdateParam(name: UpdateListado, value: boolean = false) {
+    this.myApp.writterParams[name].isLoad = value;
+  }
+
+  getUpdateParam(name: UpdateListado):boolean {
+    return this.myApp.writterParams[name].isLoad;
   }
 }

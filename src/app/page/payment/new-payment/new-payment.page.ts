@@ -2,15 +2,20 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
-import { ItemInputData } from 'src/app/models/ItemInputData.model';
+import { ItemInputData, ItemInputListData } from 'src/app/models/ItemInputData.model';
 import Swal from 'sweetalert2';
 import { BasePage } from '../../main/base/base.page';
-import { IonToolbar, IonSegmentButton, IonLabel, IonSegment, IonContent, IonSelectOption, IonToggle, IonButton, IonDatetime, IonHeader, IonFooter } from "@ionic/angular/standalone";
+import { IonToolbar, IonSegmentButton, IonLabel, IonSegment, IonContent, IonSelectOption, IonToggle, IonButton, IonDatetime, IonHeader, IonFooter, IonItem, IonIcon } from "@ionic/angular/standalone";
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
 import { InputSimpleComponent } from 'src/app/component/input/input-simple/input-simple.component';
 import { SelectorSimpleComponent } from "src/app/component/input/selector-simple/selector-simple.component";
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { Capacitor } from '@capacitor/core';
+import { list } from 'ionicons/icons';
+import { getIconPath } from 'src/app/utils/Utils';
+import { Categoria } from 'src/app/core/models/categoria.model';
+import { EmptyBaseComponent } from "src/app/component/card/empty-base/empty-base.component";
+import { RouterLink } from '@angular/router';
 
 export default Swal;
 @Component({
@@ -18,7 +23,7 @@ export default Swal;
   templateUrl: './new-payment.page.html',
   styleUrls: ['./new-payment.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonIcon, IonItem,
     CommonModule,
     FormsModule,
     BannerTopComponent,
@@ -34,8 +39,7 @@ export default Swal;
     ModalBaseComponent,
     InputSimpleComponent,
     SelectorSimpleComponent,
-    IonFooter
-  ],
+    IonFooter, EmptyBaseComponent, RouterLink],
 })
 export class NewPaymentPage extends BasePage implements OnInit {
   toolBar = {
@@ -49,64 +53,74 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
   disabledButton = true;
   dataSelect: ItemInputData | null = null;
+  dataCard = {
+    title: "No Hay Categorias",
+    description: "",
+    icon: "file-tray-outline"
+  }
 
   showPopup = false;
-  listaFormularioMain: ItemInputData[] = [
-    { id: 'titulo', titulo: 'Titulo', isError: false, placeholder: 'Ingrese el titulo del gasto', tipo: 'text', required: true },
-    //{ id: 'descripcion', titulo: 'Descripcion', isError: false, placeholder: 'Ingrese la descripcion del gasto', tipo: 'text', required: false },
-    { id: 'monto', titulo: 'Monto', isError: false, placeholder: 'Ingrese el monto del gasto', tipo: 'number', required: true },
-    {
-      id: 'categoria', titulo: 'Categoria', isError: false, placeholder: 'Seleccione la categoria del gasto', tipo: 'select', required: false, list: [
-        { code: 1, value: 'Comida' },
-        { code: 2, value: 'Transporte' },
-      ]
-    },
-    // {
-    //   id: 'etiqueta', titulo: 'Etiqueta', isError: false, placeholder: 'Seleccione la etiqueta del gasto', tipo: 'select', required: false, list: [
-    //     { code: 1, value: 'Urgente' },
-    //     { code: 2, value: 'Opcional' },
-    //   ]
-    // },
-    //{ id: 'fecha', titulo: 'Fecha', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: '2027-01-26' },
-    // { id: 'fechaEnd', titulo: 'Fecha', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: '2027-01-26' },
-  ];
+  listaFormularioMain: ItemInputData[] = [];
 
-  listaFormulario: ItemInputData[] = [...this.listaFormularioMain];
+  listaFormulario: ItemInputData[] = [];
+  dataListaSelect: ItemInputListData[] = [];
+  dataSelectItem: any = {};
+  tipoModalUse: string = 'date';
 
   ionViewDidLeave() {
     this.closePopupClick();
   }
 
-  ngOnInit() {
-    this.obtenerGastos();
+  insertInputs() {
+    this.listaFormularioMain = [
+      { id: 'titulo', titulo: 'Titulo', isError: false, placeholder: 'Ingrese el titulo del gasto', tipo: 'text', required: true },
+      //{ id: 'descripcion', titulo: 'Descripcion', isError: false, placeholder: 'Ingrese la descripcion del gasto', tipo: 'text', required: false },
+      { id: 'monto', titulo: 'Monto', isError: false, placeholder: 'Ingrese el monto del gasto', tipo: 'number', required: true },
+      {
+        id: 'categoria', titulo: 'Categoria', isError: false, placeholder: 'Seleccione la categoria del gasto', tipo: 'select', required: false, list: []
+      }
+    ]
 
-
-    this.myForm = this.fb.group({
-      etiqueta: ['', Validators.required],
-      // otros controles
-    });
-
-    console.log('Fecha actual formateada (YYYY-MM-DD):', this.myApp.dateToday);
-    const fechaForm = this.listaFormulario.find(item => item.id === 'fecha');
-    if (fechaForm) {
-      fechaForm.valueSelect = this.myApp.dateToday;
-    }
-
-
-    if (this.valueSegment != 'cuota') {
-      this.listaFormulario = [...this.listaFormularioMain];
-      this.listaFormulario.push(
-        { id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.myApp.dateToday }
-      )
-    }
+    this.listaFormulario = [...this.listaFormularioMain]
+    this.valueSegment = 'normal';
   }
 
-  async obtenerGastos() {
+  ionViewWillEnter() {
+
+  }
+
+  async ngOnInit() {
+    this.insertInputs();
+    await this.getCategorias();
+
+    // console.log('Fecha actual formateada (YYYY-MM-DD):', this.myApp.dateToday);
+    // const fechaForm = this.listaFormulario.find(item => item.id === 'fecha');
+    // if (fechaForm) {
+    //   fechaForm.valueSelect = this.myApp.dateToday;
+    // }
+
+  }
+
+  getCategorias() {
     this.baseService(async () => {
-      const gasto: Gasto[] = await this.gastoService.getAllGastos();
-      console.log('Gastos cargados:', gasto);
+      const listCategoria = await this.categoriaService.getCategoriasActivas();
+      const catego = this.listaFormularioMain.find(res => res.id === 'categoria');
+      listCategoria.map(res => {
+        catego?.list?.push({ code: res.id || 0, value: res.nombre, icon: res.icono });
+      })
+
+      console.log(this.listaFormularioMain)
+
+      this.listaFormulario = [...this.listaFormularioMain];
+
+      if (this.valueSegment != 'cuota') {
+        this.listaFormulario = [...this.listaFormularioMain];
+        this.listaFormulario.push(
+          { id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.myApp.dateToday }
+        )
+      }
     }, async () => {
-      this.getAlertError('No se pudieron cargar los gastos.');
+      this.getAlertError('No se pudieron cargar.');
     });
   }
 
@@ -142,6 +156,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
   clickDateModal(form: ItemInputData) {
     this.showPopup = true;
     this.dataSelect = form;
+    this.tipoModalUse = 'date'
   }
 
   closePopupClick() {
@@ -168,17 +183,26 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
   async saveNewPayment() {
     this.baseService(async () => {
-      await this.gastoService.addGasto({
+      const numId = await this.gastoService.addGasto({
         titulo: this.listaFormulario.find(item => item.id === 'titulo')?.valueSelect || '',
         descripcion: this.listaFormulario.find(item => item.id === 'descripcion')?.valueSelect || '',
         monto: Number(this.listaFormulario.find(item => item.id === 'monto')?.valueSelect) || 0,
-        categoria_id: this.listaFormulario.find(item => item.id === 'categoria')?.valueSelect || null,
-        etiquetas: this.listaFormulario.find(item => item.id === 'Etiqueta')?.valueSelect || '',
+        categoria_id: Number(this.listaFormulario.find(item => item.id === 'categoria')?.code) || null,
+        etiquetas: '',
         fecha: this.listaFormulario.find(item => item.id === 'fecha')?.valueSelect || '',
-        cuotas: this.valueSegment === 'cuota' ? Number(this.listaFormulario.find(item => item.id === 'cuota')?.valueSelect) || 0 : 0,
+        fechaEnd: this.listaFormulario.find(item => item.id === 'fechaEnd')?.valueSelect || '',
+        cuotas: this.valueSegment === 'cuota' ? Number(this.listaFormulario.find(item => item.id === 'cuota')?.valueSelect) || 1 : 1,
         tipo: this.valueSegment === 'cuota' ? 'cuota' : 'normal',
-        estado_cuota: this.valueSegment === 'cuota' ? Number(this.listaFormulario.find(item => item.id === 'cuotaNum')?.valueSelect) || 0 : 0,
       });
+
+      // await this.gastoService.addGastoCuota({
+      //   gasto_id: numId,
+      //   numero_cuota: this.valueSegment === 'cuota' ? Number(this.listaFormulario.find(item => item.id === 'cuotaNum')?.valueSelect) || 1 : 1,
+      //   monto_cuota: Number(this.listaFormulario.find(item => item.id === 'monto')?.valueSelect) || 0,
+      //   estado_cuota: 0,
+      //   fecha_pago: this.listaFormulario.find(item => item.id === 'fechaEnd')?.valueSelect || '',
+      // })
+
       this.getAlertSuccess('El gasto se ha guardado correctamente.');
       this.router.navigate(['/tabs/home']);
     }, async () => {
@@ -223,7 +247,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
       default:
         break;
     }
-
+    this.validButton();
   }
 
   calculadoraFecha(form: ItemInputData) {
@@ -265,5 +289,22 @@ export class NewPaymentPage extends BasePage implements OnInit {
     }
 
     return meses;
+  }
+
+  onClickItem(form: ItemInputListData) {
+    this.showPopup = false;
+    if (this.dataSelect) {
+      this.dataSelect.valueSelect = form.value || '';
+      this.dataSelect.icon = form.icon || '';
+      this.dataSelect.code = form.code || '';
+    }
+
+  }
+
+  onClickItemAction(form: ItemInputData) {
+    this.showPopup = true;
+    this.dataListaSelect = form.list || [];
+    this.tipoModalUse = 'select';
+    this.dataSelect = form;
   }
 }

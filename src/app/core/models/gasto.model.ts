@@ -1,12 +1,17 @@
+import { GastoCuota } from "./gasto-cuota.model";
+
 export interface Gasto {
   id?: number;
   titulo: string;
   monto: number;
-  descripcion?: string;
-  cuotas?: number;        
-  fecha: string;         
-  tipo: string;          
-  etiquetas?: string;     
-  categoria_id?: number | null; // null si no tiene categoria
-  estado_cuota?: number;  // 0 pendiente, 1 pagado (general)
+  descripcion?: string | null;
+  cuotas?: number;
+  fecha: string;
+  fechaEnd?: string;
+  tipo: string;
+  etiquetas?: string | null;
+  categoria_id?: number | null;
+  estado?: number; // 0 pendiente, 1 pagado
+  gastoCuota?:GastoCuota
+  
 }

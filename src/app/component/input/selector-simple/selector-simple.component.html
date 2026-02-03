@@ -1,10 +1,26 @@
-<label [for]="name">{{label}} <span *ngIf="required">*</span></label>
-<div class="content-input">
-    <div *ngIf="list">
-        <ion-select interface="action-sheet" [placeholder]="placeholder" fill="outline" [name]="name" label-placement="stacked" (ionChange)="onIonChange($event)">
+<div>
+    <div *ngIf="defaultSelect">
+        <label [for]="name">{{label}} <span *ngIf="required">*</span></label>
+        <div class="content-input">
+            <div *ngIf="list">
+                <ion-select interface="action-sheet" [placeholder]="placeholder" fill="outline" [name]="name" label-placement="stacked" (ionChange)="onIonChange($event)">
+                    <div *ngFor="let select of list">
+                        <ion-select-option [value]="select.code">
+                            {{select.value}}</ion-select-option>
+                    </div>
 
-            <ion-select-option *ngFor="let select of list" [value]="select.code">{{select.value}}</ion-select-option>
+                </ion-select>
+            </div>
+        </div>
 
-        </ion-select>
+    </div>
+
+    <div *ngIf="!defaultSelect">
+        <label [for]="name">{{label}} <span *ngIf="required">*</span></label>
+        <ion-item class="ion-item" (click)="onClickItem()">
+            <ion-icon [src]="getIcon(icon)" class="icon" *ngIf="icon"></ion-icon>
+            <ion-label [style]="{'opacity':valueSelect?'1':'0.6'}">{{valueSelect || placeholder}}</ion-label>
+            <ion-icon [src]="getIcon(open ? 'caret-up-outline' : 'caret-down-outline')" class="icon-flecha" slot="end"></ion-icon>
+        </ion-item>
     </div>
 </div>

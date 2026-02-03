@@ -6,5 +6,7 @@
             <p *ngIf="viewParr">{{toolBarData.description}}</p>
         </div>
     </ion-item>
-
+</div>
+<div style="margin:0 16px;" *ngIf="loader">
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
 </div>
