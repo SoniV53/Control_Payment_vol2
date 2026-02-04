@@ -6,6 +6,7 @@ import { CardOptionComponent } from "../../../component/card/card-option/card-op
 import { RouterLink } from '@angular/router';
 import { BasePage } from '../base/base.page';
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
+import { UpdateListado } from 'src/app/utils/update-params';
 
 @Component({
   selector: 'app-home',
@@ -59,6 +60,8 @@ export class HomePage extends BasePage implements OnInit {
 
     this.myApp.setDateSelected(selectedDate);
     this.dateSelect = this.getFormatDate();
+    this.loadUpdateParam(UpdateListado.UPDATE_RECURRENTE,true);
+    this.loadUpdateParam(UpdateListado.UPDATE_CATEGORIA,true);
   }
 
   selectDate() {

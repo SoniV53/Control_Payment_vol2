@@ -29,6 +29,7 @@ export class InputSimpleComponent extends ValueAccessorBase<string> implements O
 
   @Output() blurInput: EventEmitter<string> = new EventEmitter<any>();
   @Output() ionChangeInput: EventEmitter<string> = new EventEmitter<any>();
+  @Output() keyEnter: EventEmitter<string> = new EventEmitter<any>();
 
   ngOnInit() { }
 
@@ -40,6 +41,10 @@ export class InputSimpleComponent extends ValueAccessorBase<string> implements O
 
   onBlurInput(value: string) {
     this.blurInput.emit(value);
+  }
+
+  alPresionarEnter(){
+    this.keyEnter.emit();
   }
 
 }

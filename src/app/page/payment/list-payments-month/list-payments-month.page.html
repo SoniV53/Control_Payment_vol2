@@ -1,11 +1,11 @@
-<ion-content [fullscreen]="true">
-    <app-banner-top [toolBarData]="toolBar" (onActionTitle)="onActionTitle()"></app-banner-top>
+<ion-content [fullscreen]="false">
+    <app-banner-top [toolBarData]="toolBar" (onActionTitle)="onActionTitle()" [loader]="loaderNav"></app-banner-top>
 
     <br>
     <div class="content-background">
         <ion-item class="trans-item">
             <p slot="start">Cantidad Gastos:</p>
-            <p slot="end" class="txt-item" style="margin-right: 0px !important;">(90)</p>
+            <p slot="end" class="txt-item" style="margin-right: 0px !important;">({{cantidad}})</p>
         </ion-item>
 
         <div style="height: 1px; background-color: #EFF2F6; margin: 0.4rem 1rem;"></div>
@@ -13,21 +13,21 @@
         <ion-item class="trans-item">
             <p slot="start">Presupuesto:</p>
             <div slot="end" style="display: flex;" (click)="editarPresupuesto()">
-                <p style="text-align: end; font-weight: bold; font-size: 16px;">{{formatearMontoPr()}}</p>
+                <p style="text-align: end; font-weight: bold; font-size: 16px;">{{formatearMontoPr(form.valueSelect)}}</p>
                 <ion-icon [src]="getIcon('create-outline')" style="margin-left: 8px;"></ion-icon>
             </div>
         </ion-item>
 
         <ion-item class="trans-item">
             <p slot="start">Total de Gastos:</p>
-            <p slot="end" class="txt-item">Q8000</p>
+            <p slot="end" class="txt-item">{{formatearMontoPr(total)}}</p>
         </ion-item>
 
         <div style="height: 1px; background-color: #EFF2F6; margin: 0.4rem 1rem;"></div>
 
         <ion-item class="trans-item">
             <p slot="start">Restante:</p>
-            <p slot="end" class="txt-item">Q8000</p>
+            <p slot="end" class="txt-item">{{formatearMontoPr(restante)}}</p>
         </ion-item>
 
 
@@ -37,7 +37,7 @@
         </div> -->
 
         <div class="listado-gastos" *ngFor="let categoria of listCategoria">
-            <app-category-payment [dataCategoria]="categoria" [dataGasto]="dataGasto"></app-category-payment>
+            <app-category-payment *ngIf="categoria.dataGasto?.length" [dataCategoria]="categoria" [dataGasto]="categoria.dataGasto || []"></app-category-payment>
         </div>
     </div>
 </ion-content>
@@ -49,7 +49,8 @@
         </ion-datetime>
     </div>
     <div *ngIf="isEditar" class="input-presupuesto" id="div-presupuesto">
-        <input-simple [id]="form.id" [label]="form.titulo" [name]="form.id" [required]="form.required" [type]="form.tipo" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"></input-simple>
+        <input-simple (keyEnter)="blurInput(form); showPopup = false" [id]="form.id" [label]="form.titulo" [name]="form.id" [required]="form.required" [type]="form.tipo" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)"
+            (ionInput)="ionChangeInput(form)"></input-simple>
     </div>
 
 </app-modal-base>

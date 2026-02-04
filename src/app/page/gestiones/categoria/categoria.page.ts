@@ -11,6 +11,7 @@ import { Categoria } from 'src/app/core/models/categoria.model';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
 import { getListIconCategoria } from 'src/app/utils/IconosList';
+import { UpdateListado, updateParams } from 'src/app/utils/update-params';
 
 @Component({
   selector: 'app-categoria',
@@ -95,12 +96,14 @@ export class CategoriaPage extends BasePage implements OnInit {
         this.listCategoria.push(data);
       }
 
-
+      this.loadUpdateParam(UpdateListado.UPDATE_CATEGORIA,true);
       console.log('Se Agrego correctamente:', this.listCategoria);
       this.resetData();
       //this.getCategorias();
     }, async () => {
       this.getAlertError('Paso algo inesperado');
+    },async()=>{
+      this.dissmissLoader();
     });
   }
 

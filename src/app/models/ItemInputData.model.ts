@@ -2,9 +2,10 @@ export interface ItemInputData {
   id: string;
   titulo: string;
   placeholder: string;
-  tipo: 'input' | 'number' | 'text' | 'date' | 'select' | 'text-area';
+  tipo: 'input' | 'number' | 'text' | 'date' | 'select' | 'text-area' | 'read';
   required: boolean;
   isError: boolean;
+  msgInput?: string;
   list?: ItemInputListData[];
   valueSelect?: any;
   icon?: any;

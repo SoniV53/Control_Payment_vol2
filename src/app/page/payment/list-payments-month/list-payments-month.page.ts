@@ -11,7 +11,7 @@ import { Categoria } from 'src/app/core/models/categoria.model';
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
 import { InputSimpleComponent } from "src/app/component/input/input-simple/input-simple.component";
-import { eNumber, formatearMonto } from 'src/app/utils/Utils';
+import { dateSearch, eNumber, formatDate, formatearMonto, getMesActual, getMesAnterior } from 'src/app/utils/Utils';
 import { Presupuesto } from 'src/app/core/models/presupuesto.model';
 import { UpdateListado } from 'src/app/utils/update-params';
 
@@ -35,6 +35,7 @@ import { UpdateListado } from 'src/app/utils/update-params';
   ]
 })
 export class ListPaymentsMonthPage extends BasePage implements OnInit {
+
   toolBar = {
     title: "Noviembre | 2024",
     description: "Visualiza los gastos realizados en el mes",
@@ -43,8 +44,10 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit {
   isEditar = false;
 
   listCategoria: Categoria[] = []
-  dataGasto: Gasto[] = []
   presupuesto: Presupuesto | null = null;
+  cantidad: number = 0;
+  total: number = 0;
+  restante: number = 0;
 
   form: ItemInputData = {
     id: 'presupuesto', titulo: 'Presupuesto', isError: false, placeholder: 'Q 00.00',
@@ -53,61 +56,29 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit {
     ;
 
   ngOnInit() {
-    this.toolBar.title = this.getFormatDate();
+    this.getCategorias();
+  }
+
+  ionViewDidLeave() {
+    this.closePopupClick();
     
   }
 
   ionViewWillEnter() {
-
     this.toolBar.title = this.getFormatDate();
-    this.getCategorias();
-
-    // this.listCategoria.push({
-    //   nombre: "Super gsfdhgsfahg",
-    //   icono: 'bus-outline',
-    //   id: 0
-    // })
-    // this.listCategoria.push({
-    //   nombre: "Super",
-    //   icono: 'bus-outline',
-    //   id: 0
-    // })
-
-    // this.dataGasto.push({
-    //   fecha: '2026/01/30',
-    //   monto: 100,
-    //   tipo: 'normal',
-    //   titulo: "nani",
-    //   estado: 0
-    // })
-
-    // this.dataGasto.push({
-    //   fecha: '2026/01/30',
-
-    //   monto: 10000,
-    //   tipo: 'cuota',
-    //   titulo: "nani",
-    //   cuotas: 12,
-    //   estado: 0,
-    //   gastoCuota: {
-    //     monto_cuota: 300,
-    //     numero_cuota: 2,
-    //     fecha_pago: '2026/01/30',
-    //     gasto_id: 1,
-    //     estado_cuota: 1
-    //   }
-    // })
-
   }
 
-  formatearMontoPr() {
-    if (this.form.valueSelect) {
-      return formatearMonto(eNumber(this.form.valueSelect));
-    }
-    return 'Q00.00'
+  formatearMontoPr(valor: string | number) {
+    const num = valor?.toString() || '0'
+    return formatearMonto(eNumber(num));
   }
 
   closePopupClick() {
+    if (!this.isEditar) {
+      this.loadUpdateParam(UpdateListado.UPDATE_RECURRENTE, true);
+      this.loadUpdateParam(UpdateListado.UPDATE_CATEGORIA, true);
+      this.getCategorias();
+    }
     this.showPopup = false;
     this.isEditar = false;
   }
@@ -128,25 +99,54 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit {
   }
 
   onActionTitle() {
+    this.isEditar = false;
     this.selectDate();
   }
 
   getCategorias() {
     this.baseService(async (params) => {
-      if (this.getUpdateParam(UpdateListado.UPDATE_CATEGORIA)) {
-        this.listCategoria = await this.categoriaService.getCategoriasActivas();
-        await this.gastoService.generarPresupuestoMensualSiNoExiste(new Date(this.myApp.dateSelected));
+      this.showLoader()
+      this.cantidad = 0;
+      this.total = 0;
+      this.restante = 0;
+      await this.controlService.addGastoMensualCuota(this.myApp.dateSelected);
+      this.loadUpdateParam(UpdateListado.UPDATE_RECURRENTE);
 
-        const presupuesto = await this.gastoService.getPresupuestoByMes(this.myApp.dateSelected);
-        console.log(presupuesto)
+      
+      this.listCategoria = await this.gastoService.getGastos(this.myApp.dateSelected);
 
-        //this.form.valueSelect = this.presupuesto || '';
+      await this.gastoService.generarPresupuestoMensualSiNoExiste(this.myApp.dateSelected);
 
-        this.loadUpdateParam(UpdateListado.UPDATE_CATEGORIA)
-      }
+      const presupuesto = await this.gastoService.getPresupuestoByMes(this.myApp.dateSelected);
+      if (presupuesto) { this.presupuesto = presupuesto[0]; }
+
+      console.log(this.presupuesto)
+
+      this.form.valueSelect = this.presupuesto?.monto || '';
+
+
+      this.loadUpdateParam(UpdateListado.UPDATE_CATEGORIA);
+      this.listCategoria.map(res => {
+        if (res.dataGasto) {
+          this.cantidad += res.dataGasto?.length || 0
+
+          res.dataGasto?.map(gas => {
+            if (gas.tipo != 'cuota') {
+              this.total += gas.monto
+            } else {
+              this.total += (gas?.gastoCuota?.monto_cuota || 0)
+            }
+          })
+        }
+
+      })
+
+      this.restante = (this.presupuesto?.monto || 0) - this.total;
 
     }, async () => {
       this.getAlertError('No se pudieron cargar.');
+    }, async () => {
+      this.dissmissLoader();
     });
   }
 
@@ -161,6 +161,7 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit {
       if (this.presupuesto) {
         this.presupuesto.monto = eNumber(this.form.valueSelect);
         await this.gastoService.updatePresupuesto(this.presupuesto);
+        this.restante = eNumber(this.form.valueSelect) - this.total;
       }
 
     }, async () => {

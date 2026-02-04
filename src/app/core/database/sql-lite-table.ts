@@ -6,10 +6,11 @@ export const SQLTABLES = [
         descripcion TEXT,
         cuotas INTEGER DEFAULT 0,
         fecha TEXT NOT NULL,
-        fechaEnd TEXT NOT NULL,
+        fechaEnd TEXT,
         tipo TEXT NOT NULL,
         etiquetas TEXT, 
         categoria_id INTEGER,
+        recurrente_id INTEGER,
         estado INTEGER DEFAULT 0
     );`,
     `CREATE TABLE IF NOT EXISTS categoria (
@@ -41,6 +42,7 @@ export const SQLTABLES = [
         monto REAL,
         descripcion TEXT,
         etiquetas TEXT,
+        fechaInicio TEXT NOT NULL,
         categoria_id INTEGER,
         activo INTEGER DEFAULT 1,
         frecuencia TEXT,

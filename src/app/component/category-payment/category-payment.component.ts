@@ -37,7 +37,7 @@ export class CategoryPaymentComponent implements OnInit {
   }
 
   getTotalCategoriaMonto(){
-    let total = 100000;
+    let total = 0;
     this.dataGasto.forEach(res => {
       const monto = res.tipo === "cuota" ? res.gastoCuota?.monto_cuota || 0 : res.monto;
       total += monto;

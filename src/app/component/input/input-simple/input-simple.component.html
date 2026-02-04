@@ -1,5 +1,7 @@
 <label [for]="name">{{label}} <span *ngIf="required">*</span></label>
-<div class="content-input">
+<div class="content-input" [ngClass]="{'read-input-content':type === 'read'}">
 
-    <ion-input [required]="required" [type]="type" fill="outline" [placeholder]="placeholder" [value]="value" (ionBlur)="onBlurInput(value)" (ionInput)="onInput($event)" [name]="name" [readonly]="readonly"></ion-input>
+    <ion-input *ngIf="type != 'read'" [required]="required" [type]="type" fill="outline" [placeholder]="placeholder" [value]="value" (ionBlur)="onBlurInput(value)" (ionInput)="onInput($event)" [name]="name" [readonly]="readonly" (keyup.enter)="alPresionarEnter()"></ion-input>
+
+    <label *ngIf="type === 'read'" class="read-input">{{value || placeholder}}</label>
 </div>

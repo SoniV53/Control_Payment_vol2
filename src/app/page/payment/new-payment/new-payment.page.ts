@@ -12,10 +12,11 @@ import { SelectorSimpleComponent } from "src/app/component/input/selector-simple
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { Capacitor } from '@capacitor/core';
 import { list } from 'ionicons/icons';
-import { getIconPath } from 'src/app/utils/Utils';
+import { getIconPath, validarCuotasConRango } from 'src/app/utils/Utils';
 import { Categoria } from 'src/app/core/models/categoria.model';
 import { EmptyBaseComponent } from "src/app/component/card/empty-base/empty-base.component";
 import { RouterLink } from '@angular/router';
+import { UpdateListado } from 'src/app/utils/update-params';
 
 export default Swal;
 @Component({
@@ -66,6 +67,8 @@ export class NewPaymentPage extends BasePage implements OnInit {
   dataListaSelect: ItemInputListData[] = [];
   dataSelectItem: any = {};
   tipoModalUse: string = 'date';
+  isCheck: boolean = false;
+  event: any;
 
   ionViewDidLeave() {
     this.closePopupClick();
@@ -78,20 +81,22 @@ export class NewPaymentPage extends BasePage implements OnInit {
       { id: 'monto', titulo: 'Monto', isError: false, placeholder: 'Ingrese el monto del gasto', tipo: 'number', required: true },
       {
         id: 'categoria', titulo: 'Categoria', isError: false, placeholder: 'Seleccione la categoria del gasto', tipo: 'select', required: false, list: []
-      }
+      },
+      //{ id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.myApp.dateSelected }
+
     ]
 
     this.listaFormulario = [...this.listaFormularioMain]
     this.valueSegment = 'normal';
   }
 
-  ionViewWillEnter() {
-
+  async ionViewWillEnter() {
+    await this.getCategorias();
   }
 
   async ngOnInit() {
     this.insertInputs();
-    await this.getCategorias();
+
 
     // console.log('Fecha actual formateada (YYYY-MM-DD):', this.myApp.dateToday);
     // const fechaForm = this.listaFormulario.find(item => item.id === 'fecha');
@@ -101,26 +106,44 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
   }
 
+  resetInputs() {
+    this.valueSegment = 'normal';
+    this.isCheck = false;
+    this.listaFormularioMain.map(res => {
+      if (res.tipo != 'date') res.valueSelect = '';
+      else res.valueSelect = this.myApp.dateSelected;
+    })
+  }
+
   getCategorias() {
     this.baseService(async () => {
+      this.showLoader();
       const listCategoria = await this.categoriaService.getCategoriasActivas();
       const catego = this.listaFormularioMain.find(res => res.id === 'categoria');
-      listCategoria.map(res => {
-        catego?.list?.push({ code: res.id || 0, value: res.nombre, icon: res.icono });
-      })
-
-      console.log(this.listaFormularioMain)
+      if (catego) {
+        catego.list = [];
+        if (this.dataSelect) {
+          this.dataSelect.valueSelect = '';
+          this.dataSelect.icon = '';
+          this.dataSelect.code = '';
+        }
+        listCategoria.map(res => {
+          catego?.list?.push({ code: res.id || 0, value: res.nombre, icon: res.icono });
+        })
+      }
 
       this.listaFormulario = [...this.listaFormularioMain];
 
       if (this.valueSegment != 'cuota') {
         this.listaFormulario = [...this.listaFormularioMain];
         this.listaFormulario.push(
-          { id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.myApp.dateToday }
+          { id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.myApp.dateSelected }
         )
       }
     }, async () => {
       this.getAlertError('No se pudieron cargar.');
+    }, async () => {
+      this.dissmissLoader();
     });
   }
 
@@ -131,7 +154,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
       this.listaFormulario = [...this.listaFormularioMain];
       this.listaFormulario.push({
         id: 'cuota', titulo: 'Cuotas', isError: false, placeholder: 'Ingrese el numero de cuotas', tipo: 'number', required: true,
-        valueSelect: '1'
+        valueSelect: ''
       })
       this.listaFormulario.push({
         id: 'cuotaNum', titulo: 'Cuotas Pagadas', isError: false, placeholder: 'Ingrese el numero de cuotas pagadas', tipo: 'number', required: true,
@@ -139,21 +162,30 @@ export class NewPaymentPage extends BasePage implements OnInit {
       })
 
       this.listaFormulario.push(
-        { id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.myApp.dateToday }
+        {
+          id: 'fecha',
+          titulo: `Fecha Inicio: `, isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'read', required: false,
+          valueSelect: this.formatearFecha(new Date(this.myApp.dateToday))
+        }
       )
       this.listaFormulario.push({
-        id: 'fechaEnd', titulo: 'Fecha Final', isError: false, placeholder: 'Seleccione la fecha final del gasto', tipo: 'date', required: true, valueSelect: ''
+        id: 'fechaEnd', titulo: 'Fecha Final:', isError: false, placeholder: 'Fecha Final (Solo lectura)', tipo: 'read', required: false, valueSelect: ''
       })
     } else {
       this.listaFormulario = [...this.listaFormularioMain];
       this.listaFormulario.push(
-        { id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.myApp.dateToday }
+        { id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.formatearFecha(new Date(this.myApp.dateToday)) }
       )
     }
     this.validButton();
+
+    console.log(this.isCheck)
   }
 
   clickDateModal(form: ItemInputData) {
+    if (form.id === 'fechaEnd') {
+      return;
+    }
     this.showPopup = true;
     this.dataSelect = form;
     this.tipoModalUse = 'date'
@@ -162,10 +194,19 @@ export class NewPaymentPage extends BasePage implements OnInit {
   closePopupClick() {
     this.showPopup = false;
     this.validButton();
+    this.changeDate();
   }
 
+
   onMonthYearChange(event: any) {
-    const selectedDate = event.detail.value;
+    this.event = event;
+  }
+
+  changeDate() {
+    if (!this.dataSelect) {
+      return;
+    }
+    const selectedDate = this.event.detail.value;
     console.log('Fecha seleccionada:', selectedDate);
     if (!selectedDate) return;
 
@@ -174,7 +215,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = date.getDate();
 
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = `${year}-${month}-01`;
     console.log('Fecha formateada (YYYY-MM):', formattedDate);
     if (this.dataSelect) {
       this.dataSelect.valueSelect = formattedDate;
@@ -183,7 +224,12 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
   async saveNewPayment() {
     this.baseService(async () => {
-      const numId = await this.gastoService.addGasto({
+      // const fechaEndItem = this.listaFormulario.find(item => item.id === 'fechaEnd');
+      // if (!fechaEndItem?.valueSelect) {
+      //   this.calculadoraFecha(this.listaFormulario.find(item => item.id === 'cuota')?.valueSelect);
+      // }
+
+      const g: Gasto = {
         titulo: this.listaFormulario.find(item => item.id === 'titulo')?.valueSelect || '',
         descripcion: this.listaFormulario.find(item => item.id === 'descripcion')?.valueSelect || '',
         monto: Number(this.listaFormulario.find(item => item.id === 'monto')?.valueSelect) || 0,
@@ -193,7 +239,20 @@ export class NewPaymentPage extends BasePage implements OnInit {
         fechaEnd: this.listaFormulario.find(item => item.id === 'fechaEnd')?.valueSelect || '',
         cuotas: this.valueSegment === 'cuota' ? Number(this.listaFormulario.find(item => item.id === 'cuota')?.valueSelect) || 1 : 1,
         tipo: this.valueSegment === 'cuota' ? 'cuota' : 'normal',
-      });
+      }
+
+      if (this.valueSegment === 'cuota') {
+        const ok = validarCuotasConRango(g.fecha, g.fechaEnd || '', g.cuotas || 0);
+
+        if (!ok) {
+          this.getAlertError('Rango de fechas no valida');
+          return;
+        }
+      }
+
+      const numId = await this.gastoService.addGasto(g, this.myApp.dateSelected, (this.isCheck && this.valueSegment === 'normal'),
+        this.valueSegment === 'cuota' ?
+          Number(this.listaFormulario.find(item => item.id === 'cuotaNum')?.valueSelect) || 1 : 1);
 
       // await this.gastoService.addGastoCuota({
       //   gasto_id: numId,
@@ -204,7 +263,8 @@ export class NewPaymentPage extends BasePage implements OnInit {
       // })
 
       this.getAlertSuccess('El gasto se ha guardado correctamente.');
-      this.router.navigate(['/tabs/home']);
+      this.resetInputs();
+      this.resetNavigation();
     }, async () => {
       this.getAlertError('No se pudieron cargar los gastos.');
     });
@@ -217,7 +277,34 @@ export class NewPaymentPage extends BasePage implements OnInit {
     //   form.isError = true;
     // }
 
+    this.validarErrorInput(form);
     this.validButton();
+  }
+
+  validarErrorInput(form: ItemInputData) {
+    form.isError = false;
+    form.msgInput = '';
+
+    switch (form.id) {
+      case 'cuotaNum':
+        if (form.valueSelect <= 0) {
+          form.isError = true;
+          form.msgInput = "Ingrese un valor mayor a 0"
+        }
+
+        const cuota = this.listaFormulario.find(item => item.id === 'cuota');
+        if (form.valueSelect > cuota?.valueSelect) {
+          form.isError = true;
+          form.msgInput = "Cuota Invalida"
+        }
+        break;
+      case 'cuota':
+        if (form.valueSelect <= 1) {
+          form.isError = true;
+          form.msgInput = "Ingrese un valor mayor a 1"
+        }
+        break;
+    }
   }
 
   validButton() {
@@ -229,20 +316,23 @@ export class NewPaymentPage extends BasePage implements OnInit {
   blurInput(form: ItemInputData) {
     switch (form.id) {
       case 'cuota':
-        this.calculadoraFecha(form);
+        this.calculadoraFechaFinal(form);
         break;
       case 'cuotaNum':
-        const num = Number(form.valueSelect);
-        const nuevaFechaFin = this.sumarMeses(this.myApp.dateToday, -num);
-        const fechaEndItem = this.listaFormulario.find(item => item.id === 'fecha');
-        if (fechaEndItem) {
-          fechaEndItem.valueSelect = nuevaFechaFin;
-          const cuota = this.listaFormulario.find(item => item.id === 'cuota');
-          if (cuota && cuota.valueSelect) {
-            this.calculadoraFecha(cuota);
-          }
+        const cuotasPagadas = Number(form.valueSelect);
+
+        if (!cuotasPagadas || cuotasPagadas <= 0) return;
+
+        const fechaInicial = this.listaFormulario.find(item => item.id === 'fecha');
+        const cuota = this.listaFormulario.find(item => item.id === 'cuota');
+
+        if (fechaInicial) {
+          fechaInicial.valueSelect = this.sumarMeses(this.myApp.dateToday, -(cuotasPagadas - 1));
         }
 
+        if (cuota?.valueSelect) {
+          this.calculadoraFechaFinal({ valueSelect: cuota.valueSelect } as ItemInputData);
+        }
         break;
       default:
         break;
@@ -250,18 +340,28 @@ export class NewPaymentPage extends BasePage implements OnInit {
     this.validButton();
   }
 
-  calculadoraFecha(form: ItemInputData) {
-    const fechaInicioItem = this.listaFormulario.find(item => item.id === 'fecha');
-    if (fechaInicioItem && fechaInicioItem.valueSelect) {
-      const nuevaFechaFin = this.sumarMeses(fechaInicioItem.valueSelect, Number(form.valueSelect));
-      const fechaEndItem = this.listaFormulario.find(item => item.id === 'fechaEnd');
-      if (fechaEndItem) {
-        fechaEndItem.valueSelect = nuevaFechaFin;
-      }
+  calculadoraFechaFinal(form: ItemInputData) {
+    const fechaInicio = this.listaFormulario.find(item => item.id === 'fecha');
+    const fechaFinal = this.listaFormulario.find(item => item.id === 'fechaEnd');
+
+    if (!fechaInicio?.valueSelect) return;
+
+    const numCuotas = Number(form.valueSelect);
+
+    if (!numCuotas || numCuotas <= 0) return;
+
+    const fechaEndCalc = this.sumarMeses(fechaInicio.valueSelect, numCuotas - 1);
+
+    if (fechaFinal) {
+      fechaFinal.valueSelect = fechaEndCalc;
     }
   }
 
-  sumarMeses(fechaInicial: string, cantidadMeses: number): string {
+
+  sumarMeses(fechaInicial: string | null, cantidadMeses: number): string {
+    if (!fechaInicial) {
+      return '';
+    }
     const fecha = new Date(fechaInicial);
 
     fecha.setMonth(fecha.getMonth() + cantidadMeses);
@@ -274,6 +374,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
     const month = String(fecha.getMonth() + 1).padStart(2, '0');
     const day = String(fecha.getDate()).padStart(2, '0');
 
+    //return `${year}-${month}-${day}`;
     return `${year}-${month}-${day}`;
   }
 

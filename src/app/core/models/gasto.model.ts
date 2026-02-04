@@ -8,10 +8,11 @@ export interface Gasto {
   cuotas?: number;
   fecha: string;
   fechaEnd?: string;
-  tipo: string;
+  tipo: string;// normal, cuota, recurrente
   etiquetas?: string | null;
   categoria_id?: number | null;
-  estado?: number; // 0 pendiente, 1 pagado
+  recurrente_id?: number | null;
+  estado?: number; // 0 pendiente, 1 pagado, 2 eliminado
   gastoCuota?:GastoCuota
   
 }

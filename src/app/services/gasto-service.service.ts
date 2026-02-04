@@ -4,7 +4,10 @@ import { Gasto } from '../core/models/gasto.model';
 import { Capacitor } from '@capacitor/core';
 import { GastoCuota } from '../core/models/gasto-cuota.model';
 import { Presupuesto } from '../core/models/presupuesto.model';
-import { formatDate } from '../utils/Utils';
+import { dateSearch, formatDate, getMesActual, getMesAnterior, validarCuotasConRango } from '../utils/Utils';
+import { Categoria } from '../core/models/categoria.model';
+import { SQLiteDBConnection } from '@capacitor-community/sqlite';
+import { GastoRecurrente } from '../core/models/gasto_recurrente.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +16,41 @@ export class GastoServiceService {
 
   constructor(private dbService: DatabaseServiceService) { }
 
-  async addGasto(g: Gasto): Promise<number> {
+
+  async addGasto(g: Gasto, fecha: string, recurrente: boolean, numCuota?: number): Promise<number> {
     return new Promise<number>(async (resolve, reject) => {
       try {
+        if (!recurrente && g.tipo === 'cuota') {
+          const ok = validarCuotasConRango(g.fecha, g.fechaEnd || '', g.cuotas || 0);
+
+          if (!ok) {
+            reject('Rango de fechas no valida');
+          }
+        }
+
         const db = await this.dbService.getDB();
+        let idRecurrente = null;
+
+        if (recurrente) {
+          idRecurrente = await this.addGastoRecurrente({
+            titulo: g.titulo,
+            monto: g.monto,
+            fechaInicio: g.fecha,
+            frecuencia: 'mensual',
+            proxima_fecha: '',
+            categoria_id: g.categoria_id,
+            descripcion: g.descripcion,
+            activo: 1
+          });
+
+          g.tipo = 'recurrente'
+          g.recurrente_id = idRecurrente;
+        }
+
+        let monto = g.monto;
+        if (!recurrente && g.tipo === 'cuota') {
+          monto = monto * (g.cuotas || 1);
+        }
 
         await db.run(
           `INSERT INTO gasto (
@@ -25,20 +59,24 @@ export class GastoServiceService {
           descripcion,
           cuotas,
           fecha,
+          fechaEnd,
           tipo,
           etiquetas,
           categoria_id,
+          recurrente_id,
           estado
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             g.titulo,
-            g.monto,
+            monto,
             g.descripcion ?? null,
             g.cuotas ?? 0,
-            g.fecha,
+            dateSearch(g.fecha)[0],
+            g.fechaEnd ? dateSearch(g.fechaEnd || '')[0] : null,
             g.tipo,
             g.etiquetas ?? null,
             g.categoria_id ?? null,
+            g.recurrente_id ?? null,
             g.estado ?? 0
           ]
         );
@@ -46,10 +84,190 @@ export class GastoServiceService {
         const result = await db.query(`SELECT last_insert_rowid() as id`);
         const id = result.values?.[0]?.id;
 
-        resolve(id);
+        // if (!recurrente && g.tipo === 'cuota') {
+        //   //const data = await this.getNumeroCuota(fecha);
+        //   //console.log("COMO BIENE:",data)
+        //   const date = new Date(dateSearch(g.fecha)[0]);
+        //   const fechaCu = new Date(date);
+        //   fechaCu.setMonth(fechaCu.getMonth() + (numCuota || 1));
 
+
+        //   const c: GastoCuota = {
+        //     gasto_id: id,
+        //     monto_cuota: g.monto,
+        //     numero_cuota: numCuota || 1,
+        //     estado_cuota: 0,
+        //     fecha_pago: formatDate(fechaCu)
+        //   }
+        //   await db.run(
+        //     `INSERT INTO gasto_cuota (
+        //   gasto_id,
+        //   numero_cuota,
+        //   monto_cuota,
+        //   fecha_pago,
+        //   estado_cuota
+        // ) VALUES (?, ?, ?, ?, ?)`,
+        //     [
+        //       c.gasto_id,
+        //       c.numero_cuota,
+        //       c.monto_cuota,
+        //       c.fecha_pago ?? null,
+        //       c.estado_cuota ?? 0
+        //     ]
+        //   );
+        // }
+
+        resolve(id);
       } catch (error) {
         console.error('Error insertando gasto:', error);
+        reject(error);
+      }
+    });
+  }
+
+
+  async addGastoRecurrente(g: GastoRecurrente): Promise<number> {
+    return new Promise<number>(async (resolve, reject) => {
+      try {
+        const db = await this.dbService.getDB();
+
+        await db.run(
+          `INSERT INTO gasto_recurrente (
+          titulo,
+          monto,
+          descripcion,
+          etiquetas,
+          fechaInicio,
+          categoria_id,
+          activo,
+          frecuencia,
+          proxima_fecha
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            g.titulo,
+            g.monto,
+            g.descripcion ?? null,
+            g.etiquetas ?? null,
+            g.fechaInicio,
+            g.categoria_id ?? null,
+            g.activo ?? 1,
+            g.frecuencia,
+            g.proxima_fecha
+          ]
+        );
+
+        const result = await db.query(`SELECT last_insert_rowid() as id`);
+        resolve(result.values?.[0]?.id);
+
+      } catch (error) {
+        console.error('Error insertando gasto recurrente:', error);
+        reject(error);
+      }
+    });
+  }
+
+  async getGastosRecurrentes(): Promise<GastoRecurrente[]> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await this.dbService.getDB();
+
+        const result = await db.query(
+          `SELECT * FROM gasto_recurrente WHERE activo = 1`
+        );
+
+        resolve(result.values ?? []);
+
+      } catch (error) {
+        console.error('Error obteniendo recurrentes:', error);
+        reject(error);
+      }
+    });
+  }
+
+  async getNumeroCuota(fecha: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const date = dateSearch(fecha);
+
+        const db = await this.dbService.getDB();
+
+        const result = await db.query(
+          `SELECT 
+            id,
+            titulo,
+            fecha,
+            (
+              (strftime('%Y', ?) - strftime('%Y', fecha)) * 12 +
+              (strftime('%m', ?) - strftime('%m', fecha)) + 1
+            ) AS numero_cuota
+          FROM gasto
+          WHERE activo = 1
+          AND date(fecha) <= date(?);`, [date[0]]
+        );
+
+        resolve(result.values ?? []);
+
+      } catch (error) {
+        console.error('Error obteniendo recurrentes:', error);
+        reject(error);
+      }
+    });
+  }
+
+  async updateGastoRecurrente(g: GastoRecurrente): Promise<void> {
+    return new Promise<void>(async (resolve, reject) => {
+      try {
+        const db = await this.dbService.getDB();
+
+        await db.run(
+          `UPDATE gasto_recurrente SET
+          titulo = ?,
+          monto = ?,
+          descripcion = ?,
+          etiquetas = ?,
+          fechaInicio = ?,
+          categoria_id = ?,
+          activo = ?,
+          frecuencia = ?,
+          proxima_fecha = ?
+        WHERE id = ?`,
+          [
+            g.titulo,
+            g.monto,
+            g.descripcion ?? null,
+            g.etiquetas ?? null,
+            g.fechaInicio,
+            g.categoria_id ?? null,
+            g.activo ?? 1,
+            g.frecuencia,
+            g.proxima_fecha,
+            g.id
+          ]
+        );
+
+        resolve();
+
+      } catch (error) {
+        console.error('Error actualizando recurrente:', error);
+        reject(error);
+      }
+    });
+  }
+
+  async desactivarGastoRecurrente(id: number): Promise<void> {
+    return new Promise<void>(async (resolve, reject) => {
+      try {
+        const db = await this.dbService.getDB();
+
+        await db.run(
+          `UPDATE gasto_recurrente SET activo = 0 WHERE id = ?`,
+          [id]
+        );
+
+        resolve();
+
+      } catch (error) {
+        console.error('Error desactivando recurrente:', error);
         reject(error);
       }
     });
@@ -95,12 +313,21 @@ export class GastoServiceService {
     });
   }
 
-  async deleteGasto(id: number): Promise<void> {
+  async deleteGasto(id: number, tipo: string): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       try {
         const db = await this.dbService.getDB();
 
-        await db.run(`DELETE FROM gasto WHERE id = ?`, [id]);
+        if (tipo === 'normal') {
+          await db.run(`DELETE FROM gasto WHERE id = ?`, [id]);
+        } else {
+          await db.run(
+            `UPDATE gasto SET 
+              estado = 2
+            WHERE id = ?`,
+            [id]
+          );
+        }
 
         resolve();
 
@@ -129,10 +356,11 @@ export class GastoServiceService {
     });
   }
 
-  async getTotalPorCategoria(): Promise<any[]> {
+  async getTotalPorCategoria(fecha: string): Promise<any[]> {
     return new Promise(async (resolve, reject) => {
       try {
         const db = await this.dbService.getDB();
+        const date = dateSearch(fecha);
 
         const result = await db.query(`
         SELECT 
@@ -155,24 +383,76 @@ export class GastoServiceService {
   }
 
 
-
-  async getGastos(): Promise<any[]> {
-    return new Promise(async (resolve, reject) => {
+  async getGastos(fecha: string): Promise<Categoria[]> {
+    return new Promise<Categoria[]>(async (resolve, reject) => {
       try {
         const db = await this.dbService.getDB();
+        const [fechaInicio, fechaFin] = dateSearch(fecha);
 
-        const result = await db.query(`
-        SELECT 
-          g.*, 
-          c.nombre as categoria_nombre,
-          c.icono as categoria_icono
-        FROM gasto g
-        LEFT JOIN categoria c ON g.categoria_id = c.id
-        ORDER BY g.fecha DESC
-      `);
+        //Categorias
+        const categoriasRes = await db.query(
+          `SELECT * FROM categoria WHERE activo = 1 ORDER BY nombre ASC`
+        );
+        const categorias: Categoria[] = (categoriasRes.values || []).map(res => ({
+          id: res.id,
+          icono: res.icono,
+          nombre: res.nombre,
+          totalMonto: 0,
+          dataGasto: []
+        }));
 
-        resolve(result.values ?? []);
+        if (!categorias.length) resolve([]);;
 
+        //Gastos normales y recurrentes
+        const gastosRes = await db.query(
+          `SELECT * FROM gasto
+       WHERE fecha >= ? AND fecha < ?
+       AND (tipo = "normal" OR tipo = "recurrente") AND estado != 2`,
+          [fechaInicio, fechaFin]
+        );
+        const gastos: Gasto[] = gastosRes.values || [];
+
+        //Gastos por Cuotas fecha
+        const cuotasRes = await db.query(
+          `SELECT * FROM gasto_cuota
+       WHERE fecha_pago >= ? AND fecha_pago < ?`,
+          [fechaInicio, fechaFin]
+        );
+        const cuotas = cuotasRes.values || [];
+
+        const idsCuotas = [...new Set(cuotas.map(c => c.gasto_id))];
+        let gastosCuotasMap = new Map<number, Gasto>();
+
+        if (idsCuotas.length) {
+          const placeholders = idsCuotas.map(() => '?').join(',');
+          const gastosCuotaRes = await db.query(
+            `SELECT * FROM gasto WHERE id IN (${placeholders}) AND estado != 2`,
+            idsCuotas
+          );
+          gastosCuotaRes.values?.forEach(g => gastosCuotasMap.set(g.id, g));
+        }
+
+        gastos.forEach(g => {
+          const categoria = categorias.find(c => c.id === g.categoria_id);
+          if (categoria && categoria.dataGasto) categoria.dataGasto.push(g);
+        });
+
+        cuotas.forEach(cuota => {
+          const gastoBase = gastosCuotasMap.get(cuota.gasto_id);
+          if (!gastoBase) return;
+
+          const categoria = categorias.find(c => c.id === gastoBase.categoria_id);
+          if (categoria && categoria.dataGasto) {
+            categoria.dataGasto.push({
+              ...gastoBase,
+              gastoCuota: cuota
+            });
+          }
+
+
+        });
+
+        resolve(categorias);
       } catch (error) {
         console.error('Error obteniendo gastos:', error);
         reject(error);
@@ -397,18 +677,18 @@ export class GastoServiceService {
       try {
         const db = await this.dbService.getDB();
 
+        const date = dateSearch(fecha);
+        console.log(date)
+
         const result = await db.query(
-          `SELECT monto FROM presupuesto`,
+          `SELECT monto FROM presupuesto`
         );
 
         const result2 = await db.query(
-          `SELECT * FROM presupuesto WHERE fecha = ?`,
-          [fecha]
+          `SELECT * FROM presupuesto WHERE fecha >= ? AND fecha <  ?;`, [date[0], date[1]]
         );
 
-        console.log(result2)
-
-        resolve(result.values ?? null);
+        resolve(result2.values ?? []);
 
       } catch (error) {
         console.error('Error presupuesto por mes:', error);
@@ -443,28 +723,12 @@ export class GastoServiceService {
     });
   }
 
-
-
-
-  private getMesActual(today: Date): string {
-    return formatDate(today);
-  }
-
-  private getMesAnterior(today: Date): string {
-    const fecha = new Date(today); // copia
-    fecha.setMonth(fecha.getMonth() - 1);
-
-    return formatDate(fecha);
-  }
-
-
-
-  async generarPresupuestoMensualSiNoExiste(today: Date): Promise<void> {
+  async generarPresupuestoMensualSiNoExiste(today: string): Promise<void> {
     try {
       const db = await this.dbService.getDB();
 
-      const mesActual = this.getMesActual(today);
-      const mesAnterior = this.getMesAnterior(today);
+      const mesActual = dateSearch(today)[0];
+      const mesAnterior = dateSearch(today)[2];
 
       const check = await db.query(
         `SELECT COUNT(*) as total FROM presupuesto WHERE fecha = ?`,

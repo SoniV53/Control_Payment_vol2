@@ -2,3 +2,11 @@
     background-color: var(--ion-background-color-second90);
     border-radius: 4px;
 }
+
+.read-input-content {
+    height: 56px !important;
+    display: flex;
+    padding: 0px 16px;
+    align-items: center;
+    border-bottom: 1px solid var(--ion-color-primary);
+}

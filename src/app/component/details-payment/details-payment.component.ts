@@ -41,6 +41,9 @@ export class DetailsPaymentComponent implements OnInit {
   }
 
   formatoCuotas() {
-    return `${this.dataGasto?.gastoCuota?.numero_cuota}/${this.dataGasto?.cuotas}`;
+    if (this.isCuota) {
+      return `${this.dataGasto?.gastoCuota?.numero_cuota}/${this.dataGasto?.cuotas}`;
+    }
+    return `${this.dataGasto?.tipo.toUpperCase()}`;
   }
 }

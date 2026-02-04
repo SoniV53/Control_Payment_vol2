@@ -5,7 +5,7 @@
 </ion-header>
 
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
     <div>
         <div class="inputs-form">
             <div class="inputs-ion">
@@ -32,7 +32,7 @@
 
 
                 <div style="margin-top: 24px;" *ngIf="valueSegment === 'normal'">
-                    <ion-toggle aria-label="Enable Notifications">Agregar Recurrente:</ion-toggle>
+                    <ion-toggle aria-label="Enable Notifications" [checked]="isCheck" [(ngModel)]="isCheck">Agregar Recurrente:</ion-toggle>
                 </div>
 
 

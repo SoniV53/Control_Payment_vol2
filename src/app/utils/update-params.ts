@@ -1,6 +1,7 @@
 
 export enum UpdateListado {
-    UPDATE_CATEGORIA= 'update-categoria'
+    UPDATE_CATEGORIA= 'update-categoria',
+    UPDATE_RECURRENTE= 'update-recurrente'
 }
 
 export interface UpdateParamData{
@@ -11,6 +12,9 @@ export interface UpdateParamData{
 export const updateParams = (): Record<UpdateListado, UpdateParamData> => {
   return {
     [UpdateListado.UPDATE_CATEGORIA]: {
+      isLoad: true
+    },
+    [UpdateListado.UPDATE_RECURRENTE]: {
       isLoad: true
     }
   };

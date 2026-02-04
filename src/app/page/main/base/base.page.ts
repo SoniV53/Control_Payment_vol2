@@ -13,6 +13,7 @@ import { CategoriaServiceService } from 'src/app/services/categoria-service.serv
 import { getIconPath } from 'src/app/utils/Utils';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
 import { UpdateListado, UpdateParamData } from 'src/app/utils/update-params';
+import { ControlGastosAutomaticosService } from 'src/app/services/control-gastos-automaticos.service';
 
 @Component({
   selector: 'app-base',
@@ -44,7 +45,8 @@ export class BasePage {
 
   constructor(public router: Router, public myApp: AppComponent,
     public gastoService: GastoServiceService,
-    public fb: FormBuilder, public categoriaService: CategoriaServiceService) {
+    public fb: FormBuilder, public categoriaService: CategoriaServiceService,
+    public controlService: ControlGastosAutomaticosService) {
     const date = new Date();
     const year = date.getFullYear();
 
@@ -52,6 +54,8 @@ export class BasePage {
 
     addIcons({ barbellOutline });
   }
+
+  loaderNav = false;
 
   getFormatDate(): string {
     const numMes = this.myApp.getFragmentDate()[1];
@@ -94,7 +98,7 @@ export class BasePage {
   }
 
 
-  async baseService(callback: (updateParams: Record<UpdateListado, UpdateParamData>) => Promise<void>, callError?: () => Promise<void>, addCapasitorCheck: boolean = true) {
+  async baseService(callback: (updateParams: Record<UpdateListado, UpdateParamData>) => Promise<void>, callError?: () => Promise<void>, callFinally?: () => Promise<void>, addCapasitorCheck: boolean = true) {
     try {
       if (Capacitor.getPlatform() === 'web' && addCapasitorCheck) return;
       //throw new Error('Funcionalidad no disponible en la plataforma web.');
@@ -104,6 +108,11 @@ export class BasePage {
       if (callError) {
         return await callError();
       }
+    } finally {
+      if (callFinally) {
+        return await callFinally();
+      }
+      
     }
   }
 
@@ -122,7 +131,19 @@ export class BasePage {
     this.myApp.writterParams[name].isLoad = value;
   }
 
-  getUpdateParam(name: UpdateListado):boolean {
+  getUpdateParam(name: UpdateListado): boolean {
     return this.myApp.writterParams[name].isLoad;
+  }
+
+  showLoader() {
+    this.loaderNav = true;
+  }
+
+  dissmissLoader() {
+    this.loaderNav = false;
+  }
+
+  resetNavigation(){
+    this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
   }
 }

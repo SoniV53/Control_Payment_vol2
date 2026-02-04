@@ -2,8 +2,15 @@
     <app-banner-top [toolBarData]="toolBar"></app-banner-top>
 
     <div class="content-background">
-        <div>
-            <ion-input label="Outline input" label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>
+        <br>
+        <div *ngFor="let rec of listadoGastosRecurrentes">
+            <p>{{rec.titulo}}</p>
+            <p>{{rec.fechaInicio}}</p>
+            <p>{{rec.monto}}</p>
+            <p>{{rec.id}}</p>
+
+            <div style="height: 1px; background-color: #EFF2F6; margin: 0.4rem 1rem;"></div>
         </div>
     </div>
+
 </ion-content>

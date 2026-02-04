@@ -27,3 +27,78 @@ export const formatDate = (date: Date): string => {
 
     return `${year}-${month}-${day}`;
 }
+
+export const getMesActual = (today: Date): string => {
+    const date = new Date(dateSearch(today)[0]);
+    return formatDate(date);
+}
+
+export const getMesAnterior = (today: Date): string => {
+    const date = new Date(dateSearch(today)[0]);
+    const fecha = new Date(date);
+    fecha.setMonth(fecha.getMonth() - 1);
+
+    return formatDate(fecha);
+}
+
+export const getMesSiguiente = (today: Date): string => {
+    const date = new Date(dateSearch(today)[0]);
+    const fecha = new Date(date);
+    fecha.setMonth(fecha.getMonth() + 1);
+
+    return formatDate(fecha);
+}
+
+export const dateSearch = (valor: string | Date): string[] => {
+    if (!valor) {
+        return [];
+    }
+    const date = formatDate(new Date(valor));
+    let fechaS = date.toString();
+    let [anio, mes] = fechaS.split('-');
+    let inicio = `${anio}-${mes}-01`;
+
+    const fecha = new Date(valor);
+    fecha.setMonth(fecha.getMonth() + 1);
+    const dateFormat = formatDate(fecha);
+
+    let fechaN = dateFormat.toString();
+    let [anioN, mesN] = fechaN.split('-');
+    let siguienteMes = `${anioN}-${mesN}-01`;
+
+
+    const fechaL = new Date(valor);
+    fechaL.setMonth(fechaL.getMonth() - 1);
+    const dateLFormat = formatDate(fechaL);
+
+    let fechaSl = dateLFormat.toString();
+    let [anioL, mesL] = fechaSl.split('-');
+    let anteriorMes = `${anioL}-${mesL}-01`;
+
+    return [inicio, siguienteMes, anteriorMes];
+}
+
+export const validarCuotasConRango = (
+    fechaInicio: string,
+    fechaFin: string,
+    numeroCuotas: number
+): boolean => {
+
+    const inicio = new Date(fechaInicio);
+    const fin = new Date(fechaFin);
+
+    if (fin < inicio) return false;
+
+    const anios = fin.getFullYear() - inicio.getFullYear();
+    const meses = fin.getMonth() - inicio.getMonth();
+
+    const totalMeses = anios * 12 + meses + 1;
+
+    return totalMeses === numeroCuotas;
+}
+
+const enum CatalogoTipoGasto{
+    NORMAL = 'normal',
+    CUOTA = 'cuota',
+    REQUERRIDO = 'requerrido',
+}
