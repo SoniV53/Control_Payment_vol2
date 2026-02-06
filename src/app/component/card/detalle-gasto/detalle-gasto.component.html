@@ -1,0 +1,14 @@
+<div>
+    <div class="titulo">
+        <p>{{gastoSelect?.titulo}}</p>
+    </div>
+
+    <app-details-payment [dataGasto]="gastoSelect" [tipo]="'detalle'"></app-details-payment>
+
+    <ion-toggle [checked]="isCheck" (ionChange)="onChange()" [(ngModel)]="isCheck">{{!isCheck ?
+        'Cancelar:':'Pagado:'}}</ion-toggle>
+
+    <app-button-simple textLeft="Editar" textRight="Eliminar" [isRightbtnHiden]="isDeleteHiden"
+        (clickRigthButton)="clickRigthButton()" (clickLeftButton)="clickLeftButton()"></app-button-simple>
+
+</div>

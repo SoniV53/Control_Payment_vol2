@@ -1,7 +1,7 @@
-<div class="box-details" *ngIf="dataGasto">
+<div class="box-details" *ngIf="dataGasto" [ngClass]="{'box-detalle':tipo === 'detalle'}">
     <div class="status" [style]="{'background-color': getStatusGasto()}"></div>
     <div class="detl-main">
-        <div>
+        <div *ngIf="tipo === 'normal'">
             <div class="detl-title">
                 <h3>{{dataGasto.titulo}}</h3>
             </div>

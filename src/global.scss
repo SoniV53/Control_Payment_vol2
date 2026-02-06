@@ -82,8 +82,8 @@ ion-toggle {
     padding: 12px;
     --track-background: #ddd;
     --track-background-checked: #ddd;
-    --handle-background: #eb7769;
-    --handle-background-checked: #95c34e;
+    --handle-background: var(--color-red-primary);
+    --handle-background-checked: var(--color-green-primary);
     --handle-width: 25px;
     --handle-height: 27px;
     --handle-max-height: auto;

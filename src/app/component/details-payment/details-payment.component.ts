@@ -13,6 +13,7 @@ import { eNumber, formatearMonto } from 'src/app/utils/Utils';
 })
 export class DetailsPaymentComponent implements OnInit {
   @Input() dataGasto?: Gasto
+  @Input() tipo: 'normal' | 'detalle' = 'normal'
 
   isCuota = false
 
@@ -37,7 +38,7 @@ export class DetailsPaymentComponent implements OnInit {
   getStatusGasto() {
     //--ion-color-danger
     const status = this.isCuota ? this.dataGasto?.gastoCuota?.estado_cuota || 0 : this.dataGasto?.estado || 0;
-    return status === 0 ? 'var(--ion-color-danger)' : 'var(--color-blue-primary)'
+    return status === 0 ? 'var(--color-red-primary)' : 'var(--color-green-primary)'
   }
 
   formatoCuotas() {

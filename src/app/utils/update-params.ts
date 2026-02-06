@@ -1,22 +1,20 @@
 
 export enum UpdateListado {
-    UPDATE_CATEGORIA= 'update-categoria',
-    UPDATE_RECURRENTE= 'update-recurrente'
+  UPDATE_CATEGORIA = 'update-categoria',
+  UPDATE_RECURRENTE = 'update-recurrente'
 }
 
-export interface UpdateParamData{
-    nombre?:UpdateListado,
-    isLoad:boolean
+export interface UpdateParamData {
+  data?: Record<string, boolean>,
 }
 
-export const updateParams = (): Record<UpdateListado, UpdateParamData> => {
+
+export let updateParams = (): Record<string, UpdateParamData[]> => {
   return {
-    [UpdateListado.UPDATE_CATEGORIA]: {
-      isLoad: true
-    },
-    [UpdateListado.UPDATE_RECURRENTE]: {
-      isLoad: true
-    }
+    ['HomePage']: [
+      { data: { [UpdateListado.UPDATE_CATEGORIA]: true } },
+      { data: { [UpdateListado.UPDATE_RECURRENTE]: true } }
+    ],
   };
 };
 // export class Param {

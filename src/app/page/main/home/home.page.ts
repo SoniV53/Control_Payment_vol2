@@ -14,7 +14,7 @@ import { UpdateListado } from 'src/app/utils/update-params';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [IonDatetime, IonCol, IonRow, IonGrid, IonItem, IonContent,
-    CommonModule, FormsModule, CardOptionComponent, RouterLink, ModalBaseComponent]
+    CommonModule, FormsModule, CardOptionComponent, ModalBaseComponent]
 })
 export class HomePage extends BasePage implements OnInit {
 
@@ -25,8 +25,8 @@ export class HomePage extends BasePage implements OnInit {
 
   showKeyboard = true;
   ionRow: any = [
-    { title: 'Gastos', description: 'Opcion para visualizar mis gastos por mes', routerLink: '/tabs/list-payments-month' },
-    { title: 'Gestiones', description: 'Opcion para crear un gasto o agregar, ya se para  mes o en el mes seleccionado', routerLink: '/tabs/gestiones' },
+    { title: 'Gastos', description: 'Opcion para visualizar mis gastos por mes', routerLink: 'ListPaymentsMonthPage' },
+    { title: 'Gestiones', description: 'Opcion para crear un gasto o agregar, ya se para  mes o en el mes seleccionado', routerLink: 'MenuGestionesPage' },
     //{ title: 'Resumen', description: 'Opcion para visualizar un resumen de los gastos mensuales' },
     //{ title: 'Historial', description: 'Opcion para visualizar un Historial cuanto gasto en cada mes' }
   ];
@@ -35,8 +35,9 @@ export class HomePage extends BasePage implements OnInit {
     // this.dateSelect = this.getFormatDate();
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.dateSelect = this.getFormatDate();
+    this.historialNavigation()
   }
 
   ionViewDidLeave() {
@@ -44,7 +45,7 @@ export class HomePage extends BasePage implements OnInit {
   }
 
   onClickAction() {
-    this.router.navigate(['/tabs/category']);
+    this.router.navigate(['/category']);
   }
 
   closePopupClick() {
@@ -60,12 +61,15 @@ export class HomePage extends BasePage implements OnInit {
 
     this.myApp.setDateSelected(selectedDate);
     this.dateSelect = this.getFormatDate();
-    this.loadUpdateParam(UpdateListado.UPDATE_RECURRENTE,true);
-    this.loadUpdateParam(UpdateListado.UPDATE_CATEGORIA,true);
+    this.loadUpdateParam(UpdateListado.UPDATE_RECURRENTE, true);
+    this.loadUpdateParam(UpdateListado.UPDATE_CATEGORIA, true);
   }
 
   selectDate() {
     this.showPopup = true;
   }
 
+  navegacion(ruta: string) {
+    this.navCtrl.push(ruta)
+  }
 }

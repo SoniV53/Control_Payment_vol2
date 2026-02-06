@@ -1,0 +1,15 @@
+.item-buttom {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    ion-button {
+        width: 80%;
+    }
+}
+
+.item-buttom:has(> :nth-child(2):last-child) {
+    justify-content: space-between;
+    ion-button {
+        width: 45%;
+    }
+}

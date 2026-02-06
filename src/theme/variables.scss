@@ -17,6 +17,8 @@
     --color-tag-white: #FFFFFF;
     --color-black-text: #051510;
     font-size: 16px;
+    --color-green-primary: #95c34e;
+    --color-red-primary: #eb7769;
 }
 
 .center-grid {
@@ -48,4 +50,9 @@
     --color: var(--ion-background-color);
     margin: 24px 16px;
     margin-bottom: 8px;
+}
+
+.button-action-second1 {
+    --background: var(--ion-color-success);
+    --color: var(--ion-background-color);
 }

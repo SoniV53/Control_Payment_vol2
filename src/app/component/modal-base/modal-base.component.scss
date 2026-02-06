@@ -7,13 +7,12 @@
     display: flex;
     align-items: center;
     z-index: 3000;
-    flex-direction: column-reverse;
+    padding: 24px;
 }
 
 .popup-content {
     background-color: var(--ion-background-color-second);
-    border-top-left-radius: var(--esquina-04);
-    border-top-right-radius: var(--esquina-04);
+    border-radius: var(--esquina-04);
     width: 100%;
     position: relative;
     display: flex;
@@ -59,4 +58,15 @@
 .close-button::part(icon) {
     width: 16px;
     height: 16px;
+}
+
+.popup-backdrop-bottom {
+    flex-direction: column-reverse;
+    padding: 0px;
+    .popup-content {
+        border-radius: 0px;
+        background-color: var(--ion-background-color-second);
+        border-top-left-radius: var(--esquina-04);
+        border-top-right-radius: var(--esquina-04);
+    }
 }

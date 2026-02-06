@@ -31,7 +31,7 @@ export class AddPaymentPage extends BasePage implements OnInit {
   }
 
   getRecurrentes() {
-      this.baseService(async (params) => {
+      this.baseService(async () => {
         this.showLoader()
         this.listadoGastosRecurrentes = await this.gastoService.getGastosRecurrentes();
         

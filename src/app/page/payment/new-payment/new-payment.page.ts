@@ -91,7 +91,11 @@ export class NewPaymentPage extends BasePage implements OnInit {
   }
 
   async ionViewWillEnter() {
+
     await this.getCategorias();
+
+    console.log(this.listaFormulario)
+
   }
 
   async ngOnInit() {
@@ -206,7 +210,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
     if (!this.dataSelect) {
       return;
     }
-    const selectedDate = this.event.detail.value;
+    const selectedDate = this.event?.detail?.value;
     console.log('Fecha seleccionada:', selectedDate);
     if (!selectedDate) return;
 
@@ -223,12 +227,8 @@ export class NewPaymentPage extends BasePage implements OnInit {
   }
 
   async saveNewPayment() {
+    console.log(this.listaFormulario)
     this.baseService(async () => {
-      // const fechaEndItem = this.listaFormulario.find(item => item.id === 'fechaEnd');
-      // if (!fechaEndItem?.valueSelect) {
-      //   this.calculadoraFecha(this.listaFormulario.find(item => item.id === 'cuota')?.valueSelect);
-      // }
-
       const g: Gasto = {
         titulo: this.listaFormulario.find(item => item.id === 'titulo')?.valueSelect || '',
         descripcion: this.listaFormulario.find(item => item.id === 'descripcion')?.valueSelect || '',
@@ -254,20 +254,13 @@ export class NewPaymentPage extends BasePage implements OnInit {
         this.valueSegment === 'cuota' ?
           Number(this.listaFormulario.find(item => item.id === 'cuotaNum')?.valueSelect) || 1 : 1);
 
-      // await this.gastoService.addGastoCuota({
-      //   gasto_id: numId,
-      //   numero_cuota: this.valueSegment === 'cuota' ? Number(this.listaFormulario.find(item => item.id === 'cuotaNum')?.valueSelect) || 1 : 1,
-      //   monto_cuota: Number(this.listaFormulario.find(item => item.id === 'monto')?.valueSelect) || 0,
-      //   estado_cuota: 0,
-      //   fecha_pago: this.listaFormulario.find(item => item.id === 'fechaEnd')?.valueSelect || '',
-      // })
-
       this.getAlertSuccess('El gasto se ha guardado correctamente.');
       this.resetInputs();
       this.resetNavigation();
     }, async () => {
       this.getAlertError('No se pudieron cargar los gastos.');
     });
+
 
   }
 

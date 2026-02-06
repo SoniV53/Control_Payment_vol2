@@ -96,13 +96,13 @@ export class CategoriaPage extends BasePage implements OnInit {
         this.listCategoria.push(data);
       }
 
-      this.loadUpdateParam(UpdateListado.UPDATE_CATEGORIA,true);
+      this.loadUpdateParam(UpdateListado.UPDATE_CATEGORIA, true);
       console.log('Se Agrego correctamente:', this.listCategoria);
       this.resetData();
       //this.getCategorias();
     }, async () => {
       this.getAlertError('Paso algo inesperado');
-    },async()=>{
+    }, async () => {
       this.dissmissLoader();
     });
   }

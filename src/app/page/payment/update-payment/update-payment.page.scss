@@ -1,0 +1,44 @@
+ion-item {
+    padding: 0;
+    --min-height: auto;
+    margin-bottom: 0.3rem;
+}
+
+.inputs-form {
+    margin: 16px;
+    // overflow-y: scroll;
+    // height: auto;
+    //max-height: calc(100vh - (250px + 52px));
+    //box-sizing: content-box;
+}
+
+.inputs-ion {
+    .input:first-child {
+        margin-top: 0 !important;
+    }
+
+    .input {
+        margin-top: 24px;
+    }
+}
+
+ion-footer {
+    background-color: var(--ion-background-color-primary);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    //border-radius: 16px;
+}
+
+.segmet {
+    background-color: var(--ion-background-color-primary);
+    margin-top: 0px !important;
+}
+
+.ion-item {
+        --background: var(--ion-background-color-second90) !important;
+        border-radius: 4px;
+        .icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+    }

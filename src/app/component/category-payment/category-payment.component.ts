@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DetailsPaymentComponent } from "../details-payment/details-payment.component";
 import { CommonModule } from '@angular/common';
 import { Gasto } from 'src/app/core/models/gasto.model';
@@ -17,6 +17,8 @@ export class CategoryPaymentComponent implements OnInit {
 
   @Input() dataGasto: Gasto[] = []
   @Input() dataCategoria?: Categoria
+  @Output() clickItem: EventEmitter<Gasto> = new EventEmitter<Gasto>();
+
 
   dataGastoCuota?: GastoCuota
 
@@ -44,5 +46,9 @@ export class CategoryPaymentComponent implements OnInit {
     })
 
     return formatearMonto(total);
+  }
+
+  clickDetalle(gasto:Gasto){
+    this.clickItem.emit(gasto);
   }
 }

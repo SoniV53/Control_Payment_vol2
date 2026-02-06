@@ -97,8 +97,8 @@ export const validarCuotasConRango = (
     return totalMeses === numeroCuotas;
 }
 
-const enum CatalogoTipoGasto{
+export enum CatalogoTipoGasto{
     NORMAL = 'normal',
     CUOTA = 'cuota',
-    REQUERRIDO = 'requerrido',
+    RECURRENTE = 'recurrente',
 }

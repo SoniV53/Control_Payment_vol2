@@ -1,0 +1,110 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <app-banner-top [toolBarData]="toolBar"></app-banner-top>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true" class="ion-padding">
+    <div *ngIf="gasto?.tipo === 'recurrente'">
+        <ion-item class="trans-item">
+            <p class="txt-item">Restablecer:</p>
+            <div slot="end" (click)="refreshRecurrente()"> <ion-icon [src]="getIcon('refresh-outline')"
+                    style="margin-left: 8px;"></ion-icon>
+            </div>
+        </ion-item>
+    </div>
+    <div *ngFor="let item of listadoDetalle">
+        <ion-item class="trans-item">
+            <p slot="start">{{item.titulo}}</p>
+            <p slot="end" class="txt-item" style="margin-right: 0px !important;">{{item.valor}}</p>
+        </ion-item>
+    </div>
+    <div *ngIf="listadoDetalle.length" style="height: 1px; background-color: #EFF2F6; margin: 0.5rem 1rem;"></div>
+
+    <div>
+        <div class="inputs-form">
+            <div class="inputs-ion">
+                <form #f="ngForm">
+                    <div class="input" *ngFor="let form of listaFormulario">
+                        <div [ngSwitch]="form.tipo">
+
+                            <div *ngSwitchCase="'select'">
+                                <selector-simple [defaultSelect]="false"
+                                    [open]="this.showPopup && tipoModalUse === 'select'"
+                                    [valueSelect]="form.valueSelect" [icon]="form.icon"
+                                    (clickItem)="onClickItemAction(form)" [label]="form.titulo" [name]="form.id"
+                                    [required]="form.required" [placeholder]="form.placeholder"
+                                    [list]="form?.list || []" [(ngModel)]="form.valueSelect"
+                                    (ionChange)="ionChangeInput(form)"></selector-simple>
+                            </div>
+                            <div *ngSwitchCase="'date'">
+                                <input-simple (click)="clickDateModal(form)" [label]="form.titulo" [name]="form.id"
+                                    [required]="form.required" type="date" [placeholder]="form.placeholder"
+                                    [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)"
+                                    (ionInput)="ionChangeInput(form)" [readonly]="true"></input-simple>
+                            </div>
+
+                            <div *ngSwitchDefault>
+                                <input-simple [label]="form.titulo" [name]="form.id" [required]="form.required"
+                                    [type]="form.tipo" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect"
+                                    (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"></input-simple>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+
+                <ion-toggle [checked]="isCheckCancel"  [(ngModel)]="isCheckCancel">{{!isCheckCancel ? 'Cancelar:':'Pagado:'}}</ion-toggle>
+
+                <div style="margin-top: 24px;" *ngIf="gasto?.tipo === 'normal'">
+                    <ion-toggle (ionChange)="ionChangeToggle()" aria-label="Enable Notifications" [checked]="isCheck"
+                        [(ngModel)]="isCheck">Actualizar a
+                        Recurrente:</ion-toggle>
+                </div>
+
+
+
+
+            </div>
+            <p style="padding-top: 16px;">{{notaMsg}}</p>
+
+        </div>
+    </div>
+    <div class="footer-button" style="margin: 16px;">
+        <!-- <ion-button class="button-action-second" expand="block" (click)="updatePayment()"
+            [disabled]="disabledButton">Actualizar</ion-button> -->
+
+        <app-button-simple textLeft="Actualizar" textRight="Eliminar" [isRightbtnHiden]="isDeleteHiden"
+            (clickRigthButton)="deletePayment()" (clickLeftButton)="updatePayment()"></app-button-simple>
+
+    </div>
+
+
+</ion-content>
+
+
+<app-modal-base *ngIf="showPopup" [showPopup]="showPopup" (closePopupClick)="closePopupClick()"
+    [isButtonClsHidden]="true">
+
+    <div *ngIf="tipoModalUse === 'select'" class="modal-sheet">
+        <br>
+        <div *ngFor="let data of dataListaSelect">
+            <ion-item class="ion-item" (click)="onClickItem(data)">
+                <ion-icon [src]="getIcon(data.icon || '')" class="icon"></ion-icon>
+                <ion-label>{{data.value}}</ion-label>
+            </ion-item>
+        </div>
+
+        <div *ngIf="!dataListaSelect.length">
+            <empty-base [dataCard]="dataCard"></empty-base>
+
+
+            <br>
+        </div>
+        <ion-button class="button-action-second " expand="block" [routerLink]="['/categoria']">Crear Categoria
+        </ion-button>
+    </div>
+
+</app-modal-base>

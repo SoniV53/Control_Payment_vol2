@@ -4,7 +4,7 @@ import { Gasto } from '../core/models/gasto.model';
 import { Capacitor } from '@capacitor/core';
 import { GastoCuota } from '../core/models/gasto-cuota.model';
 import { Presupuesto } from '../core/models/presupuesto.model';
-import { dateSearch, formatDate, getMesActual, getMesAnterior, validarCuotasConRango } from '../utils/Utils';
+import { CatalogoTipoGasto, dateSearch, formatDate, getMesActual, getMesAnterior, validarCuotasConRango } from '../utils/Utils';
 import { Categoria } from '../core/models/categoria.model';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { GastoRecurrente } from '../core/models/gasto_recurrente.model';
@@ -184,6 +184,24 @@ export class GastoServiceService {
     });
   }
 
+  async getGastosRecurrentesById(id: string): Promise<GastoRecurrente[]> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await this.dbService.getDB();
+
+        const result = await db.query(
+          `SELECT * FROM gasto_recurrente WHERE id = ?`, [id]
+        );
+
+        resolve(result.values ?? []);
+
+      } catch (error) {
+        console.error('Error obteniendo recurrentes:', error);
+        reject(error);
+      }
+    });
+  }
+
   async getNumeroCuota(fecha: string): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -273,37 +291,138 @@ export class GastoServiceService {
     });
   }
 
-  async updateGasto(g: Gasto): Promise<void> {
+  async updateGasto(g: Gasto, newRecurrente: boolean): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       try {
         const db = await this.dbService.getDB();
+        if (g.tipo === CatalogoTipoGasto.CUOTA) {
+          if (g.gastoCuota) {
+            await db.run(
+              `UPDATE gasto_cuota SET
+                monto_cuota = ?,
+                estado_cuota = ?
+              WHERE id = ?`,
+              [
+                g.gastoCuota.monto_cuota,
+                g.gastoCuota.estado_cuota ?? 0,
+                g.gastoCuota.id
+              ]
+            );
+          }
 
-        await db.run(
-          `UPDATE gasto SET
-          titulo = ?,
-          monto = ?,
-          descripcion = ?,
-          cuotas = ?,
-          fecha = ?,
-          tipo = ?,
-          etiquetas = ?,
-          categoria_id = ?,
-          estado = ?
-        WHERE id = ?`,
-          [
-            g.titulo,
-            g.monto,
-            g.descripcion ?? null,
-            g.cuotas ?? 0,
-            g.fecha,
-            g.tipo,
-            g.etiquetas ?? null,
-            g.categoria_id ?? null,
-            g.estado ?? 0,
-            g.id
-          ]
-        );
+        } else {
+          newRecurrente = g.tipo === CatalogoTipoGasto.NORMAL ? newRecurrente : false;
 
+          let idRecurrente = g.recurrente_id;
+
+          if (newRecurrente) {
+            idRecurrente = await this.addGastoRecurrente({
+              titulo: g.titulo,
+              monto: g.monto,
+              fechaInicio: g.fecha,
+              frecuencia: 'mensual',
+              proxima_fecha: '',
+              categoria_id: g.categoria_id,
+              descripcion: g.descripcion,
+              activo: 1
+            });
+
+            g.tipo = 'recurrente'
+            g.recurrente_id = idRecurrente;
+          }
+
+          await db.run(
+            `UPDATE gasto SET
+              titulo = ?,
+              monto = ?,
+              descripcion = ?,
+              tipo = ?,
+              categoria_id = ?,
+              recurrente_id = ?,
+              estado = ?
+            WHERE id = ?`,
+            [
+              g.titulo,
+              g.monto,
+              g.descripcion ?? null,
+              g.tipo,
+              g.categoria_id ?? null,
+              g.recurrente_id ?? null,
+              g.estado ?? 0,
+              g.id
+            ]
+          );
+        }
+
+
+
+
+        resolve();
+      } catch (error) {
+        console.error('Error actualizando gasto:', error);
+        reject(error);
+      }
+    });
+  }
+
+  async updateEstadoGasto(g: Gasto): Promise<void> {
+    return new Promise<void>(async (resolve, reject) => {
+      try {
+        const db = await this.dbService.getDB();
+        if (g?.tipo === CatalogoTipoGasto.CUOTA && g.gastoCuota) {
+          await db.run(
+            `UPDATE gasto_cuota SET
+              estado_cuota = ?
+            WHERE id = ?`,
+            [
+              g.gastoCuota.estado_cuota ?? 0,
+              g.gastoCuota.id
+            ]
+          );
+
+        } else {
+          await db.run(
+            `UPDATE gasto SET 
+              estado = ?
+            WHERE id = ?`,
+            [
+              g.estado ?? 0,
+              g.id
+            ]
+          );
+        }
+        resolve();
+
+      } catch (error) {
+        console.error('Error actualizando gasto:', error);
+        reject(error);
+      }
+    });
+  }
+
+  async eliminarEstadoGasto(g: Gasto): Promise<void> {
+    return new Promise<void>(async (resolve, reject) => {
+      try {
+        const db = await this.dbService.getDB();
+        if (g?.tipo === CatalogoTipoGasto.NORMAL) {
+          await db.run(`DELETE FROM gasto WHERE id = ?`, [g.id]);
+        } else if (g?.tipo === CatalogoTipoGasto.RECURRENTE) {
+          await db.run(
+            `UPDATE gasto SET 
+              estado = 2
+            WHERE id = ?`,
+            [g.id]
+          );
+        } else if (g.gastoCuota) {
+          await db.run(
+            `UPDATE gasto_cuota SET
+              estado_cuota = 2
+            WHERE id = ?`,
+            [
+              g.gastoCuota.id
+            ]
+          );
+        }
         resolve();
 
       } catch (error) {

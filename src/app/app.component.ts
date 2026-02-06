@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, IonTabs, IonTabBar, IonTabButton, IonIcon } from '@ionic/angular/standalone';
 import { updateParams } from './utils/update-params';
+import { addIcons } from 'ionicons';
+import { addCircleOutline, clipboardOutline, fileTrayStackedOutline, homeOutline, library, search, starOutline } from 'ionicons/icons';
+import { NavCtrl } from './services/nav-ctrl';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet],
+  imports: [IonIcon, IonTabButton, IonTabBar, IonTabs, IonApp, IonRouterOutlet],
 })
 export class AppComponent {
   dateToday = '';
@@ -13,7 +16,7 @@ export class AppComponent {
 
   writterParams = updateParams();
 
-  constructor() {
+  constructor(public navCtrl: NavCtrl) {
     this.toggleTheme(false)
 
     const date = new Date();
@@ -26,7 +29,8 @@ export class AppComponent {
     this.dateSelected = !nombre ? this.dateToday : nombre;
 
     localStorage.setItem('date', this.dateSelected);
-    
+    addIcons({ homeOutline, addCircleOutline, clipboardOutline, fileTrayStackedOutline, starOutline, library, search });
+
   }
 
   toggleTheme(isDark: boolean) {
@@ -59,5 +63,8 @@ export class AppComponent {
 
     return [year, month, day];
   }
-  
+
+  tabNavegation(nav:string){
+    this.navCtrl.setRoot(nav);
+  }
 }

@@ -7,7 +7,7 @@ export interface Gasto {
   descripcion?: string | null;
   cuotas?: number;
   fecha: string;
-  fechaEnd?: string;
+  fechaEnd?: string | null;
   tipo: string;// normal, cuota, recurrente
   etiquetas?: string | null;
   categoria_id?: number | null;

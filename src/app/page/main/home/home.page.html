@@ -28,7 +28,7 @@
                 <ion-grid style="padding: 0; ">
                     <ion-row class="ion-justify-content-center">
                         <ion-col size="6" *ngFor="let col of ionRow">
-                            <app-card-option [dataCard]="col" [routerLink]="[col?.routerLink || '/tabs/home']"></app-card-option>
+                            <app-card-option [dataCard]="col" (click)="navegacion(col.routerLink)"></app-card-option>
                         </ion-col>
                     </ion-row>
                     <!-- <ion-row class="ion-justify-content-center">
@@ -55,7 +55,9 @@
     </div>
 </ion-content>
 
-<app-modal-base *ngIf="showPopup && this.myApp.dateSelected" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
-    <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="this.myApp.dateSelected" [max]="maxYear">
+<app-modal-base *ngIf="showPopup && this.myApp.dateSelected" [showPopup]="showPopup"
+    (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
+    <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)"
+        class="custom-date" [value]="this.myApp.dateSelected" [max]="maxYear">
     </ion-datetime>
 </app-modal-base>

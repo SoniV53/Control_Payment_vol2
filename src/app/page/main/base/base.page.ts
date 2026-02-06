@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonFooter } from '@ionic/angular/standalone';
-import { Router } from '@angular/router';
+import { Route, Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 import { GastoServiceService } from 'src/app/services/gasto-service.service';
 import Swal from 'sweetalert2';
@@ -14,18 +14,22 @@ import { getIconPath } from 'src/app/utils/Utils';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
 import { UpdateListado, UpdateParamData } from 'src/app/utils/update-params';
 import { ControlGastosAutomaticosService } from 'src/app/services/control-gastos-automaticos.service';
+import { ToastController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
+import { NavCtrl } from 'src/app/services/nav-ctrl';
 
 @Component({
   selector: 'app-base',
   templateUrl: './base.page.html',
   styleUrls: ['./base.page.scss'],
   standalone: true,
-  imports: [IonFooter,
+  imports: [
     CommonModule,
     FormsModule,
   ]
 })
 export class BasePage {
+
   meses = [
     { id: '01', nombre: 'Enero' },
     { id: '02', nombre: 'Febrero' },
@@ -46,7 +50,9 @@ export class BasePage {
   constructor(public router: Router, public myApp: AppComponent,
     public gastoService: GastoServiceService,
     public fb: FormBuilder, public categoriaService: CategoriaServiceService,
-    public controlService: ControlGastosAutomaticosService) {
+    public controlService: ControlGastosAutomaticosService,
+    public toastController: ToastController,
+    public navCtrl: NavCtrl) {
     const date = new Date();
     const year = date.getFullYear();
 
@@ -98,11 +104,11 @@ export class BasePage {
   }
 
 
-  async baseService(callback: (updateParams: Record<UpdateListado, UpdateParamData>) => Promise<void>, callError?: () => Promise<void>, callFinally?: () => Promise<void>, addCapasitorCheck: boolean = true) {
+  async baseService(callback: () => Promise<void>, callError?: () => Promise<void>, callFinally?: () => Promise<void>, addCapasitorCheck: boolean = true) {
     try {
       if (Capacitor.getPlatform() === 'web' && addCapasitorCheck) return;
       //throw new Error('Funcionalidad no disponible en la plataforma web.');
-      return await callback(this.myApp.writterParams);
+      return await callback();
     } catch (error) {
       console.error('Error obteniendo gastos:', error);
       if (callError) {
@@ -112,7 +118,7 @@ export class BasePage {
       if (callFinally) {
         return await callFinally();
       }
-      
+
     }
   }
 
@@ -128,11 +134,11 @@ export class BasePage {
   }
 
   loadUpdateParam(name: UpdateListado, value: boolean = false) {
-    this.myApp.writterParams[name].isLoad = value;
+    //this.myApp.writterParams[name].isLoad = value;
   }
 
-  getUpdateParam(name: UpdateListado): boolean {
-    return this.myApp.writterParams[name].isLoad;
+  getUpdateParam(name: UpdateListado) {
+    //return this.myApp.writterParams[name].isLoad;
   }
 
   showLoader() {
@@ -143,7 +149,50 @@ export class BasePage {
     this.loaderNav = false;
   }
 
-  resetNavigation(){
-    this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
+  resetNavigation() {
+    this.navCtrl.setRoot('HomePage');
+  }
+
+  historialNavigation() {
+    console.log(this.navCtrl.getHistorial());
+    return this.navCtrl.getHistorial();
+  }
+
+  async toastMessage(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 2000,
+      position: 'bottom'
+    });
+
+    await toast.present();
+  }
+
+  async getParametros() {
+    const response = await this.navCtrl.getParams()
+    return response;
+  }
+
+
+  modalDelete(callback: () => Promise<void>) {
+    Swal.fire({
+      title: "Estas Seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, ¡eliminalo!",
+      heightAuto: false,
+      width: 500,
+      padding: "3em",
+      color: "var(--ion-background-color)",
+      customClass: {
+        title: 'swal-title-small',
+        htmlContainer: 'swal-text-small'
+      },
+    }).then((result) => {
+      callback();
+    });
   }
 }

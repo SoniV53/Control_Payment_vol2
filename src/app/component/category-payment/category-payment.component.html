@@ -16,7 +16,7 @@
 
     <div *ngIf="mostrar" style="margin-bottom: 8px;">
         <div *ngFor="let gasto of dataGasto">
-            <app-details-payment [dataGasto]="gasto"></app-details-payment>
+            <app-details-payment [dataGasto]="gasto" (click)="clickDetalle(gasto)"></app-details-payment>
         </div>
     </div>
 

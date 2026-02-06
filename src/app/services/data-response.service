@@ -1,0 +1,118 @@
+import { Injectable } from '@angular/core';
+import { Categoria } from '../core/models/categoria.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataResponseService {
+  private categoriaOb = new BehaviorSubject<Categoria | null>(null);
+  public listadoCategoria: Categoria[] = [
+    {
+      "id": 1,
+      "icono": "fast-food-outline",
+      "nombre": "comida",
+      "totalMonto": 0,
+      "dataGasto": [
+        {
+          "id": 3,
+          "titulo": "recurrete",
+          "monto": 3600,
+          "descripcion": "",
+          "cuotas": 1,
+          "fecha": "2026-02-01",
+          "fechaEnd": null,
+          "tipo": "normal",
+          "etiquetas": "",
+          "categoria_id": 1,
+          "recurrente_id": 1,
+          "estado": 0
+        },
+        {
+          "id": 2,
+          "titulo": "cuota",
+          "monto": 3600,
+          "descripcion": "",
+          "cuotas": 12,
+          "fecha": "2026-02-01",
+          "fechaEnd": "2027-01-01",
+          "tipo": "cuota",
+          "etiquetas": "",
+          "categoria_id": 1,
+          "recurrente_id": null,
+          "estado": 0,
+          "gastoCuota": {
+            "id": 1,
+            "gasto_id": 2,
+            "numero_cuota": 1,
+            "monto_cuota": 300,
+            "fecha_pago": "2026-02-01",
+            "estado_cuota": 0
+          }
+        },
+
+        {
+          "id": 3,
+          "titulo": "cuota ss",
+          "monto": 3600,
+          "descripcion": "",
+          "cuotas": 12,
+          "fecha": "2026-02-01",
+          "fechaEnd": "2027-01-01",
+          "tipo": "cuota",
+          "etiquetas": "",
+          "categoria_id": 1,
+          "recurrente_id": null,
+          "estado": 0,
+          "gastoCuota": {
+            "id": 1,
+            "gasto_id": 2,
+            "numero_cuota": 1,
+            "monto_cuota": 300,
+            "fecha_pago": "2026-02-01",
+            "estado_cuota": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "icono": "business-outline",
+      "nombre": "papas",
+      "totalMonto": 0,
+      "dataGasto": [
+        {
+          "id": 7,
+          "titulo": "hwh",
+          "monto": 64,
+          "descripcion": "",
+          "cuotas": 1,
+          "fecha": "2026-02-01",
+          "fechaEnd": null,
+          "tipo": "recurrente",
+          "etiquetas": "",
+          "categoria_id": 2,
+          "recurrente_id": 4,
+          "estado": 0
+        },
+      ]
+    }
+  ];
+
+  constructor() { }
+
+
+  setCategoriaData(data: Categoria): void {
+    this.categoriaOb.next(data);
+  }
+
+  getCategoriaData$(): Observable<Categoria | null> {
+    return this.categoriaOb.asObservable();
+  }
+
+  //  private transferenciaSub?: Subscription;
+  //if (!this.transferenciaSub) {
+  //this.transferenciaSub = await this.transferenciaService.getTransferenciaData$().subscribe(async (data) => {
+  //this.transferenciaSub.unsubscribe();
+
+}

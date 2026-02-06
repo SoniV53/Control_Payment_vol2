@@ -1,0 +1,26 @@
+.titulo {
+    border-radius: 16px;
+    padding: 8px 16px;
+    text-align: center;
+    background-color: var(--color-black-text-opacity70);
+    margin-bottom: 16px;
+    p {
+        font-size: 24px;
+    }
+}
+
+.item-buttom {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    ion-button {
+        width: 80%;
+    }
+}
+
+.item-buttom:has(> :nth-child(2):last-child) {
+    justify-content: space-between;
+    ion-button {
+        width: 45%;
+    }
+}

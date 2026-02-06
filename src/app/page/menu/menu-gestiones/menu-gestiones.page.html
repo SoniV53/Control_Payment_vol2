@@ -10,7 +10,7 @@
                 <p>{{cat.title}}</p>
             </div>
             <div *ngFor="let col of cat.listado">
-                <app-card-option [dataCard]="col" [routerLink]="[col?.routerLink || '/tabs/home']" [tipo]="'list'"></app-card-option>
+                <app-card-option [dataCard]="col" [routerLink]="[col?.routerLink || '/home']" [tipo]="'list'"></app-card-option>
             </div>
         </div>
     </div>

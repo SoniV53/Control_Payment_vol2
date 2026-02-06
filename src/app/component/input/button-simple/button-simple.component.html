@@ -1,0 +1,8 @@
+<div class="item-buttom">
+    <ion-button *ngIf="!isLeftbtnHiden" shape="round" class="button-action-second1"
+        [style]="{'--color':colorStyle(colorL),'--background':backgroudStyle(backgroudL)}" (click)="onClickLeft()"
+        [disabled]="disabledL">{{textLeft}}</ion-button>
+    <ion-button shape="round" class="button-action-second1" *ngIf="!isRightbtnHiden"
+        [style]="{'--color':colorStyle(colorR),'--background':backgroudStyle(backgroudR)}" (click)="onClickRight()"
+        [disabled]="disabledR">{{textRight}}</ion-button>
+</div>
