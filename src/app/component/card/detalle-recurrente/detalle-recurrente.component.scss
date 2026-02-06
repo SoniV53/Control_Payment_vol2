@@ -1,0 +1,22 @@
+.items-detalle {
+    width: 100%;
+    margin: 8px 0px;
+    margin-left: 8px;
+}
+
+ion-item {
+    border-radius: 8px;
+    --inner-padding-start: 0;
+    --inner-padding-end: 0;
+    --padding-start: 0;
+
+    --min-height: 24px;
+}
+
+ion-label {
+    margin: 0px !important;
+}
+
+ion-icon {
+    margin-right: 8px;
+}

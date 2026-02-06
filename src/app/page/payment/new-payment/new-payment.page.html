@@ -4,7 +4,6 @@
     </ion-toolbar>
 </ion-header>
 
-
 <ion-content [fullscreen]="true" class="ion-padding">
     <div>
         <div class="inputs-form">
@@ -14,15 +13,25 @@
                         <div [ngSwitch]="form.tipo">
 
                             <div *ngSwitchCase="'select'">
-                                <selector-simple [defaultSelect]="false" [open]="this.showPopup && tipoModalUse === 'select'" [valueSelect]="form.valueSelect" [icon]="form.icon" (clickItem)="onClickItemAction(form)" [label]="form.titulo" [name]="form.id" [required]="form.required" [placeholder]="form.placeholder"
-                                    [list]="form?.list || []" [(ngModel)]="form.valueSelect" (ionChange)="ionChangeInput(form)"></selector-simple>
+                                <selector-simple [defaultSelect]="false"
+                                    [open]="this.showPopup && tipoModalUse === 'select'"
+                                    [valueSelect]="form.valueSelect" [icon]="form.icon"
+                                    (clickItem)="onClickItemAction(form)" [label]="form.titulo" [name]="form.id"
+                                    [required]="form.required" [placeholder]="form.placeholder"
+                                    [list]="form?.list || []" [(ngModel)]="form.valueSelect"
+                                    (ionChange)="ionChangeInput(form)"></selector-simple>
                             </div>
                             <div *ngSwitchCase="'date'">
-                                <input-simple (click)="clickDateModal(form)" [label]="form.titulo" [name]="form.id" [required]="form.required" type="date" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)" [readonly]="true"></input-simple>
+                                <input-simple (click)="clickDateModal(form)" [label]="form.titulo" [name]="form.id"
+                                    [required]="form.required" type="date" [placeholder]="form.placeholder"
+                                    [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)"
+                                    (ionInput)="ionChangeInput(form)" [readonly]="true"></input-simple>
                             </div>
 
                             <div *ngSwitchDefault>
-                                <input-simple [label]="form.titulo" [name]="form.id" [required]="form.required" [type]="form.tipo" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"></input-simple>
+                                <input-simple [label]="form.titulo" [name]="form.id" [required]="form.required"
+                                    [type]="form.tipo" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect"
+                                    (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"></input-simple>
                             </div>
 
                         </div>
@@ -32,7 +41,8 @@
 
 
                 <div style="margin-top: 24px;" *ngIf="valueSegment === 'normal'">
-                    <ion-toggle aria-label="Enable Notifications" [checked]="isCheck" [(ngModel)]="isCheck">Agregar Recurrente:</ion-toggle>
+                    <ion-toggle aria-label="Enable Notifications" [checked]="isCheck" [(ngModel)]="isCheck">Agregar
+                        Recurrente:</ion-toggle>
                 </div>
 
 
@@ -42,27 +52,33 @@
         </div>
     </div>
     <div class="footer-button">
-        <ion-button class="button-action-second" expand="block" (click)="saveNewPayment()" [disabled]="disabledButton">Aceptar</ion-button>
+        <ion-button class="button-action-second" expand="block" (click)="saveNewPayment()"
+            [disabled]="disabledButton">Aceptar</ion-button>
     </div>
 
 </ion-content>
 
-<ion-footer class="ion-no-border footer" *ngIf="!showPopup">
-    <ion-toolbar class="segmet">
-        <ion-segment [(ngModel)]="valueSegment" (ionChange)="clickSegment(valueSegment)">
-            <ion-segment-button value="normal">
-                <ion-label>Mensual</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="cuota">
-                <ion-label>Cuota</ion-label>
-            </ion-segment-button>
-        </ion-segment>
-    </ion-toolbar>
-</ion-footer>
+<div style="margin: 0 16px;">
+    <ion-footer class="ion-no-border footer" *ngIf="!showPopup">
+        <ion-toolbar class="segmet">
+            <ion-segment [(ngModel)]="valueSegment" (ionChange)="clickSegment(valueSegment)">
+                <ion-segment-button value="normal">
+                    <ion-label>Mensual</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="cuota">
+                    <ion-label>Cuota</ion-label>
+                </ion-segment-button>
+            </ion-segment>
+        </ion-toolbar>
+    </ion-footer>
+</div>
 
-<app-modal-base *ngIf="showPopup" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="true">
+<app-modal-base *ngIf="showPopup" [showPopup]="showPopup" (closePopupClick)="closePopupClick()"
+    [isButtonClsHidden]="true">
     <div *ngIf="tipoModalUse === 'date' && dataSelect">
-        <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="dataSelect.valueSelect || ''" [max]="maxYear">
+        <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar"
+            (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="dataSelect.valueSelect || ''"
+            [max]="maxYear">
         </ion-datetime>
     </div>
 

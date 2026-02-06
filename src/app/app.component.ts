@@ -65,6 +65,7 @@ export class AppComponent {
   }
 
   tabNavegation(nav:string){
-    this.navCtrl.setRoot(nav);
+    //this.navCtrl.setRoot(nav);
+    this.navCtrl.push(nav);
   }
 }

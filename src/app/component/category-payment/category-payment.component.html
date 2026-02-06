@@ -15,8 +15,22 @@
 
 
     <div *ngIf="mostrar" style="margin-bottom: 8px;">
-        <div *ngFor="let gasto of dataGasto">
-            <app-details-payment [dataGasto]="gasto" (click)="clickDetalle(gasto)"></app-details-payment>
+        <ion-accordion-group expand="inset" *ngIf="isRecurrente">
+            <ion-accordion *ngFor="let gasto of dataGasto" [value]="gasto.id">
+                <ion-item slot="header" color="light">
+                    <ion-label>{{gasto.titulo}}</ion-label>
+                </ion-item>
+                <div class="ion-padding" slot="content">
+                   <app-detalle-recurrente [gastoData]="gasto"></app-detalle-recurrente>
+                </div>
+            </ion-accordion>
+        </ion-accordion-group>
+
+
+        <div *ngIf="!isRecurrente">
+            <div *ngFor="let gasto of dataGasto">
+                <app-details-payment [dataGasto]="gasto" (click)="clickDetalle(gasto)"></app-details-payment>
+            </div>
         </div>
     </div>
 

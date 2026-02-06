@@ -1,0 +1,28 @@
+<div>
+
+  <ion-item>
+    <div class="items-detalle">
+      <ion-item>
+        <ion-label style="font-weight: bold;">Fecha:</ion-label>
+        <ion-label slot="end">{{formatearDate()}}</ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label style="font-weight: bold;">Monto:</ion-label>
+        <ion-label slot="end">{{formatearMonto()}}</ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label style="font-weight: bold;">Cantidad:</ion-label>
+        <ion-label slot="end">({{gastoData?.cantidad || 0}})</ion-label>
+      </ion-item>
+    </div>
+    <ion-icon [src]="getIcon('create-outline')" slot="end"></ion-icon>
+
+  </ion-item>
+
+  <div style="margin-top: 0px;">
+    <ion-toggle aria-label="Enable Notifications" (ionChange)="ionChangeToggle($event)"
+      [checked]="isCheck">Desabilitar:</ion-toggle>
+  </div>
+</div>

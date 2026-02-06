@@ -13,7 +13,8 @@
         <ion-item class="trans-item">
             <p slot="start">Presupuesto:</p>
             <div slot="end" style="display: flex;" (click)="editarPresupuesto()">
-                <p style="text-align: end; font-weight: bold; font-size: 16px;">{{formatearMontoPr(form.valueSelect)}}</p>
+                <p style="text-align: end; font-weight: bold; font-size: 16px;">{{formatearMontoPr(form.valueSelect)}}
+                </p>
                 <ion-icon [src]="getIcon('create-outline')" style="margin-left: 8px;"></ion-icon>
             </div>
         </ion-item>
@@ -37,26 +38,33 @@
         </div> -->
 
         <div class="listado-gastos" *ngFor="let categoria of listCategoria">
-            <app-category-payment *ngIf="categoria.dataGasto?.length" (clickItem)="clickItem($event)" [dataCategoria]="categoria" [dataGasto]="categoria.dataGasto || []"></app-category-payment>
+            <app-category-payment *ngIf="categoria.dataGasto?.length" (clickItem)="clickItem($event)"
+                [dataCategoria]="categoria" [dataGasto]="categoria.dataGasto || []"></app-category-payment>
         </div>
     </div>
 </ion-content>
 
 
-<app-modal-base *ngIf="showPopup && this.myApp.dateSelected && !showModalInfo" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
+<app-modal-base *ngIf="showPopup && this.myApp.dateSelected && !showModalInfo" [showPopup]="showPopup"
+    (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
     <div *ngIf="!isEditar">
-        <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="this.myApp.dateSelected" [max]="maxYear || ''">
+        <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar"
+            (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="this.myApp.dateSelected"
+            [max]="maxYear || ''">
         </ion-datetime>
     </div>
     <div *ngIf="isEditar" class="input-presupuesto" id="div-presupuesto">
-        <input-simple (keyEnter)="blurInput(form); showPopup = false" [id]="form.id" [label]="form.titulo" [name]="form.id" [required]="form.required" [type]="form.tipo" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)"
-            (ionInput)="ionChangeInput(form)"></input-simple>
+        <input-simple (keyEnter)="blurInput(form); showPopup = false" [id]="form.id" [label]="form.titulo"
+            [name]="form.id" [required]="form.required" [type]="form.tipo" [placeholder]="form.placeholder"
+            [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"></input-simple>
     </div>
 
 </app-modal-base>
 
-<app-modal-base *ngIf="showModalInfo && !showPopup" [showPopup]="showModalInfo" (closePopupClick)="closePopupModalInfo()" [sheetBottom]="false" [isButtonClsHidden]="false">
+<app-modal-base *ngIf="showModalInfo && !showPopup" [showPopup]="showModalInfo"
+    (closePopupClick)="closePopupModalInfo()" [sheetBottom]="false" [isButtonClsHidden]="false">
     <div style="margin: 24px;">
-        <app-detalle-gasto [gastoSelect]="gastoSelect" (clickCheck)="clickUpdateCheck($event)" (clickDelete)="clickDeleteItem($event)" (clickEdit)="clickEditItem($event)"></app-detalle-gasto>
+        <app-detalle-gasto [gastoSelect]="gastoSelect" (clickCheck)="clickUpdateCheck($event)"
+            (clickDelete)="clickDeleteItem($event)" (clickEdit)="clickEditItem($event)"></app-detalle-gasto>
     </div>
 </app-modal-base>

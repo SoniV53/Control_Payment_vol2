@@ -1,3 +1,4 @@
+import { getMoths } from "./IconosList";
 
 export const getIconPath = (iconName: string, pordefecto: string = ''): string => {
     if (pordefecto)
@@ -97,7 +98,30 @@ export const validarCuotasConRango = (
     return totalMeses === numeroCuotas;
 }
 
-export enum CatalogoTipoGasto{
+export const getFragmentDate = (date: string | any): string[] => {
+    if (date) {
+        const selected = new Date(date);
+        const year = selected.getFullYear().toString();
+        const month = String(selected.getMonth() + 1).padStart(2, '0');
+        const day = String(selected.getDate()).padStart(2, '0');
+
+        return [year, month, day];
+    }
+    return []
+}
+
+export const getNameMonth = (month: string):string => {
+    const meses = getMoths()
+    const findMonth = meses.find(res => res.id === month);
+    if (findMonth) {
+        return findMonth.nombre
+    } else {
+        const num = Number(month) - 1;
+        return meses[num].nombre;
+    }
+}
+
+export enum CatalogoTipoGasto {
     NORMAL = 'normal',
     CUOTA = 'cuota',
     RECURRENTE = 'recurrente',

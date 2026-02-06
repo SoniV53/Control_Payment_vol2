@@ -171,9 +171,30 @@ export class GastoServiceService {
       try {
         const db = await this.dbService.getDB();
 
-        const result = await db.query(
-          `SELECT * FROM gasto_recurrente WHERE activo = 1`
-        );
+        // const result = await db.query(
+        //   `SELECT * FROM gasto_recurrente WHERE activo = 1`
+        // );
+
+        // let recurrentes: GastoRecurrente[] = result.values || []
+        // for (let g of recurrentes) {
+        //   const gasto = await db.query(
+        //     `SELECT * FROM gasto WHERE recurrente_id = ?`, [g.id]
+        //   );
+
+        //   g.cantidad = gasto.values?.length
+        // }
+
+        const result = await db.query(`
+          SELECT 
+            gr.*,
+            COUNT(g.id) AS cantidad
+          FROM gasto_recurrente gr
+          LEFT JOIN gasto g 
+            ON g.recurrente_id = gr.id
+          WHERE gr.activo = 1
+          GROUP BY gr.id
+        `);
+
 
         resolve(result.values ?? []);
 

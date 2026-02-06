@@ -72,6 +72,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
   ionViewDidLeave() {
     this.closePopupClick();
+   
   }
 
   insertInputs() {
@@ -120,7 +121,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
   }
 
   getCategorias() {
-    this.baseService(async () => {
+   return this.baseService(async () => {
       this.showLoader();
       const listCategoria = await this.categoriaService.getCategoriasActivas();
       const catego = this.listaFormularioMain.find(res => res.id === 'categoria');
@@ -227,8 +228,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
   }
 
   async saveNewPayment() {
-    console.log(this.listaFormulario)
-    this.baseService(async () => {
+   return this.baseService(async () => {
       const g: Gasto = {
         titulo: this.listaFormulario.find(item => item.id === 'titulo')?.valueSelect || '',
         descripcion: this.listaFormulario.find(item => item.id === 'descripcion')?.valueSelect || '',

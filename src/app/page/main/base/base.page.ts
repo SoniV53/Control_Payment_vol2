@@ -173,6 +173,16 @@ export class BasePage {
     return response;
   }
 
+  getNameMonth(month: string) {
+    const findMonth = this.meses.find(res => res.id === month);
+    if (findMonth) {
+      return findMonth.nombre
+    } else {
+      const num = Number(month) - 1;
+      return this.meses[num].nombre;
+    }
+  }
+
 
   modalDelete(callback: () => Promise<void>) {
     Swal.fire({

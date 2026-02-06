@@ -26,6 +26,8 @@ export class MenuGestionesPage extends BasePage implements OnInit {
     {
       title: 'Categorías:', listado: [
         { title: 'Categorías', routerLink: '/categoria', icon: 'albums-outline' },
+        { title: 'Historial', routerLink: '', icon: 'albums-outline' },
+        { title: 'Resumen', routerLink: '', icon: 'albums-outline' },
        // { title: 'Etiquetas', routerLink: '/gestiones' },
       ]
     },

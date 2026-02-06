@@ -1,16 +1,28 @@
-<ion-content [fullscreen]="false" [scrollY]="true">
-    <app-banner-top [toolBarData]="toolBar"></app-banner-top>
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <app-banner-top [toolBarData]="toolBar" [loader]="loaderNav"></app-banner-top>
+    </ion-toolbar>
+</ion-header>
 
-    <div class="content-background">
-        <br>
-        <div *ngFor="let rec of listadoGastosRecurrentes">
-            <p>{{rec.titulo}}</p>
-            <p>{{rec.fechaInicio}}</p>
-            <p>{{rec.monto}}</p>
-            <p>{{rec.id}}</p>
+<ion-content [fullscreen]="true" class="ion-padding">
+    <ion-segment [(ngModel)]="valueSegment" (ionChange)="clickSegment()">
+        <ion-segment-button value="recurrente" content-id="first">
+            <ion-label>Recurrentes</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="cuota" content-id="second">
+            <ion-label>Cuotas</ion-label>
+        </ion-segment-button>
+    </ion-segment>
 
-            <div style="height: 1px; background-color: #EFF2F6; margin: 0.4rem 1rem;"></div>
-        </div>
-    </div>
+    <ion-segment-view>
+        <ion-segment-content id="first" class="content-segment">
+            <div class="listado-gastos" *ngFor="let categoria of listCategoria">
+                <app-category-payment *ngIf="categoria.dataGasto?.length" (clickItem)="clickItem($event)"
+                    [dataCategoria]="categoria" [dataGasto]="categoria.dataGasto || []"
+                    [isRecurrente]="true"></app-category-payment>
+            </div>
+        </ion-segment-content>
+        <ion-segment-content id="second">Second</ion-segment-content>
+    </ion-segment-view>
 
 </ion-content>

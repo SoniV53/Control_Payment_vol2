@@ -1,4 +1,5 @@
 import { Gasto } from "./gasto.model";
+import { GastoRecurrente } from "./gasto_recurrente.model";
 
 export interface Categoria {
   id?: number;
@@ -6,5 +7,5 @@ export interface Categoria {
   icono: string;
   activo?: number;
   totalMonto?: number;
-  dataGasto?: Gasto[]
+  dataGasto?: Gasto[],
 }

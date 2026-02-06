@@ -14,5 +14,5 @@ export interface Gasto {
   recurrente_id?: number | null;
   estado?: number; // 0 pendiente, 1 pagado, 2 eliminado
   gastoCuota?:GastoCuota
-  
+  cantidad?:number
 }

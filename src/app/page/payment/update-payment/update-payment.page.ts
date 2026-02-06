@@ -453,15 +453,7 @@ export class UpdatePaymentPage extends BasePage implements OnInit {
 
   }
 
-  getNameMonth(month: string) {
-    const findMonth = this.meses.find(res => res.id === month);
-    if (findMonth) {
-      return findMonth.nombre
-    } else {
-      const num = Number(month) - 1;
-      return this.meses[num].nombre;
-    }
-  }
+  
 
   findFormId(value: string) {
     return this.listaFormulario.find(res => res.id === value);
