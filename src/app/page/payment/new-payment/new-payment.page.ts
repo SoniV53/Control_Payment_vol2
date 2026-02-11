@@ -70,6 +70,8 @@ export class NewPaymentPage extends BasePage implements OnInit {
   isCheck: boolean = false;
   event: any;
 
+  isStartLoad:boolean = false;
+
   ionViewDidLeave() {
     this.closePopupClick();
    
@@ -81,7 +83,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
       //{ id: 'descripcion', titulo: 'Descripcion', isError: false, placeholder: 'Ingrese la descripcion del gasto', tipo: 'text', required: false },
       { id: 'monto', titulo: 'Monto', isError: false, placeholder: 'Ingrese el monto del gasto', tipo: 'number', required: true },
       {
-        id: 'categoria', titulo: 'Categoria', isError: false, placeholder: 'Seleccione la categoria del gasto', tipo: 'select', required: false, list: []
+        id: 'categoria', titulo: 'Categoria', isError: false, placeholder: 'Seleccione la categoria del gasto', tipo: 'select', required: true, list: []
       },
       //{ id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.myApp.dateSelected }
 
@@ -92,23 +94,12 @@ export class NewPaymentPage extends BasePage implements OnInit {
   }
 
   async ionViewWillEnter() {
-
     await this.getCategorias();
-
-    console.log(this.listaFormulario)
-
+    this.clickSegment(this.valueSegment);
   }
 
   async ngOnInit() {
-    this.insertInputs();
-
-
-    // console.log('Fecha actual formateada (YYYY-MM-DD):', this.myApp.dateToday);
-    // const fechaForm = this.listaFormulario.find(item => item.id === 'fecha');
-    // if (fechaForm) {
-    //   fechaForm.valueSelect = this.myApp.dateToday;
-    // }
-
+     this.insertInputs();
   }
 
   resetInputs() {

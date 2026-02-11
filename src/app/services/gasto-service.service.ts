@@ -195,7 +195,6 @@ export class GastoServiceService {
           GROUP BY gr.id
         `);
 
-
         resolve(result.values ?? []);
 
       } catch (error) {
@@ -293,14 +292,14 @@ export class GastoServiceService {
     });
   }
 
-  async desactivarGastoRecurrente(id: number): Promise<void> {
+  async desactivarGastoRecurrente(id: number,isCheck:boolean): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       try {
         const db = await this.dbService.getDB();
-
+        const activar = isCheck ? 0 : 1;
         await db.run(
-          `UPDATE gasto_recurrente SET activo = 0 WHERE id = ?`,
-          [id]
+          `UPDATE gasto_recurrente SET activo = ? WHERE id = ?`,
+          [activar,id]
         );
 
         resolve();

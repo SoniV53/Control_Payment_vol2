@@ -2,7 +2,7 @@
     <div class="nav-cat" (click)="onClickMostrar()">
         <ion-item>
             <ion-icon [src]="getIcon(dataCategoria?.icono || '')" slot="start"></ion-icon>
-            <h3>{{dataCategoria?.nombre || ''}} ({{dataGasto.length}})</h3>
+            <h3>{{dataCategoria?.nombre || ''}} ({{cantidadGastos()}})</h3>
             <div class="p-label" slot="end">
                 <p>({{getTotalCategoriaMonto()}})</p>
             </div>
@@ -21,7 +21,7 @@
                     <ion-label>{{gasto.titulo}}</ion-label>
                 </ion-item>
                 <div class="ion-padding" slot="content">
-                   <app-detalle-recurrente [gastoData]="gasto"></app-detalle-recurrente>
+                   <app-detalle-recurrente [gastoData]="gasto" (changeToggle)="onChangeToggle($event,gasto)"></app-detalle-recurrente>
                 </div>
             </ion-accordion>
         </ion-accordion-group>

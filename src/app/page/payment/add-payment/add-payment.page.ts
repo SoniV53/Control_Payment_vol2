@@ -26,7 +26,7 @@ export class AddPaymentPage extends BasePage implements OnInit {
   listadoGastosRecurrentes: GastoRecurrente[] = []
   listCategoria: Categoria[] = []
 
-  valueSegment:string = 'recurrente'
+  valueSegment: string = 'recurrente'
 
   ngOnInit() {
   }
@@ -101,7 +101,31 @@ export class AddPaymentPage extends BasePage implements OnInit {
     });
   }
 
-  clickItem(cate: Gasto) { }
+  clickItem(cate: Gasto) {
+    console.log("nania")
+
+  }
+
+  changeToggle(data: any) {
+    console.log(data)
+    if (!data) {
+      return;
+    }
+    const gasto: Gasto = data.gasto;
+    const isCheck: boolean = data.isCheck;
+    
+    this.baseService(async () => {
+      this.showLoader()
+      await this.gastoService.desactivarGastoRecurrente(gasto.id || 0, isCheck);
+
+      this.toastMessage("Se actualizo correctamente")
+    }, async () => {
+      this.getAlertError('No se pudieron cargar.');
+    }, async () => {
+      this.dissmissLoader();
+    });
+
+  }
 
   modelAToModelB(a: GastoRecurrente): Gasto {
     return {
@@ -116,7 +140,7 @@ export class AddPaymentPage extends BasePage implements OnInit {
     };
   }
 
-  clickSegment(){
-    
+  clickSegment() {
+
   }
 }

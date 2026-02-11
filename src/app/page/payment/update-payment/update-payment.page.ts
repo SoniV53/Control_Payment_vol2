@@ -123,7 +123,7 @@ export class UpdatePaymentPage extends BasePage implements OnInit {
         { id: 'monto', titulo: 'Monto', isError: false, placeholder: 'Ingrese el monto del gasto', tipo: 'number', required: true, valueSelect: this.gasto.monto },
         {
           id: 'categoria', titulo: 'Categoria', isError: false, placeholder: 'Seleccione la categoria del gasto', tipo: 'select',
-          required: false, list: []
+          required: true, list: []
         },
       ]
       if (categoria) {
@@ -159,7 +159,7 @@ export class UpdatePaymentPage extends BasePage implements OnInit {
         },
         { id: 'monto', titulo: 'Monto', isError: false, placeholder: 'Ingrese el monto del gasto', tipo: 'number', required: true, valueSelect: this.gasto.monto },
         {
-          id: 'categoria', titulo: 'Categoria', isError: false, placeholder: 'Seleccione la categoria del gasto', tipo: 'select', required: false, list: []
+          id: 'categoria', titulo: 'Categoria', isError: false, placeholder: 'Seleccione la categoria del gasto', tipo: 'select', required: true, list: []
         },
       ]
       if (categoria) {
@@ -453,7 +453,7 @@ export class UpdatePaymentPage extends BasePage implements OnInit {
 
   }
 
-  
+
 
   findFormId(value: string) {
     return this.listaFormulario.find(res => res.id === value);

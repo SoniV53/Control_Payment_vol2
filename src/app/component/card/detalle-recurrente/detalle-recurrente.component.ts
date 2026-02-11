@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IonToggle, IonItem, IonIcon, IonLabel } from "@ionic/angular/standalone";
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { formatearMonto, getFragmentDate, getIconPath, getNameMonth } from 'src/app/utils/Utils';
@@ -12,6 +12,7 @@ import { formatearMonto, getFragmentDate, getIconPath, getNameMonth } from 'src/
 })
 export class DetalleRecurrenteComponent implements OnInit {
   @Input() gastoData?: Gasto
+  @Output() changeToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   isCheck: boolean = false
   constructor() { }
@@ -23,8 +24,7 @@ export class DetalleRecurrenteComponent implements OnInit {
 
   ionChangeToggle(event: any) {
     this.isCheck = !this.isCheck
-
-    console.log(this.isCheck)
+    this.changeToggle.emit(this.isCheck);
   }
 
   getIcon(icon: string) {

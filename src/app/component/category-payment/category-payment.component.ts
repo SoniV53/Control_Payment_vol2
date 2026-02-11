@@ -21,7 +21,17 @@ export class CategoryPaymentComponent implements OnInit {
   @Input() dataCategoria?: Categoria
   @Input() isRecurrente: boolean = false
   @Output() clickItem: EventEmitter<Gasto> = new EventEmitter<Gasto>();
+  @Output() changeToggle: EventEmitter<any> = new EventEmitter<any>();
 
+
+  onChangeToggle(event: boolean,gasto:Gasto) {
+    const data = {
+      gasto:gasto,
+      isCheck:event
+    }
+
+    this.changeToggle.emit(data);
+  }
 
   dataGastoCuota?: GastoCuota
 
@@ -54,5 +64,16 @@ export class CategoryPaymentComponent implements OnInit {
 
   clickDetalle(gasto: Gasto) {
     this.clickItem.emit(gasto);
+  }
+
+  cantidadGastos() {
+    if (this.isRecurrente) {
+      const fil = this.dataGasto.filter(res => res.estado == 0);
+      return `${this.dataGasto.length}`
+    } else {
+      const fil = this.dataGasto.filter(res => res.estado == 1 || res.gastoCuota?.estado_cuota == 1);
+      return `${fil.length}/${this.dataGasto.length}`
+    }
+
   }
 }

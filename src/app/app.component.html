@@ -1,23 +1,25 @@
 <ion-app>
-    <ion-router-outlet></ion-router-outlet>
+    <div>
+        <ion-router-outlet></ion-router-outlet>
+    </div>
 
     <div class="custom-tabs">
         <ion-tabs>
 
             <ion-tab-bar slot="bottom">
-                <ion-tab-button (click)="tabNavegation('HomePage')">
+                <ion-tab-button tab="home">
                     <ion-icon name="home-outline"></ion-icon>
                     Home
                 </ion-tab-button>
-                <ion-tab-button (click)="tabNavegation('NewPaymentPage')">
+                <ion-tab-button tab="new-payment" >
                     <ion-icon name="add-circle-outline"></ion-icon>
                     Nuevo
                 </ion-tab-button>
-                <ion-tab-button  (click)="tabNavegation('AddPaymentPage')">
+                <ion-tab-button tab="add-payment" >
                     <ion-icon name="clipboard-outline"></ion-icon>
                     Automaticos
                 </ion-tab-button>
-                <ion-tab-button  (click)="tabNavegation('MenuGestionesPage')">
+                <ion-tab-button tab="gestiones" >
                     <ion-icon name="file-tray-stacked-outline"></ion-icon>
                     Gestiones
                 </ion-tab-button>

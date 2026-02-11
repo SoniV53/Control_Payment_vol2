@@ -17,7 +17,7 @@
     <ion-segment-view>
         <ion-segment-content id="first" class="content-segment">
             <div class="listado-gastos" *ngFor="let categoria of listCategoria">
-                <app-category-payment *ngIf="categoria.dataGasto?.length" (clickItem)="clickItem($event)"
+                <app-category-payment *ngIf="categoria.dataGasto?.length" (clickItem)="clickItem($event)" (changeToggle)="changeToggle($event)"
                     [dataCategoria]="categoria" [dataGasto]="categoria.dataGasto || []"
                     [isRecurrente]="true"></app-category-payment>
             </div>

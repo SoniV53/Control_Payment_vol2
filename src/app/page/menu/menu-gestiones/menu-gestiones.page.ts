@@ -13,7 +13,7 @@ import { Title } from '@angular/platform-browser';
   templateUrl: './menu-gestiones.page.html',
   styleUrls: ['./menu-gestiones.page.scss'],
   standalone: true,
-  imports: [ IonFooter, IonContent, IonHeader,  IonToolbar, CommonModule, FormsModule, BannerTopComponent, CardOptionComponent, RouterLink],
+  imports: [IonFooter, IonContent, IonHeader, IonToolbar, CommonModule, FormsModule, BannerTopComponent, CardOptionComponent, RouterLink],
 })
 export class MenuGestionesPage extends BasePage implements OnInit {
 
@@ -23,19 +23,20 @@ export class MenuGestionesPage extends BasePage implements OnInit {
   }
 
   categoriaRow: any = [
+
     {
-      title: 'Categorías:', listado: [
-        { title: 'Categorías', routerLink: '/categoria', icon: 'albums-outline' },
-        { title: 'Historial', routerLink: '', icon: 'albums-outline' },
-        { title: 'Resumen', routerLink: '', icon: 'albums-outline' },
-       // { title: 'Etiquetas', routerLink: '/gestiones' },
+      title: 'Todo los Gastos:', listado: [
+        { title: 'Gastos Mensuales', routerLink: '/list-payments-month' },
+        { title: 'Gestion Gastos Recurrentes', routerLink: '/gestiones' },
+        { title: 'Gestion Gastos por Cuotas', routerLink: '/gestiones' },
       ]
     },
     {
-      title: 'Gastos Recurrentes y Cuotas:', listado: [
-        { title: 'Gastos', routerLink: '/list-payments-month' },
-        { title: 'Gastos Recurrentes', routerLink: '/gestiones' },
-        { title: 'Gastos por Cuotas', routerLink: '/gestiones' },
+      title: 'Otros:', listado: [
+        { title: 'Categorías', routerLink: '/categoria', icon: 'albums-outline' },
+        { title: 'Historial', routerLink: '', icon: 'albums-outline' },
+        { title: 'Resumen', routerLink: '', icon: 'albums-outline' },
+        // { title: 'Etiquetas', routerLink: '/gestiones' },
       ]
     },
   ]
