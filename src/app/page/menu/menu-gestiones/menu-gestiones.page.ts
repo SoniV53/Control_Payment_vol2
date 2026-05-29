@@ -27,7 +27,7 @@ export class MenuGestionesPage extends BasePage implements OnInit {
     {
       title: 'Todo los Gastos:', listado: [
         { title: 'Gastos Mensuales', routerLink: '/list-payments-month' },
-        { title: 'Gestion Gastos Recurrentes', routerLink: '/gestiones' },
+        { title: 'Gestion Gastos Recurrentes', routerLink: '/control-recurrentes' },
         { title: 'Gestion Gastos por Cuotas', routerLink: '/gestiones' },
       ]
     },

@@ -35,6 +35,10 @@ export const routes: Routes = [
     path: 'update-payment',
     loadComponent: () => import('./page/payment/update-payment/update-payment.page').then( m => m.UpdatePaymentPage)
   },
+  {
+    path: 'control-recurrentes',
+    loadComponent: () => import('./page/control-recurrentes/control-recurrentes.page').then( m => m.ControlRecurrentesPage)
+  },
 
 
 

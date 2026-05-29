@@ -1,0 +1,291 @@
+ion-content {
+  --background: #1a2026;
+}
+
+.tab-content {
+  padding: 16px;
+}
+
+.category-card {
+  background: #2D3740;
+  border-radius: 12px;
+  margin: 0 0 20px 0;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+
+  .category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+
+    .cat-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      ion-icon {
+        font-size: 20px;
+        color: #b0bec5;
+      }
+    }
+  }
+
+  .divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 12px 0;
+  }
+}
+
+ion-accordion {
+  background: transparent;
+  
+  .item-header {
+    --background: transparent;
+    --color: #ffffff;
+    --min-height: 40px;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    
+    .item-title {
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+
+  .item-content-box {
+    background: #1E252B; 
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+
+      .detail-label {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .detail-value {
+        color: #ffffff;
+        font-size: 14px;
+      }
+    }
+
+    .divider-dark {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 12px 0;
+    }
+
+    .actions-footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .toggle-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .detail-label {
+          color: #ffffff;
+          font-weight: 600;
+          font-size: 14px;
+        }
+
+        ion-toggle {
+          // MODIFICADO: Switch de deshabilitar ahora se enciende en verde impecable
+          --background-checked: #2ecc71 !important; 
+          --handle-background-checked: #ffffff !important;
+        }
+      }
+
+      .action-buttons {
+        display: flex;
+        align-items: center;
+
+        .icon-btn {
+          font-size: 22px;
+          cursor: pointer;
+          transition: transform 0.1s ease;
+
+          &:active {
+            transform: scale(0.9);
+          }
+        }
+
+        .edit-btn {
+          color: #8c9ba5;
+        }
+      }
+    }
+  }
+}
+
+// Estilos personalizados para el Modal Oscuro de Edición
+.modal-content-bg {
+  --background: #1a2026;
+  color: #ffffff;
+}
+
+ion-toolbar {
+  --background: #2D3740;
+  --color: #ffffff;
+}
+
+.custom-input-item {
+  --background: #2D3740;
+  --color: #ffffff;
+  border-radius: 8px;
+  --padding-start: 12px;
+  margin-bottom: 8px;
+  
+  ion-label {
+    color: #8c9ba5 !important;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  
+  ion-input {
+    --color: #ffffff;
+    font-size: 15px;
+  }
+}
+
+.btn-save {
+  --background: #E57368;
+  --color: #ffffff;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.history-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 16px;
+
+  .history-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 12px;
+  }
+
+  .no-history {
+    color: #8c9ba5;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .history-list {
+    background: transparent;
+  }
+
+  .history-item {
+    --background: #1E252B;
+    --color: #ffffff;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    
+    h2 {
+      font-size: 14px;
+      font-weight: 500;
+      color: #ffffff;
+    }
+    
+    .gasto-date {
+      color: #8c9ba5;
+      font-size: 12px;
+    }
+
+    .history-end {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      .gasto-amount {
+        font-weight: bold;
+        color: #ffffff;
+        font-size: 14px;
+      }
+
+      .delete-history-btn {
+        color: #E57368;
+        font-size: 18px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+/* ... Manten todo el CSS que ya tienes y agrega esto al final: ... */
+
+.custom-toggle-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 10px;
+
+  ion-label {
+    color: #8c9ba5 !important;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  ion-toggle {
+    --background-checked: #E57368 !important; 
+    --handle-background-checked: #ffffff !important;
+  }
+}
+
+.history-item {
+  // ... (tus estilos actuales del history item) ...
+  
+  .history-end {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .gasto-amount {
+      font-weight: bold;
+      color: #ffffff;
+      font-size: 14px;
+      margin-right: 4px;
+    }
+
+    .edit-history-btn {
+      color: #b0bec5; 
+      font-size: 20px;
+      cursor: pointer;
+      transition: color 0.2s;
+
+      &:active {
+        color: #ffffff;
+      }
+    }
+
+    .delete-history-btn {
+      color: #E57368;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  }
+}
+
+.history-checkbox {
+  --border-color: #8c9ba5;
+  --background-checked: #E57368;
+  --border-color-checked: #E57368;
+  --checkmark-color: #ffffff;
+  margin-right: 14px;
+}

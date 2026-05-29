@@ -8,7 +8,7 @@ import { GastoServiceService } from 'src/app/services/gasto-service.service';
 import Swal from 'sweetalert2';
 import { Capacitor } from '@capacitor/core';
 import { addIcons } from 'ionicons';
-import { barbellOutline } from 'ionicons/icons';
+import { barbellOutline, createOutline, trashOutline } from 'ionicons/icons';
 import { CategoriaServiceService } from 'src/app/services/categoria-service.service';
 import { getIconPath } from 'src/app/utils/Utils';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
@@ -17,6 +17,8 @@ import { ControlGastosAutomaticosService } from 'src/app/services/control-gastos
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { NavCtrl } from 'src/app/services/nav-ctrl';
+import { AlertController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-base',
@@ -52,13 +54,15 @@ export class BasePage {
     public fb: FormBuilder, public categoriaService: CategoriaServiceService,
     public controlService: ControlGastosAutomaticosService,
     public toastController: ToastController,
-    public navCtrl: NavCtrl) {
+    public navCtrl: NavCtrl,
+    public alertController: AlertController
+  ) {
     const date = new Date();
     const year = date.getFullYear();
 
     this.maxYear = Number(year.toString()) + 10 + '';
 
-    addIcons({ barbellOutline });
+    addIcons({ barbellOutline,createOutline,trashOutline });
   }
 
   loaderNav = false;
