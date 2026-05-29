@@ -166,36 +166,36 @@ export class GastoServiceService {
     });
   }
 
-  async getGastosRecurrentes(): Promise<GastoRecurrente[]> {
+  async getGastosRecurrentes(isActive: boolean = true): Promise<GastoRecurrente[]> {
     return new Promise(async (resolve, reject) => {
       try {
         const db = await this.dbService.getDB();
 
-        // const result = await db.query(
-        //   `SELECT * FROM gasto_recurrente WHERE activo = 1`
-        // );
+        let result = undefined
+        if (isActive) {
+          result = await db.query(`
+            SELECT 
+              gr.*,
+              COUNT(g.id) AS cantidad
+            FROM gasto_recurrente gr
+            LEFT JOIN gasto g 
+              ON g.recurrente_id = gr.id
+            WHERE gr.activo = 1
+            GROUP BY gr.id
+          `);
+        } else {
+          result = await db.query(`
+            SELECT 
+              gr.*,
+              COUNT(g.id) AS cantidad
+            FROM gasto_recurrente gr
+            LEFT JOIN gasto g 
+              ON g.recurrente_id = gr.id
+            GROUP BY gr.id
+          `);
+        }
 
-        // let recurrentes: GastoRecurrente[] = result.values || []
-        // for (let g of recurrentes) {
-        //   const gasto = await db.query(
-        //     `SELECT * FROM gasto WHERE recurrente_id = ?`, [g.id]
-        //   );
-
-        //   g.cantidad = gasto.values?.length
-        // }
-
-        const result = await db.query(`
-          SELECT 
-            gr.*,
-            COUNT(g.id) AS cantidad
-          FROM gasto_recurrente gr
-          LEFT JOIN gasto g 
-            ON g.recurrente_id = gr.id
-          WHERE gr.activo = 1
-          GROUP BY gr.id
-        `);
-
-        resolve(result.values ?? []);
+        resolve(result?.values ?? []);
 
       } catch (error) {
         console.error('Error obteniendo recurrentes:', error);
@@ -292,14 +292,14 @@ export class GastoServiceService {
     });
   }
 
-  async desactivarGastoRecurrente(id: number,isCheck:boolean): Promise<void> {
+  async desactivarGastoRecurrente(id: number, isCheck: boolean): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       try {
         const db = await this.dbService.getDB();
         const activar = isCheck ? 0 : 1;
         await db.run(
           `UPDATE gasto_recurrente SET activo = ? WHERE id = ?`,
-          [activar,id]
+          [activar, id]
         );
 
         resolve();

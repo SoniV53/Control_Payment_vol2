@@ -8,15 +8,15 @@
 <ion-content [fullscreen]="true">
     <div style="margin-bottom: 32px;">
         <ion-item class="ion-item">
-            <div class="icon" slot="start">
-                <ion-icon *ngIf="formCat.icon" [src]="getIcon(formCat.icon)"></ion-icon>
+            <div class="icon" slot="start" (click)="clickDateModal()">
+                <ion-icon *ngIf="formCat.icon" [src]="getIcon(formCat.icon)" ></ion-icon>
             </div>
             <div style="width: 100%;">
                 <input-simple [label]="formCat.titulo" [name]="formCat.id" [required]="formCat.required" [type]="formCat.tipo" [placeholder]="formCat.placeholder" [(ngModel)]="formCat.valueSelect" (ionInput)="ionChangeInput(formCat)"></input-simple>
             </div>
-            <div class="icon" slot="end" (click)="clickDateModal()">
+            <!-- <div class="icon" slot="end" (click)="clickDateModal()">
                 <ion-icon [src]="getIcon('add-circle-outline')"></ion-icon>
-            </div>
+            </div> -->
         </ion-item>
 
         <ion-button class="button-action" expand="block" (click)="saveNewCategory()" [disabled]="disabledButton">{{tituloBotton}}</ion-button>

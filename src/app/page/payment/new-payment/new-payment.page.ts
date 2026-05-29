@@ -382,8 +382,11 @@ export class NewPaymentPage extends BasePage implements OnInit {
       this.dataSelect.valueSelect = form.value || '';
       this.dataSelect.icon = form.icon || '';
       this.dataSelect.code = form.code || '';
-    }
 
+      this.validarErrorInput(this.dataSelect as ItemInputData);
+      this.validButton();
+    }
+    
   }
 
   onClickItemAction(form: ItemInputData) {
