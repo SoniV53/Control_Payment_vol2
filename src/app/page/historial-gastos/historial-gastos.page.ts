@@ -24,12 +24,20 @@ import { HistorialServiceService } from 'src/app/services/historial-service.serv
 export class HistorialGastosPage extends BasePage {
   toolBar = { title: "Historial", description: "Revisa todos tus movimientos." };
   
-  // Segmento de filtro
-  tabFiltro = 'todos';
+  // Controles de Vista y Filtros
+  vistaActual: 'lista' | 'grafica' = 'lista';
+  tabFiltro: string = 'todos';
+  anioSeleccionado: number = new Date().getFullYear();
+  aniosDisponibles: number[] = [];
   
   // Datos
   gastosBrutos: any[] = [];
   gruposHistorial: any[] = [];
+  
+  // Datos para Gráfica
+  datosGrafica: { mes: string, total: number, porcentaje: number }[] = [];
+  maximoGastoMes: number = 0;
+  totalAnio: number = 0;
 
   constructor(
     public override router: Router,
@@ -55,6 +63,7 @@ export class HistorialGastosPage extends BasePage {
       async () => {
         this.showLoader();
         this.gastosBrutos = await this.historialService.getHistorialCompleto();
+        this.extraerAniosDisponibles();
         this.procesarYAgruparDatos();
       },
       async () => { this.getAlertError('No se pudo cargar el historial.'); },
@@ -62,28 +71,50 @@ export class HistorialGastosPage extends BasePage {
     );
   }
 
+  extraerAniosDisponibles() {
+    const aniosSet = new Set<number>();
+    this.gastosBrutos.forEach(g => {
+      if (g.fecha) {
+        const anio = parseInt(g.fecha.split('-')[0]);
+        if (!isNaN(anio)) aniosSet.add(anio);
+      }
+    });
+    
+    this.aniosDisponibles = Array.from(aniosSet).sort((a, b) => b - a); // Mayor a menor
+    
+    // Asegurar que el año actual/seleccionado siempre esté en la lista
+    if (!this.aniosDisponibles.includes(this.anioSeleccionado)) {
+      this.aniosDisponibles.push(this.anioSeleccionado);
+      this.aniosDisponibles.sort((a, b) => b - a);
+    }
+  }
+
   procesarYAgruparDatos() {
-    // 1. Filtrar los datos según el segmento (Todos, Recurrentes, Cuotas)
+    this.totalAnio = 0;
+
+    // 1. Filtrar por Año y Tipo
     const datosFiltrados = this.gastosBrutos.filter(gasto => {
-      if (this.tabFiltro === 'todos') return true;
-      if (this.tabFiltro === 'recurrentes') return gasto.tipo !== 'cuota'; // O la lógica exacta de tu BD para recurrentes
-      if (this.tabFiltro === 'cuotas') return gasto.tipo === 'cuota';
+      if (!gasto.fecha) return false;
+      const gastoAnio = parseInt(gasto.fecha.split('-')[0]);
+      
+      // Filtro de Año
+      if (gastoAnio !== this.anioSeleccionado) return false;
+
+      // Filtro de Pestaña (Tipo)
+      if (this.tabFiltro === 'recurrentes' && gasto.tipo === 'cuota') return false;
+      if (this.tabFiltro === 'cuotas' && gasto.tipo !== 'cuota') return false;
+      
       return true;
     });
 
-    // 2. Agrupar por "Mes Año" (Ej: "Mayo 2024")
+    // 2. Agrupar para la Vista de LISTA (Mes Año)
     const gruposMap = datosFiltrados.reduce((acc: any, cur: any) => {
       let llave = 'Fecha Desconocida';
-      
       if (cur.fecha) {
-        // Asumiendo formato YYYY-MM-DD
         const partes = cur.fecha.split('-');
         if (partes.length >= 2) {
-          const anio = partes[0];
-          const mes = partes[1];
-          // Usamos tu método heredado de BasePage
-          const nombreMes = this.getNameMonth(mes);
-          llave = `${nombreMes} ${anio}`;
+          const nombreMes = this.getNameMonth(partes[1]);
+          llave = `${nombreMes} ${partes[0]}`;
         }
       }
 
@@ -91,20 +122,51 @@ export class HistorialGastosPage extends BasePage {
         acc[llave] = { titulo: llave, items: [] };
       }
       acc[llave].items.push(cur);
+      this.totalAnio += (cur.monto || 0);
       
       return acc;
     }, {});
 
-    // Convertir a Array para iterar en el HTML
     this.gruposHistorial = Object.values(gruposMap);
+
+    // 3. Agrupar para la Vista de GRÁFICA (Resumen de 12 meses)
+    this.generarDatosGrafica(datosFiltrados);
   }
 
-  cambiarFiltro() {
+  generarDatosGrafica(datos: any[]) {
+    // Array de 12 posiciones (0 = Enero, 11 = Diciembre)
+    const totalesMes = new Array(12).fill(0);
+    
+    datos.forEach(g => {
+      if (g.fecha) {
+        const mesIdx = parseInt(g.fecha.split('-')[1]) - 1;
+        if (mesIdx >= 0 && mesIdx <= 11) {
+          totalesMes[mesIdx] += (g.monto || 0);
+        }
+      }
+    });
+
+    // Obtener el mes con mayor gasto para calcular el 100% de la altura de la barra
+    this.maximoGastoMes = Math.max(...totalesMes, 1); 
+
+    this.datosGrafica = totalesMes.map((total, index) => {
+      // Usamos el mes formateado (Ej: "01" -> "Ene")
+      const mesNumString = (index + 1).toString().padStart(2, '0');
+      const nombreMes = this.getNameMonth(mesNumString).substring(0, 3).toUpperCase();
+      
+      return {
+        mes: nombreMes,
+        total: total,
+        porcentaje: (total / this.maximoGastoMes) * 100
+      };
+    });
+  }
+
+  cambiarFiltroOAno() {
     this.procesarYAgruparDatos();
   }
 
   verDetalleGasto(gasto: any) {
-    // Aquí puedes abrir un modal o navegar si quieres ver detalles profundos de ese gasto en el historial
     console.log("Ver detalle:", gasto);
   }
 }
