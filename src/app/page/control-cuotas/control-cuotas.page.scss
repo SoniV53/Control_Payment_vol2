@@ -1,0 +1,241 @@
+/* Eliminación agresiva de líneas y fondos en el Acordeón */
+ion-accordion-group {
+  margin-top: 8px;
+}
+
+ion-accordion {
+  background: transparent !important;
+  margin: 0 !important;
+
+  /* Forzamos al Shadow DOM a quitar la línea izquierda que sale en Android (mode="md") */
+  &::part(content) {
+    border: none !important;
+    border-left: none !important;
+  }
+  &::part(header) {
+    border: none !important;
+  }
+
+  .cat-title-container {
+    --background: transparent; 
+    --color: #8c9ba5;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none !important; 
+    --border-width: 0 !important;
+    --inner-border-width: 0 !important;
+    margin: 8px 16px 0; 
+    --padding-start: 0; 
+    --inner-padding-end: 0; 
+    --min-height: 36px;
+    box-shadow: none; 
+    
+    ion-icon[slot="start"] {
+      font-size: 20px;
+      color: #b0bec5;
+      margin-right: 8px;
+    }
+  }
+}
+
+.listado-gastos {
+  margin: 8px 0px 16px;
+}
+
+.content-segment {
+  box-sizing: content-box;
+}
+
+ion-segment-view {
+  width: 100%;
+  height: 92%;
+  box-sizing: content-box;
+}
+
+.cuota-card {
+  background: #2D3740;
+  color: white;
+  border-radius: 12px;
+  margin: 0 16px 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .monto-total {
+      color: #E57368;
+      font-weight: bold;
+      font-size: 15px;
+    }
+  }
+
+  .card-dates {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #8c9ba5;
+    font-size: 12px;
+    margin-bottom: 14px;
+    
+    ion-icon {
+      font-size: 14px;
+      color: #b0bec5;
+    }
+  }
+}
+
+.info-grid {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+  font-size: 13px;
+  color: #b0bec5;
+
+  b {
+    color: #ffffff;
+  }
+}
+
+.cuota-detail-item {
+  background: #1E252B;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  --background: transparent;
+  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cuota-amount {
+  margin-right: 15px;
+  font-weight: bold;
+  color: #2ecc71;
+}
+
+.modal-bg {
+  --background: #1a2026;
+}
+
+.actions { 
+  display: flex; 
+  justify-content: flex-end; 
+  padding: 0 16px 16px; 
+  gap: 16px;
+  
+  ion-icon { 
+    font-size: 22px; 
+    color: #8c9ba5; 
+    cursor: pointer; 
+    transition: transform 0.2s, color 0.2s; 
+    
+    &:active { 
+      transform: scale(0.9); 
+      color: white; 
+    }
+
+    &[name="trash-outline"]:active {
+      color: #E57368;
+    }
+  }
+}
+
+/* Empty state styling */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 30vh;
+  color: #8c9ba5;
+  text-align: center;
+  
+  ion-icon { 
+    font-size: 64px; 
+    margin-bottom: 16px; 
+    opacity: 0.5;
+  }
+}
+
+/* Nuevos Estilos para los Inputs Solid del Bottom Sheet */
+.form-section { 
+  padding-top: 10px;
+  padding-bottom: 20px; 
+}
+
+.custom-input {
+  --background: #2D3740;
+  --color: #ffffff;
+  --placeholder-color: #8c9ba5;
+  --padding-start: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  
+  &::part(native) {
+    color: #ffffff;
+  }
+}
+
+/* Arreglo específico para ion-select */
+ion-select.custom-input {
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  
+  &::part(icon) {
+    color: #8c9ba5;
+  }
+}
+
+.btn-save {
+  --background: #E57368;
+  --color: #ffffff;
+  font-weight: bold;
+  margin-top: 20px;
+  --border-radius: 8px;
+  height: 48px;
+}
+
+/* Bottom Sheet Configuration */
+ion-modal.bottom-sheet {
+  --border-radius: 20px 20px 0 0;
+  align-items: flex-end;
+  
+  ::ng-deep .ion-page {
+    position: relative;
+    display: block;
+    contain: content;
+  }
+  
+  ion-toolbar {
+    --background: #1a2026;
+    --border-color: transparent;
+  }
+}
+
+.cat-title-container {
+  display: flex;
+  align-items: center;
+  background: transparent; 
+  color: #8c9ba5;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 16px 16px 4px; 
+  
+  ion-icon {
+    font-size: 20px;
+    color: #b0bec5;
+    margin-right: 8px;
+  }
+}

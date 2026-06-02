@@ -16,5 +16,7 @@ export let rutasModel = (): Record<string, string> => {
     ['NewPaymentPage']: 'new-payment',
     ['UpdatePaymentPage']: 'update-payment',
     ['ControlRecurrentesPage']: 'control-recurrentes',
+    ['ControlCuotasPage']: 'control-cuotas',
+    ['HistorialGastosPage']: 'historial-gastos',
   };
 };

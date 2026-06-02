@@ -1,0 +1,62 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <app-banner-top [toolBarData]="toolBar" [loader]="loaderNav"></app-banner-top>
+  </ion-toolbar>
+  
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="tabFiltro" (ionChange)="cambiarFiltro()" mode="md">
+      <ion-segment-button value="todos">
+        <ion-label>Todos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="recurrentes">
+        <ion-label>Servicios</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="cuotas">
+        <ion-label>Cuotas</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  
+  <div *ngIf="gruposHistorial.length === 0" class="empty-state">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <p>No hay registros en el historial.</p>
+  </div>
+
+  <div class="historial-container" *ngIf="gruposHistorial.length > 0">
+    <ion-item-group *ngFor="let grupo of gruposHistorial" class="mes-grupo">
+      
+      <!-- Cabecera del Mes (Sticky) -->
+      <ion-item-divider sticky="true" class="mes-divider" lines="none">
+        <ion-label>{{ grupo.titulo | uppercase }}</ion-label>
+        <ion-badge slot="end" class="badge-count">{{ grupo.items.length }}</ion-badge>
+      </ion-item-divider>
+
+      <!-- Lista de Gastos del Mes -->
+      <div class="listado-items">
+        <div *ngFor="let item of grupo.items" class="historial-card" (click)="verDetalleGasto(item)">
+          
+          <div class="icon-box">
+            <ion-icon [name]="item.cat_icono || 'cash-outline'"></ion-icon>
+          </div>
+          
+          <div class="item-details">
+            <h3>{{ item.titulo }}</h3>
+            <p>{{ item.cat_nombre || 'Sin categoría' }} &bull; {{ item.fecha | date:'dd MMM' }}</p>
+          </div>
+          
+          <div class="item-amount">
+            <span>GTQ {{ item.monto | number:'1.2-2' }}</span>
+            <small *ngIf="item.tipo === 'cuota'" class="tag-cuota">Cuota</small>
+            <small *ngIf="item.tipo !== 'cuota'" class="tag-recurrente">Servicio</small>
+          </div>
+
+        </div>
+      </div>
+
+    </ion-item-group>
+  </div>
+
+</ion-content>

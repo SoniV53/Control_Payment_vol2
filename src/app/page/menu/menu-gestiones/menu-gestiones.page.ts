@@ -28,13 +28,13 @@ export class MenuGestionesPage extends BasePage implements OnInit {
       title: 'Todo los Gastos:', listado: [
         { title: 'Gastos Mensuales', routerLink: '/list-payments-month' },
         { title: 'Gestion Gastos Recurrentes', routerLink: '/control-recurrentes' },
-        { title: 'Gestion Gastos por Cuotas', routerLink: '/gestiones' },
+        { title: 'Gestion Gastos por Cuotas', routerLink: '/control-cuotas' },
       ]
     },
     {
       title: 'Otros:', listado: [
         { title: 'Categorías', routerLink: '/categoria', icon: 'albums-outline' },
-        { title: 'Historial', routerLink: '', icon: 'albums-outline' },
+        { title: 'Historial', routerLink: '/historial-gastos', icon: 'albums-outline' },
         { title: 'Resumen', routerLink: '', icon: 'albums-outline' },
         // { title: 'Etiquetas', routerLink: '/gestiones' },
       ]

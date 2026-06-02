@@ -39,6 +39,14 @@ export const routes: Routes = [
     path: 'control-recurrentes',
     loadComponent: () => import('./page/control-recurrentes/control-recurrentes.page').then( m => m.ControlRecurrentesPage)
   },
+  {
+    path: 'control-cuotas',
+    loadComponent: () => import('./page/control-cuotas/control-cuotas.page').then( m => m.ControlCuotasPage)
+  },
+  {
+    path: 'historial-gastos',
+    loadComponent: () => import('./page/historial-gastos/historial-gastos.page').then( m => m.HistorialGastosPage)
+  },
 
 
 

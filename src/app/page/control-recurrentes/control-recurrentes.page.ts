@@ -31,7 +31,10 @@ interface GrupoCategoria {
   imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent]
 })
 export class ControlRecurrentesPage extends BasePage {
-  toolBar: any = { titulo: 'Control de Recurrentes', isReturn: true };
+  toolBar = {
+    title: "Control de Gastos Recurrentes",
+    description: "Aquí puedes administrar tus gastos recurrentes.",
+  }
   grupos: GrupoCategoria[] = [];
 
   isModalOpen: boolean = false;

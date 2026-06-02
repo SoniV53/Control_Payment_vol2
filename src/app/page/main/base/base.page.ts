@@ -206,7 +206,9 @@ export class BasePage {
         htmlContainer: 'swal-text-small'
       },
     }).then((result) => {
-      callback();
+      if (result.isConfirmed) { 
+        callback();
+      }
     });
   }
 }
