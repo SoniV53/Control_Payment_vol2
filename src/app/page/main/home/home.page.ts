@@ -27,8 +27,8 @@ export class HomePage extends BasePage implements OnInit {
   ionRow: any = [
     { title: 'Gastos', description: 'Opcion para visualizar mis gastos por mes', routerLink: 'ListPaymentsMonthPage' },
     { title: 'Gestiones', description: 'Opcion para crear un gasto o agregar, ya se para  mes o en el mes seleccionado', routerLink: 'MenuGestionesPage' },
-    //{ title: 'Resumen', description: 'Opcion para visualizar un resumen de los gastos mensuales' },
-    //{ title: 'Historial', description: 'Opcion para visualizar un Historial cuanto gasto en cada mes' }
+    { title: 'Resumen', description: 'Opcion para visualizar un resumen de los gastos mensuales', routerLink: 'ResumenGastosPage' },
+    { title: 'Historial', description: 'Opcion para visualizar un Historial cuanto gasto en cada mes', routerLink: 'HistorialGastosPage' }
   ];
 
   ngOnInit() {
