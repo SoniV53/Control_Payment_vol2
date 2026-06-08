@@ -18,5 +18,6 @@ export let rutasModel = (): Record<string, string> => {
     ['ControlRecurrentesPage']: 'control-recurrentes',
     ['ControlCuotasPage']: 'control-cuotas',
     ['HistorialGastosPage']: 'historial-gastos',
+    ['ResumenGastosPage']: 'resumen-gastos',
   };
 };

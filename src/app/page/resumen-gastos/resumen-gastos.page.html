@@ -1,0 +1,112 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <app-banner-top [toolBarData]="toolBar" [loader]="loaderNav"></app-banner-top>
+  </ion-toolbar>
+
+  <!-- Filtros -->
+  <ion-toolbar class="filtros-toolbar">
+    
+    <div class="search-container">
+      <ion-icon name="search-outline"></ion-icon>
+      <input type="text" placeholder="Buscar por título..." [(ngModel)]="textoBusqueda" (keyup)="aplicarFiltros()">
+    </div>
+
+    <div class="categoria-selector-container">
+      <ion-select [(ngModel)]="categoriaSeleccionada" (ionChange)="aplicarFiltros()" interface="popover">
+        <ion-select-option value="todas">Todas las categorías</ion-select-option>
+        <ion-select-option *ngFor="let cat of categoriasActivas" [value]="cat.id">{{cat.nombre}}</ion-select-option>
+      </ion-select>
+    </div>
+
+    <ion-segment [(ngModel)]="tabTipo" (ionChange)="aplicarFiltros()" mode="md">
+      <ion-segment-button value="todos"><ion-label>Todos</ion-label></ion-segment-button>
+      <ion-segment-button value="recurrente"><ion-label>Recurrentes</ion-label></ion-segment-button>
+      <ion-segment-button value="cuota"><ion-label>Cuotas</ion-label></ion-segment-button>
+    </ion-segment>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  
+  <div *ngIf="datosFiltrados.length === 0" class="empty-state">
+    <ion-icon name="folder-open-outline"></ion-icon>
+    <p>No hay resultados para mostrar.</p>
+  </div>
+
+  <div class="resumen-container">
+    
+    <!-- Tarjeta Principal -->
+    <div class="resumen-card" *ngFor="let gasto of datosFiltrados" [class.expanded]="gasto.expanded">
+      
+      <!-- CABECERA (Se puede clickear para expandir) -->
+      <div class="card-header" (click)="toggleExpand(gasto)">
+        <div class="header-top">
+          <div class="title-wrapper">
+            <h3>{{ gasto.titulo }}</h3>
+            <!-- Etiqueta de Recurrente o Cuota -->
+            <div class="badge-tipo" [ngClass]="gasto.tipo === 'cuota' ? 'cuota' : 'recurrente'">
+              {{ gasto.tipo === 'cuota' ? 'Cuota' : 'Recurrente' }}
+            </div>
+          </div>
+          <ion-icon [name]="gasto.expanded ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- ESTO SOLO SE VE CUANDO ESTÁ MINIMIZADO         -->
+        <!-- ============================================== -->
+        <div class="minimized-info" *ngIf="!gasto.expanded">
+          <div class="monto">GTQ {{ gasto.montoTotal | number:'1.2-2' }}</div>
+          <div class="progreso">{{ gasto.pagados }}/{{ gasto.totalItems }} pagados</div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- ESTO SOLO SE VE CUANDO ESTÁ MAXIMIZADO (DETALLE) -->
+      <!-- ============================================== -->
+      <div class="card-expanded-content" *ngIf="gasto.expanded">
+        
+        <div class="pagos-list">
+          <!-- Cabecera de las 3 columnas -->
+          <div class="table-header" *ngIf="gasto.pagosDetalle.length > 0">
+            <span>Mes/Año</span>
+            <span class="th-status">Status</span>
+            <span class="th-monto">Monto</span>
+          </div>
+
+          <!-- Filas de pagos -->
+          <div class="pago-item" *ngFor="let pago of gasto.pagosDetalle">
+            <!-- Columna 1: Fecha / Nombre Mes -->
+            <div class="pago-label">
+               {{ pago.fecha | date:'MMM yyyy' }}
+            </div>
+            
+            <!-- Columnas 2 y 3 (Se adaptan al Grid CSS) -->
+            <div class="pago-status">
+              <div class="status-text" [ngClass]="pago.estado">
+                {{ pago.estado }}
+              </div>
+              <div class="monto">GTQ {{ pago.monto | number:'1.2-2' }}</div>
+              <!-- Si es cuota, mostrar el número abajo del monto -->
+              <div class="cuota-num" *ngIf="pago.numero">Cuota #{{ pago.numero }}</div>
+            </div>
+          </div>
+
+          <!-- Si no hay registros generados -->
+          <div class="no-pagos" *ngIf="gasto.pagosDetalle.length === 0">
+            No hay pagos registrados aún.
+          </div>
+        </div>
+
+         <div class="minimized-info">
+          <div class="monto">GTQ {{ gasto.montoTotal | number:'1.2-2' }}</div>
+          <div class="progreso">{{ gasto.pagados }}/{{ gasto.totalItems }} pagados</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>

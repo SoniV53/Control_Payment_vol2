@@ -1,0 +1,330 @@
+/* Fondo General */
+ion-content {
+    --background: #1a2026;
+}
+
+/* ==================== FILTROS SUPERIORES ==================== */
+.filtros-toolbar {
+    --background: #1a2026;
+    padding: 10px 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background: #EAECEF;
+    border-radius: 8px;
+    padding: 0 16px;
+    height: 48px;
+    margin-bottom: 16px;
+
+    ion-icon {
+        color: #8c9ba5;
+        font-size: 20px;
+        margin-right: 10px;
+    }
+
+    input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #2D3740;
+        font-size: 15px;
+        font-weight: 500;
+
+        &::placeholder {
+            color: #8c9ba5;
+        }
+    }
+}
+
+.categoria-selector-container {
+    background: #EAECEF;
+    border-radius: 8px;
+    margin-bottom: 12px;
+
+    ion-select {
+        width: 100%;
+        color: #8c9ba5;
+        font-weight: 600;
+        font-size: 15px;
+        --padding-top: 14px;
+        --padding-bottom: 14px;
+        --padding-start: 16px;
+
+        &::part(icon) {
+            color: #8c9ba5;
+        }
+    }
+}
+
+ion-segment {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-bottom: 8px;
+
+    ion-segment-button {
+        min-height: 40px;
+        --color: #8c9ba5;
+        --color-checked: #ffffff;
+        --indicator-color: #E57368;
+
+        ion-label {
+            font-weight: 600;
+            font-size: 12px;
+        }
+    }
+}
+
+/* ==================== TARJETAS DE RESUMEN ==================== */
+.resumen-container {
+    padding-bottom: 40px;
+}
+
+.resumen-card {
+    background: #2D3740;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+    &.expanded {
+        background: #2D3740;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Cabecera de la Tarjeta */
+    .card-header {
+        display: flex;
+        flex-direction: column;
+        padding: 16px 20px 16px;
+        position: relative;
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+
+            .title-wrapper {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+
+                h3 {
+                    margin: 0;
+                    color: #ffffff;
+                    font-size: 16px;
+                    font-weight: 700;
+                }
+            }
+
+            ion-icon {
+                color: #8c9ba5;
+                font-size: 24px;
+                transition: transform 0.3s ease;
+                margin-top: -2px;
+            }
+        }
+
+        /* Etiqueta para diferenciar Recurrente / Cuota */
+        .badge-tipo {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: fit-content;
+
+            &.recurrente {
+                background: rgba(229, 115, 104, 0.15);
+                color: #E57368;
+            }
+
+            &.cuota {
+                background: rgba(46, 204, 113, 0.15);
+                color: #2ecc71;
+            }
+        }
+
+
+    }
+
+    .minimized-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        animation: fadeIn 0.3s ease-out forwards;
+
+        .monto {
+            color: #E57368;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .progreso {
+            color: #8c9ba5;
+            font-size: 13px;
+            font-weight: 600;
+        }
+    }
+
+    /* Vista Expandida (El Listado de Pagos) */
+    .card-expanded-content {
+        padding: 0 20px 16px;
+        animation: fadeIn 0.3s ease-out forwards;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Estilos del Listado Interno con Grid (Diseño de Tabla) */
+    .pagos-list {
+        padding: 8px 0 4px;
+        display: flex;
+        flex-direction: column;
+
+        /* Cabecera de la tabla */
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 85px 85px;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 4px;
+
+            span {
+                color: #8c9ba5;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+
+            .th-status {
+                text-align: center;
+            }
+
+            .th-monto {
+                text-align: right;
+            }
+        }
+
+        .pago-item {
+            display: grid;
+            grid-template-columns: 1fr 85px 85px;
+            /* Columnas: Mes/Año | Status | Monto */
+            gap: 10px;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            /* Mes / Año */
+            .pago-label {
+                color: #ffffff;
+                font-size: 13px;
+                font-weight: 600;
+                text-transform: capitalize;
+            }
+
+            /* Estado y Monto agrupados pero distribuidos por el Grid */
+            .pago-status {
+                display: contents;
+
+                .status-text {
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    font-weight: 700;
+                    padding: 4px 8px;
+                    border-radius: 6px;
+                    text-align: center;
+                    margin: 0;
+                    grid-column: 2;
+
+                    &.pagado {
+                        color: #2ecc71;
+                        background: rgba(46, 204, 113, 0.15);
+                    }
+
+                    &.pendiente {
+                        color: #e74c3c;
+                        background: rgba(231, 76, 60, 0.15);
+                    }
+                }
+
+                .monto {
+                    color: #ffffff;
+                    font-weight: 700;
+                    font-size: 13px;
+                    text-align: right;
+                    grid-column: 3;
+                }
+
+                .cuota-num {
+                    font-size: 10px;
+                    color: #8c9ba5;
+                    grid-column: 3;
+                    text-align: right;
+                    margin-top: -6px;
+                }
+            }
+        }
+
+        .no-pagos {
+            color: #8c9ba5;
+            font-size: 13px;
+            text-align: center;
+            font-style: italic;
+            padding: 16px 0 10px;
+        }
+    }
+}
+
+/* Animación */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estado Vacío */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40vh;
+    color: #8c9ba5;
+    text-align: center;
+
+    ion-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    p {
+        margin: 0;
+        font-size: 15px;
+    }
+}

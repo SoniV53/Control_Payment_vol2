@@ -47,6 +47,10 @@ export const routes: Routes = [
     path: 'historial-gastos',
     loadComponent: () => import('./page/historial-gastos/historial-gastos.page').then( m => m.HistorialGastosPage)
   },
+  {
+    path: 'resumen-gastos',
+    loadComponent: () => import('./page/resumen-gastos/resumen-gastos.page').then( m => m.ResumenGastosPage)
+  },
 
 
 
