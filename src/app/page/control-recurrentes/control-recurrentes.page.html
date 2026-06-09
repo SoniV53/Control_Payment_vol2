@@ -35,7 +35,8 @@
             <div class="actions-footer-row">
               <div class="toggle-box">
                 <span class="detail-label">Deshabilitar:</span>
-                <ion-toggle mode="ios" [checked]="item.activo === 0" (ionChange)="toggleDeshabilitar(item, $event)"></ion-toggle>
+                <ion-toggle mode="ios" [checked]="item.activo === 0"
+                  (ionChange)="toggleDeshabilitar(item, $event)"></ion-toggle>
               </div>
               <div class="action-buttons">
                 <ion-icon name="create-outline" class="icon-btn edit-btn" (click)="editarRecurrente(item)"></ion-icon>
@@ -72,7 +73,8 @@
 
           <ion-item lines="none" class="custom-toggle-item ion-margin-top">
             <ion-label class="toggle-text" class="ion-text-wrap">Seleccionar todos los meses</ion-label>
-            <ion-toggle mode="ios" [(ngModel)]="aplicarAtodos" (ionChange)="toggleAllHistorial($event)" slot="end"></ion-toggle>
+            <ion-toggle mode="ios" [(ngModel)]="aplicarAtodos" (ionChange)="toggleAllHistorial($event)"
+              slot="end"></ion-toggle>
           </ion-item>
 
           <ion-button expand="block" class="btn-save ion-margin-top" (click)="guardarEdicion()">
@@ -82,24 +84,32 @@
 
         <div class="history-section ion-margin-top">
           <h3 class="history-title">Historial Generado</h3>
-          
+
           <div *ngIf="gastosHistoricos.length === 0" class="no-history">
             <p>No hay gastos registrados para este servicio todavía.</p>
           </div>
 
           <ion-list lines="none" class="history-list" *ngIf="gastosHistoricos.length > 0">
             <ion-item *ngFor="let gasto of gastosHistoricos" class="history-item">
-              
-              <ion-checkbox slot="start" mode="ios" [(ngModel)]="gasto.seleccionado" class="history-checkbox"></ion-checkbox>
+
+              <ion-checkbox slot="start" mode="ios" [(ngModel)]="gasto.seleccionado"
+                class="history-checkbox"></ion-checkbox>
 
               <ion-label>
                 <h2>{{ gasto.titulo }}</h2>
                 <p class="gasto-date">{{ gasto.fecha | date:'MMMM yyyy' | titlecase }}</p>
+                <p class="gasto-date">{{ printStado(gasto.estado) }}</p>
               </ion-label>
               <div slot="end" class="history-end">
                 <span class="gasto-amount">GTQ {{ gasto.monto | number:'1.2-2' }}</span>
-                <ion-icon name="create-outline" class="edit-history-btn" (click)="editarGastoHistorico(gasto)"></ion-icon>
-                <ion-icon name="trash-outline" class="delete-history-btn" (click)="eliminarGastoHistorico(gasto.id)"></ion-icon>
+                <ion-icon name="create-outline" class="edit-history-btn"
+                  (click)="editarGastoHistorico(gasto)"></ion-icon>
+                <ion-icon name="trash-outline" class="delete-history-btn"
+                  (click)="eliminarGastoHistorico(gasto.id)"></ion-icon>
+                <div *ngIf="gasto.estado == 2" (click)="restablecerGastoHistorico(gasto)"> <ion-icon
+                    [src]="getIcon('refresh-outline')"></ion-icon>
+                </div>
+
               </div>
             </ion-item>
           </ion-list>

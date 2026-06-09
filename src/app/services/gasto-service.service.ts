@@ -221,6 +221,23 @@ export class GastoServiceService {
       }
     });
   }
+  async updateStateGasto(id: string, state: number): Promise<GastoRecurrente[]> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await this.dbService.getDB();
+
+        const result = await db.query(
+          `UPDATE gasto SET estado = ? WHERE id = ?`, [state, id]
+        );
+
+        resolve(result.values ?? []);
+
+      } catch (error) {
+        console.error('Error obteniendo recurrentes:', error);
+        reject(error);
+      }
+    });
+  }
 
   async getNumeroCuota(fecha: string): Promise<any> {
     return new Promise(async (resolve, reject) => {

@@ -41,7 +41,7 @@ export class ControlRecurrentesPage extends BasePage {
   recurrenteSeleccionado: GastoRecurrente | null = null;
   editTitulo: string = '';
   editMonto: number = 0;
-  aplicarAtodos: boolean = false; 
+  aplicarAtodos: boolean = false;
   gastosHistoricos: any[] = [];
 
   constructor(
@@ -54,7 +54,7 @@ export class ControlRecurrentesPage extends BasePage {
     public override toastController: ToastController,
     public override navCtrl: NavCtrl,
     public override alertController: AlertController,
-    private dbService: DatabaseServiceService 
+    private dbService: DatabaseServiceService
   ) {
     super(router, myApp, gastoService, fb, categoriaService, controlService, toastController, navCtrl, alertController);
   }
@@ -72,14 +72,14 @@ export class ControlRecurrentesPage extends BasePage {
       this.grupos = categorias.map(cat => {
         const items = recurrentes.filter(r => r.categoria_id === cat.id);
         const totalMonto = items.reduce((sum, item) => sum + (item.monto || 0), 0);
-        
+
         return {
           categoria: cat,
           recurrentes: items,
           totalMonto: totalMonto,
           totalCantidad: items.length
         };
-      }).filter(grupo => grupo.totalCantidad > 0); 
+      }).filter(grupo => grupo.totalCantidad > 0);
     } catch (error) {
       this.getAlertError(error);
     } finally {
@@ -88,7 +88,7 @@ export class ControlRecurrentesPage extends BasePage {
   }
 
   async toggleDeshabilitar(recurrente: any, event: any) {
-    const isChecked = event.detail.checked; 
+    const isChecked = event.detail.checked;
     this.showLoader();
     try {
       await this.gastoService.desactivarGastoRecurrente(recurrente.id, isChecked);
@@ -96,7 +96,7 @@ export class ControlRecurrentesPage extends BasePage {
       this.toastMessage(isChecked ? 'Servicio deshabilitado' : 'Servicio habilitado');
     } catch (error) {
       this.getAlertError(error);
-      recurrente.activo = isChecked ? 1 : 0; 
+      recurrente.activo = isChecked ? 1 : 0;
     } finally {
       this.dissmissLoader();
     }
@@ -108,7 +108,7 @@ export class ControlRecurrentesPage extends BasePage {
     this.editMonto = recurrente.monto || 0;
     this.aplicarAtodos = false; // Por defecto apagado para evitar errores
     this.isModalOpen = true;
-    
+
     await this.obtenerHistorialGastos(recurrente.id);
   }
 
@@ -142,7 +142,7 @@ export class ControlRecurrentesPage extends BasePage {
     this.showLoader();
     try {
       const db = await this.dbService.getDB();
-      
+
       // 1. Actualizamos la plantilla principal
       await db.run(
         'UPDATE gasto_recurrente SET titulo = ?, monto = ? WHERE id = ?',
@@ -151,7 +151,7 @@ export class ControlRecurrentesPage extends BasePage {
 
       // 2. Filtramos los historiales que el usuario dejó marcados con el checkbox
       const seleccionados = this.gastosHistoricos.filter(g => g.seleccionado);
-      
+
       // 3. Actualizamos uno a uno los marcados
       for (const gasto of seleccionados) {
         await db.run(
@@ -159,7 +159,7 @@ export class ControlRecurrentesPage extends BasePage {
           [this.editTitulo, this.editMonto, gasto.id]
         );
       }
-      
+
       this.getAlertSuccess(seleccionados.length > 0 ? `Servicio y ${seleccionados.length} meses actualizados` : 'Servicio actualizado');
       this.isModalOpen = false;
       await this.cargarDatos();
@@ -173,7 +173,7 @@ export class ControlRecurrentesPage extends BasePage {
   async editarGastoHistorico(gasto: any) {
     const alert = await this.alertController.create({
       header: 'Editar Gasto del Mes',
-      subHeader: this.getNameMonth(gasto.fecha.split('-')[1]), 
+      subHeader: this.getNameMonth(gasto.fecha.split('-')[1]),
       mode: 'ios',
       inputs: [
         { name: 'titulo', type: 'text', value: gasto.titulo, placeholder: 'Nombre' },
@@ -185,7 +185,7 @@ export class ControlRecurrentesPage extends BasePage {
           text: 'Guardar',
           handler: async (data) => {
             if (!data.titulo || !data.monto) return false;
-            
+
             this.showLoader();
             try {
               const db = await this.dbService.getDB();
@@ -193,11 +193,11 @@ export class ControlRecurrentesPage extends BasePage {
                 'UPDATE gasto SET titulo = ?, monto = ? WHERE id = ?',
                 [data.titulo, Number(data.monto), gasto.id]
               );
-              
+
               if (this.recurrenteSeleccionado) {
                 await this.obtenerHistorialGastos(this.recurrenteSeleccionado.id);
               }
-              await this.cargarDatos(); 
+              await this.cargarDatos();
               this.toastMessage('Mes actualizado correctamente');
             } catch (error) {
               this.getAlertError(error);
@@ -213,13 +213,30 @@ export class ControlRecurrentesPage extends BasePage {
     await alert.present();
   }
 
+
+  async restablecerGastoHistorico(gasto: any) {
+    this.baseService(async () => {
+      if (gasto) {
+        this.showLoader();
+        await this.gastoService.updateStateGasto(gasto.id.toString(),0);
+        this.getAlertSuccess('Gasto restablecido correctamente');
+        gasto.estado = 0; 
+      }
+
+    }, async () => {
+      this.getAlertError('No se pudieron cargar.');
+    }, async () => {
+      this.dissmissLoader();
+    });
+  }
+
   eliminarGastoHistorico(gastoId: number) {
     this.modalDelete(async () => {
       this.showLoader();
       try {
         const db = await this.dbService.getDB();
         await db.run('DELETE FROM gasto WHERE id = ?', [gastoId]);
-        
+
         if (this.recurrenteSeleccionado) {
           await this.obtenerHistorialGastos(this.recurrenteSeleccionado.id);
         }
@@ -231,5 +248,9 @@ export class ControlRecurrentesPage extends BasePage {
         this.dissmissLoader();
       }
     });
+  }
+
+  printStado(estado: number): string {
+    return estado === 2 ? 'Eliminado' : estado === 1 ? 'Pagado' : 'Pendiente';
   }
 }

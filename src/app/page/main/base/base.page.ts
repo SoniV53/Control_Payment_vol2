@@ -8,7 +8,7 @@ import { GastoServiceService } from 'src/app/services/gasto-service.service';
 import Swal from 'sweetalert2';
 import { Capacitor } from '@capacitor/core';
 import { addIcons } from 'ionicons';
-import { barbellOutline, createOutline, searchOutline, trashOutline } from 'ionicons/icons';
+import { barbellOutline, carOutline, createOutline, refreshOutline, searchOutline, trashOutline } from 'ionicons/icons';
 import { CategoriaServiceService } from 'src/app/services/categoria-service.service';
 import { getIconPath } from 'src/app/utils/Utils';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
@@ -62,7 +62,7 @@ export class BasePage {
 
     this.maxYear = Number(year.toString()) + 10 + '';
 
-    addIcons({ barbellOutline,createOutline,trashOutline,searchOutline });
+    addIcons({ barbellOutline,createOutline,trashOutline,searchOutline,refreshOutline,carOutline });
   }
 
   loaderNav = false;
