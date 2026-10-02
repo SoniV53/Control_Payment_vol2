@@ -1,28 +1,33 @@
-<div>
+<div class="recurrente-card">
+  <div class="card-header">
+    <div class="status-indicator" [class.inactive]="isCheck"></div>
+    <span class="header-title">Detalle Recurrente</span>
+    <ion-button fill="clear" class="btn-edit" (click)="clickEditItem()">
+      <ion-icon [src]="getIcon('create-outline')"></ion-icon>
+    </ion-button>
+  </div>
 
-  <ion-item>
-    <div class="items-detalle">
-      <ion-item>
-        <ion-label style="font-weight: bold;">Fecha:</ion-label>
-        <ion-label slot="end">{{formatearDate()}}</ion-label>
-      </ion-item>
-
-      <ion-item>
-        <ion-label style="font-weight: bold;">Monto:</ion-label>
-        <ion-label slot="end">{{formatearMonto()}}</ion-label>
-      </ion-item>
-
-      <ion-item>
-        <ion-label style="font-weight: bold;">Cantidad:</ion-label>
-        <ion-label slot="end">({{gastoData?.cantidad || 0}})</ion-label>
-      </ion-item>
+  <div class="details-grid">
+    <div class="detail-item">
+      <span class="label">Fecha</span>
+      <span class="value">{{formatearDate()}}</span>
     </div>
-    <ion-icon [src]="getIcon('create-outline')" slot="end"></ion-icon>
 
-  </ion-item>
+    <div class="detail-item">
+      <span class="label">Monto</span>
+      <span class="value highlight">{{formatearMonto()}}</span>
+    </div>
 
-  <div style="margin-top: 0px;">
-    <ion-toggle aria-label="Enable Notifications" (ionChange)="ionChangeToggle($event)"
-      [checked]="isCheck">Desabilitar:</ion-toggle>
+    <div class="detail-item">
+      <span class="label">Cantidad</span>
+      <span class="value">({{gastoData?.cantidad || 0}})</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="toggle-section">
+    <ion-label>Deshabilitar cargo automático</ion-label>
+    <ion-toggle aria-label="Deshabilitar" mode="ios" (ionChange)="ionChangeToggle($event)" [checked]="isCheck"></ion-toggle>
   </div>
 </div>

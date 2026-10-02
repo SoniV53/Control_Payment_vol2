@@ -1,17 +1,47 @@
 .content-input,
 ion-item {
-    background-color: var(--ion-background-color-second90);
-    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #9fa2ac;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-left: 4px;
+
+    span {
+        color: #ff4961;
+    }
 }
 
 .ion-item {
-    --background: var(--ion-background-color-second90) !important;
-    border-radius: 4px;
+    --background: transparent !important;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 56px;
+    
+    &:active {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
     .icon {
         font-size: 24px;
-        margin-right: 8px;
+        margin-right: 12px;
+        color: #00d09c;
     }
+    
+    ion-label {
+        font-size: 1rem;
+        color: #ffffff;
+    }
+
     .icon-flecha {
         font-size: 16px;
+        color: #9fa2ac;
     }
 }

@@ -1,17 +1,20 @@
 ion-content {
-  --background: #1a2026;
+  --background: #121317;
 }
 
 .tab-content {
   padding: 16px;
 }
 
-.category-card {
-  background: #2D3740;
-  border-radius: 12px;
-  margin: 0 0 20px 0;
+/* Fix específico para tarjetas Ionic */
+ion-card.category-card {
+  --background: #1e2025;
+  background: #1e2025;
+  border-radius: 20px;
+  margin: 0 0 20px 0 !important;
   padding: 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 
   .category-header {
     display: flex;
@@ -19,72 +22,104 @@ ion-content {
     align-items: center;
     color: #ffffff;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
+    margin-bottom: 8px;
 
     .cat-info {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
 
       ion-icon {
-        font-size: 20px;
-        color: #b0bec5;
+        font-size: 22px;
+        color: #00d09c;
+        /* Quitamos el background/padding del icon para evitar glitches en Webview */
       }
+
+      .cat-name {
+        text-transform: capitalize;
+      }
+    }
+
+    .cat-total {
+      color: #8c9ba5;
+      font-size: 14px;
+      font-weight: 600;
     }
   }
 
   .divider {
     height: 1px;
-    background: rgba(255, 255, 255, 0.2);
-    margin: 12px 0;
+    background: rgba(255, 255, 255, 0.05);
+    margin: 16px 0;
   }
 }
 
+/* FIX AGRESIVO PARA EL ACORDEON EN ANDROID (quitar las líneas grises raras a la izquierda) */
+ion-accordion-group {
+  margin-top: 8px;
+}
+
 ion-accordion {
-  background: transparent;
+  background: transparent !important;
+  margin: 0 !important;
+
+  /* Forzamos al Shadow DOM a quitar la línea izquierda que sale en Android (mode="md") */
+  &::part(content) {
+    border: none !important;
+    border-left: none !important;
+  }
+  &::part(header) {
+    border: none !important;
+  }
   
   .item-header {
     --background: transparent;
     --color: #ffffff;
-    --min-height: 40px;
+    --min-height: 48px;
     --padding-start: 0;
     --inner-padding-end: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     
     .item-title {
       font-size: 15px;
-      font-weight: 500;
+      font-weight: 600;
     }
   }
 
   .item-content-box {
-    background: #1E252B; 
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03); 
+    border-radius: 16px;
     padding: 16px;
-    margin-top: 8px;
+    margin-top: 12px;
     margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 
     .detail-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
 
       .detail-label {
-        color: #ffffff;
+        color: #8c9ba5;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
       .detail-value {
         color: #ffffff;
-        font-size: 14px;
+        font-size: 15px;
+        font-weight: 600;
       }
     }
 
     .divider-dark {
       height: 1px;
-      background: rgba(255, 255, 255, 0.1);
-      margin: 12px 0;
+      background: rgba(255, 255, 255, 0.05);
+      margin: 16px 0;
     }
 
     .actions-footer-row {
@@ -99,14 +134,14 @@ ion-accordion {
 
         .detail-label {
           color: #ffffff;
-          font-weight: 600;
+          font-weight: 500;
           font-size: 14px;
         }
 
         ion-toggle {
-          // MODIFICADO: Switch de deshabilitar ahora se enciende en verde impecable
-          --background-checked: #2ecc71 !important; 
-          --handle-background-checked: #ffffff !important;
+          --background: rgba(255, 255, 255, 0.1);
+          --background-checked: #ff4961 !important; 
+          --handle-background: #ffffff !important;
         }
       }
 
@@ -115,7 +150,7 @@ ion-accordion {
         align-items: center;
 
         .icon-btn {
-          font-size: 22px;
+          font-size: 24px;
           cursor: pointer;
           transition: transform 0.1s ease;
 
@@ -125,66 +160,85 @@ ion-accordion {
         }
 
         .edit-btn {
-          color: #8c9ba5;
+          color: #00d09c;
+          padding: 8px;
+          background: rgba(0, 208, 156, 0.1);
+          border-radius: 12px;
         }
       }
     }
   }
 }
 
-// Estilos personalizados para el Modal Oscuro de Edición
+// Modal Edición
 .modal-content-bg {
-  --background: #1a2026;
+  --background: #121317;
   color: #ffffff;
 }
 
+.edit-modal {
+  --border-radius: 24px 24px 0 0;
+}
+
 ion-toolbar {
-  --background: #2D3740;
+  --background: #1e2025;
   --color: #ffffff;
+  --border-color: rgba(255, 255, 255, 0.05);
 }
 
 .custom-input-item {
-  --background: #2D3740;
+  --background: #1e2025;
   --color: #ffffff;
-  border-radius: 8px;
-  --padding-start: 12px;
-  margin-bottom: 8px;
+  border-radius: 16px;
+  --padding-start: 16px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   
   ion-label {
     color: #8c9ba5 !important;
     font-size: 13px;
     font-weight: 600;
+    margin-top: 12px;
   }
   
   ion-input {
     --color: #ffffff;
-    font-size: 15px;
+    font-size: 16px;
+    font-weight: 500;
   }
 }
 
 .btn-save {
-  --background: #E57368;
+  --background: #00d09c;
+  --background-activated: #00b889;
   --color: #ffffff;
-  font-weight: bold;
-  margin-top: 20px;
+  font-weight: 700;
+  margin-top: 24px;
+  --border-radius: 16px;
+  height: 50px;
+  box-shadow: 0 8px 16px rgba(0, 208, 156, 0.2);
 }
 
 .history-section {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 24px;
 
   .history-title {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
     color: #ffffff;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   .no-history {
     color: #8c9ba5;
     font-size: 14px;
     text-align: center;
-    padding: 20px 0;
+    padding: 24px 0;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
   }
 
   .history-list {
@@ -192,15 +246,19 @@ ion-toolbar {
   }
 
   .history-item {
-    --background: #1E252B;
+    --background: #1e2025;
     --color: #ffffff;
-    margin-bottom: 8px;
-    border-radius: 8px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    --padding-start: 12px;
+    --inner-padding-end: 12px;
     
     h2 {
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 15px;
+      font-weight: 600;
       color: #ffffff;
+      margin-bottom: 4px;
     }
     
     .gasto-date {
@@ -211,81 +269,53 @@ ion-toolbar {
     .history-end {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
 
       .gasto-amount {
         font-weight: bold;
         color: #ffffff;
-        font-size: 14px;
+        font-size: 15px;
+        margin-right: 8px;
+      }
+
+      .edit-history-btn {
+        color: #00d09c; 
+        font-size: 22px;
+        cursor: pointer;
       }
 
       .delete-history-btn {
-        color: #E57368;
-        font-size: 18px;
+        color: #ff4961;
+        font-size: 22px;
         cursor: pointer;
       }
     }
   }
 }
 
-/* ... Manten todo el CSS que ya tienes y agrega esto al final: ... */
-
 .custom-toggle-item {
   --background: transparent;
   --padding-start: 0;
   --inner-padding-end: 0;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+  margin-top: 16px;
 
   ion-label {
     color: #8c9ba5 !important;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   ion-toggle {
-    --background-checked: #E57368 !important; 
+    --background-checked: #00d09c !important; 
     --handle-background-checked: #ffffff !important;
-  }
-}
-
-.history-item {
-  // ... (tus estilos actuales del history item) ...
-  
-  .history-end {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .gasto-amount {
-      font-weight: bold;
-      color: #ffffff;
-      font-size: 14px;
-      margin-right: 4px;
-    }
-
-    .edit-history-btn {
-      color: #b0bec5; 
-      font-size: 20px;
-      cursor: pointer;
-      transition: color 0.2s;
-
-      &:active {
-        color: #ffffff;
-      }
-    }
-
-    .delete-history-btn {
-      color: #E57368;
-      font-size: 18px;
-      cursor: pointer;
-    }
   }
 }
 
 .history-checkbox {
   --border-color: #8c9ba5;
-  --background-checked: #E57368;
-  --border-color-checked: #E57368;
+  --background-checked: #00d09c;
+  --border-color-checked: #00d09c;
   --checkmark-color: #ffffff;
-  margin-right: 14px;
+  margin-right: 16px;
 }

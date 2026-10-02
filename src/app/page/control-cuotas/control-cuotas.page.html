@@ -166,4 +166,10 @@
     </ng-template>
   </ion-modal>
 
+  <!-- Funcionalidad solicitada: Botón flotante para agregar nuevos -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 24px; margin-right: 16px;">
+    <ion-fab-button style="--background: #00d09c; --color: #ffffff; box-shadow: 0 4px 12px rgba(0,208,156,0.4);" (click)="navCtrl.push('NewPaymentPage')">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

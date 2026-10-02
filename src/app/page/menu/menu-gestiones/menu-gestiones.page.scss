@@ -1,7 +1,82 @@
-.label-title {
-    margin-top: 24px;
-    margin-bottom: 8px;
-    font-weight: bold;
-    font-size: 1.2em;
-    margin-left: 8px;
+.content-bg {
+    --background: #121317;
+}
+
+.menu-container {
+    padding: 8px 16px 24px;
+}
+
+.menu-section {
+    margin-bottom: 32px;
+
+    .section-title {
+        color: #9fa2ac;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0 0 16px 8px;
+    }
+
+    .menu-list {
+        background: #1e2025;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+
+        .menu-item {
+            --background: transparent;
+            --padding-start: 16px;
+            --padding-end: 16px;
+            --min-height: 72px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &:active {
+                --background: rgba(255, 255, 255, 0.05);
+            }
+
+            .menu-icon {
+                width: 40px;
+                height: 40px;
+                background: rgba(0, 208, 156, 0.1);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 16px;
+
+                ion-icon {
+                    color: #00d09c;
+                    font-size: 20px;
+                }
+            }
+
+            ion-label {
+                margin-top: 14px;
+                margin-bottom: 14px;
+                
+                h3 {
+                    color: #ffffff;
+                    font-size: 1.05rem;
+                    font-weight: 600;
+                    margin-bottom: 4px;
+                }
+
+                p {
+                    color: #8c9ba5;
+                    font-size: 0.85rem;
+                }
+            }
+
+            .chevron-icon {
+                color: #8c9ba5;
+                font-size: 20px;
+                opacity: 0.5;
+            }
+        }
+    }
 }

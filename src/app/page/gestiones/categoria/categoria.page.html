@@ -4,62 +4,53 @@
     </ion-toolbar>
 </ion-header>
 
-
-<ion-content [fullscreen]="true">
-    <div style="margin-bottom: 32px;">
-        <ion-item class="ion-item">
-            <div class="icon" slot="start" (click)="clickDateModal()">
-                <ion-icon *ngIf="formCat.icon" [src]="getIcon(formCat.icon)" ></ion-icon>
+<ion-content [fullscreen]="true" class="content-bg ion-padding">
+    
+    <!-- Sección de Creación / Edición -->
+    <div class="form-section">
+        <h2 class="section-title">{{ isUpdate ? 'Editar Categoría' : 'Nueva Categoría' }}</h2>
+        
+        <div class="input-group">
+            <div class="icon-selector" (click)="clickDateModal()">
+                <ion-icon [src]="formCat.icon ? getIcon(formCat.icon) : getIcon('add-outline')"></ion-icon>
             </div>
-            <div style="width: 100%;">
-                <input-simple [label]="formCat.titulo" [name]="formCat.id" [required]="formCat.required" [type]="formCat.tipo" [placeholder]="formCat.placeholder" [(ngModel)]="formCat.valueSelect" (ionInput)="ionChangeInput(formCat)"></input-simple>
+            <div class="input-wrapper">
+                <input-simple [label]="''" [name]="formCat.id" [required]="formCat.required" [type]="formCat.tipo" [placeholder]="formCat.placeholder" [(ngModel)]="formCat.valueSelect" (ionInput)="ionChangeInput(formCat)"></input-simple>
             </div>
-            <!-- <div class="icon" slot="end" (click)="clickDateModal()">
-                <ion-icon [src]="getIcon('add-circle-outline')"></ion-icon>
-            </div> -->
-        </ion-item>
+        </div>
 
-        <ion-button class="button-action" expand="block" (click)="saveNewCategory()" [disabled]="disabledButton">{{tituloBotton}}</ion-button>
-        <!-- <p class="center-grid">agregue texto</p> -->
+        <div class="action-buttons">
+            <ion-button *ngIf="isUpdate" class="button-cancel" fill="clear" (click)="resetData()">Cancelar</ion-button>
+            <ion-button class="button-action-main" expand="block" shape="round" (click)="saveNewCategory()" [disabled]="disabledButton">{{tituloBotton}}</ion-button>
+        </div>
     </div>
 
-    <div *ngIf="listCategoria.length">
-        <p style="margin-left: 16px !important;">Listado Categorias:</p>
-        <ion-grid>
-            <ion-row>
-                <ion-col *ngFor="let cat of listCategoria">
-                    <ion-item (click)="onItemCategoria(cat)">
-                        <div class="icon-list" slot="start">
-                            <ion-icon [src]="getIcon(cat.icono)"></ion-icon>
-                        </div>
-                        <ion-label>{{cat.nombre}}</ion-label>
-                    </ion-item>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
+    <!-- Listado de Categorías Existentes -->
+    <div class="list-section" *ngIf="listCategoria.length">
+        <h2 class="section-title">Categorías Activas</h2>
+        
+        <div class="categories-grid">
+            <div class="category-card" *ngFor="let cat of listCategoria" (click)="onItemCategoria(cat)">
+                <div class="cat-icon-container">
+                    <ion-icon [src]="getIcon(cat.icono)"></ion-icon>
+                </div>
+                <span class="cat-name">{{cat.nombre}}</span>
+            </div>
+        </div>
     </div>
 
     <empty-base *ngIf="!listCategoria.length" [dataCard]="dataCard"></empty-base>
+
 </ion-content>
 
-<ion-footer class="ion-no-border">
-
-</ion-footer>
-
+<!-- Modal de Selección de Iconos -->
 <app-modal-base *ngIf="showPopup" [showPopup]="showPopup" (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
-
-    <div *ngIf="listSim.length" style="margin-top: 16px;">
-        <p style="margin-left: 16px !important;">Símbolos:</p>
-        <ion-grid>
-            <ion-row>
-                <ion-col *ngFor="let cat of listSim">
-                    <ion-item (click)="onSimbolCLick(cat)">
-                        <div class="icon-list" slot="start">
-                            <ion-icon [src]="getIcon(cat)" color="primary"></ion-icon>
-                        </div>
-                    </ion-item>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
+    <div class="icon-modal-content">
+        <h3 class="modal-title">Elige un ícono</h3>
+        <div class="icons-grid">
+            <div class="icon-option" *ngFor="let sim of listSim" (click)="onSimbolCLick(sim)">
+                <ion-icon [src]="getIcon(sim)"></ion-icon>
+            </div>
+        </div>
     </div>
 </app-modal-base>

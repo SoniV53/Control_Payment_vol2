@@ -17,6 +17,12 @@ import { Categoria } from 'src/app/core/models/categoria.model';
 import { EmptyBaseComponent } from "src/app/component/card/empty-base/empty-base.component";
 import { RouterLink } from '@angular/router';
 import { UpdateListado } from 'src/app/utils/update-params';
+import { addIcons } from 'ionicons';
+import { syncOutline } from 'ionicons/icons';
+
+addIcons({
+  'sync-outline': syncOutline
+});
 
 export default Swal;
 @Component({

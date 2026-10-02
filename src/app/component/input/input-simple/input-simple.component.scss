@@ -1,6 +1,22 @@
 .content-input {
-    background-color: var(--ion-background-color-second90);
-    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+    
+    &:focus-within {
+        border-color: #00d09c;
+        background-color: rgba(0, 208, 156, 0.05);
+    }
+
+    ion-input {
+        --padding-start: 16px;
+        --padding-end: 16px;
+        --padding-top: 14px;
+        --padding-bottom: 14px;
+        font-size: 1rem;
+        color: #ffffff;
+    }
 }
 
 .read-input-content {
@@ -8,5 +24,25 @@
     display: flex;
     padding: 0px 16px;
     align-items: center;
-    border-bottom: 1px solid var(--ion-color-primary);
+    border-bottom: none;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.03);
+    
+    .read-input {
+        color: #9fa2ac;
+        font-size: 1rem;
+    }
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #9fa2ac;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-left: 4px;
+
+    span {
+        color: #ff4961;
+    }
 }

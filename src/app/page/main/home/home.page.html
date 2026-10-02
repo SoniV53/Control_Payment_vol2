@@ -1,63 +1,108 @@
 <ion-content [fullscreen]="true" class="content">
 
-    <div class="container card-content">
-        <div>
-            <ion-item class="item-title">
-                <img src="../../../../assets/images/icon-title.png" alt="icon" slot="start" width="80" height="75">
-                <div>
-                    <h1>Plantilla Control de Gastos</h1>
-                    <p>Gestiona tus gastos y realiza diferentes acciones segun tus necesidades </p>
-                </div>
-            </ion-item>
-        </div>
+  <div class="dashboard-container">
+      
+      <!-- HERO SECTION / HEADER -->
+      <div class="hero-section">
+          <!-- Saludo y logo -->
+          <div class="header-top">
+              <div class="greeting">
+                  <p>Resumen Mensual</p>
+                  <h2>Mi Billetera</h2>
+              </div>
+              <img src="../../../../assets/images/icon-title.png" alt="logo" class="header-logo">
+          </div>
 
-        <div class="sub-item center-grid" (click)="selectDate()">
-            <h3 id="h3-title">{{dateSelect}}</h3>
-        </div>
-        <br>
-        <!-- <div class="">
-            <app-category-payment></app-category-payment>
-            <br>
-            <app-category-payment></app-category-payment>
-        </div> -->
+          <!-- Selector de Fecha -->
+          <div class="date-selector" (click)="selectDate()">
+              <div class="date-pill">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <span>{{ dateSelect || 'Seleccionar mes' }}</span>
+                  <ion-icon name="chevron-down-outline"></ion-icon>
+              </div>
+          </div>
 
+          <!-- Tarjeta de Balance -->
+          <div class="balance-card">
+              <div class="balance-info">
+                  <p>Total de Gastos</p>
+                  <h1><span>$</span> {{ totalGastos | number:'1.2-2' }}</h1>
+              </div>
+              <div class="balance-icon">
+                  <ion-icon name="wallet-outline"></ion-icon>
+              </div>
+          </div>
+      </div>
 
-        <div id="card-items" class="center-grid">
-            <div>
-                <h3 style="font-size: 20px; margin-left: 8px;">Mis Opciones: </h3>
-                <ion-grid style="padding: 0; ">
-                    <ion-row class="ion-justify-content-center">
-                        <ion-col size="6" *ngFor="let col of ionRow">
-                            <app-card-option [dataCard]="col" (click)="navegacion(col.routerLink)"></app-card-option>
-                        </ion-col>
-                    </ion-row>
-                    <!-- <ion-row class="ion-justify-content-center">
-                        <ion-col size="6">
-                            <app-card-option [dataCard]="dataCard[0]" [routerLink]="['/list-payments-month']"></app-card-option>
-                        </ion-col>
-                        <ion-col size="6">
-                            <app-card-option [dataCard]="dataCard[1]" (click)="onClickAction()"></app-card-option>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="6">
-                            <app-card-option [dataCard]="dataCard[2]" (click)="onClickAction()"></app-card-option>
-                        </ion-col>
-                        <ion-col size="6">
-                            <app-card-option [dataCard]="dataCard[3]" (click)="onClickAction()"></app-card-option>
-                        </ion-col>
-                    </ion-row> -->
-                </ion-grid>
-            </div>
+      <!-- ACCIONES RÁPIDAS (Quick Actions) -->
+      <div class="quick-actions-section">
+          <div class="action-btn" (click)="navegacion('MenuGestionesPage')">
+              <div class="icon-wrapper add-btn">
+                  <ion-icon name="add-outline"></ion-icon>
+              </div>
+              <span>Añadir</span>
+          </div>
+          <div class="action-btn" (click)="navegacion('ListPaymentsMonthPage')">
+              <div class="icon-wrapper">
+                  <ion-icon name="list-outline"></ion-icon>
+              </div>
+              <span>Gastos</span>
+          </div>
+          <div class="action-btn" (click)="navegacion('ResumenGastosPage')">
+              <div class="icon-wrapper">
+                  <ion-icon name="pie-chart-outline"></ion-icon>
+              </div>
+              <span>Resumen</span>
+          </div>
+          <div class="action-btn" (click)="navegacion('HistorialGastosPage')">
+              <div class="icon-wrapper">
+                  <ion-icon name="time-outline"></ion-icon>
+              </div>
+              <span>Historial</span>
+          </div>
+      </div>
 
-        </div>
+      <!-- ÚLTIMOS MOVIMIENTOS -->
+      <div class="recent-activity-section">
+          <div class="section-header">
+              <h3>Últimos Movimientos</h3>
+              <span class="see-all" (click)="navegacion('ListPaymentsMonthPage')">Ver todos</span>
+          </div>
 
-    </div>
+          <!-- Estado Vacío (Empty State) -->
+          <div class="empty-state" *ngIf="recentExpenses.length === 0">
+              <div class="empty-icon">
+                  <ion-icon name="receipt-outline"></ion-icon>
+              </div>
+              <p>Aún no hay gastos registrados<br>en este mes.</p>
+              <button class="add-expense-btn" (click)="navegacion('MenuGestionesPage')">Registrar mi primer gasto</button>
+          </div>
+
+          <!-- Aquí irá el ngFor de recentExpenses cuando lo conectemos a SQLite -->
+          <div class="transactions-list" *ngIf="recentExpenses.length > 0">
+              <div class="transaction-item" *ngFor="let exp of recentExpenses">
+                  <div class="trans-icon" [ngStyle]="{'background-color': (exp.cat_color || '#00d09c') + '20'}">
+                      <ion-icon [name]="exp.cat_icono || 'pricetag-outline'" [ngStyle]="{'color': exp.cat_color || '#00d09c'}"></ion-icon>
+                  </div>
+                  <div class="trans-info">
+                      <h4>{{ exp.titulo }}</h4>
+                      <p>{{ exp.fecha | date:'dd/MM/yyyy' }} • {{ exp.tipo | titlecase }}</p>
+                  </div>
+                  <div class="trans-amount">
+                      <p>-$ {{ exp.monto | number:'1.2-2' }}</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  </div>
+
 </ion-content>
 
+<!-- MODAL FECHA -->
 <app-modal-base *ngIf="showPopup && this.myApp.dateSelected" [showPopup]="showPopup"
-    (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
-    <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)"
-        class="custom-date" [value]="this.myApp.dateSelected" [max]="maxYear">
-    </ion-datetime>
+  (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false" [sheetBottom]="false">
+  <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar" (ionChange)="onMonthYearChange($event)"
+      class="custom-date" [value]="this.myApp.dateSelected" [max]="maxYear">
+  </ion-datetime>
 </app-modal-base>

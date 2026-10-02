@@ -1,43 +1,48 @@
-<ion-content [fullscreen]="false">
+<ion-content [fullscreen]="true" class="content-bg ion-padding">
     <app-banner-top [toolBarData]="toolBar" (onActionTitle)="onActionTitle()" [loader]="loaderNav"></app-banner-top>
 
-    <br>
-    <div class="content-background">
-        <ion-item class="trans-item">
-            <p slot="start">Cantidad Gastos:</p>
-            <p slot="end" class="txt-item" style="margin-right: 0px !important;">({{cantidad}})</p>
-        </ion-item>
-
-        <div style="height: 1px; background-color: #EFF2F6; margin: 0.4rem 1rem;"></div>
-
-        <ion-item class="trans-item">
-            <p slot="start">Presupuesto:</p>
-            <div slot="end" style="display: flex;" (click)="editarPresupuesto()">
-                <p style="text-align: end; font-weight: bold; font-size: 16px;">{{formatearMontoPr(form.valueSelect)}}
-                </p>
-                <ion-icon [src]="getIcon('create-outline')" style="margin-left: 8px;"></ion-icon>
+    <div class="metrics-grid">
+        <!-- Tarjeta de Presupuesto -->
+        <div class="metric-card budget-card" (click)="editarPresupuesto()">
+            <div class="metric-header">
+                <ion-icon name="wallet-outline"></ion-icon>
+                <span>Presupuesto</span>
             </div>
-        </ion-item>
+            <div class="metric-value edit-value">
+                {{formatearMontoPr(form.valueSelect)}}
+                <ion-icon name="create-outline" class="edit-icon"></ion-icon>
+            </div>
+        </div>
 
-        <ion-item class="trans-item">
-            <p slot="start">Total de Gastos:</p>
-            <p slot="end" class="txt-item">{{formatearMontoPr(total)}}</p>
-        </ion-item>
+        <div class="metrics-row">
+            <!-- Tarjeta Total Gastos -->
+            <div class="metric-card small-card">
+                <div class="metric-header">
+                    <span>Total Gastos</span>
+                </div>
+                <div class="metric-value warning-value">
+                    {{formatearMontoPr(total)}}
+                </div>
+            </div>
 
-        <div style="height: 1px; background-color: #EFF2F6; margin: 0.4rem 1rem;"></div>
+            <!-- Tarjeta Restante -->
+            <div class="metric-card small-card">
+                <div class="metric-header">
+                    <span>Restante</span>
+                </div>
+                <div class="metric-value success-value">
+                    {{formatearMontoPr(restante)}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="metric-footer">
+            <span>Cantidad de Gastos: <strong>{{cantidad}}</strong></span>
+        </div>
+    </div>
 
-        <ion-item class="trans-item">
-            <p slot="start">Restante:</p>
-            <p slot="end" class="txt-item">{{formatearMontoPr(restante)}}</p>
-        </ion-item>
-
-
-        <!-- <div class="chip-scroll">
-            <ion-chip>Default</ion-chip>
-            <ion-chip>Default</ion-chip>
-        </div> -->
-
-        <div class="listado-gastos" *ngFor="let categoria of listCategoria">
+    <div class="listado-gastos">
+        <div *ngFor="let categoria of listCategoria">
             <app-category-payment *ngIf="categoria.dataGasto?.length" (clickItem)="clickItem($event)"
                 [dataCategoria]="categoria" [dataGasto]="categoria.dataGasto || []"></app-category-payment>
         </div>
@@ -46,7 +51,7 @@
 
 
 <app-modal-base *ngIf="showPopup && this.myApp.dateSelected && !showModalInfo" [showPopup]="showPopup"
-    (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false">
+    (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false" [sheetBottom]="false">
     <div *ngIf="!isEditar">
         <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar"
             (ionChange)="onMonthYearChange($event)" class="custom-date" [value]="this.myApp.dateSelected"

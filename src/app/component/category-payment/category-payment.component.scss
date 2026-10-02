@@ -13,12 +13,12 @@
 }
 
 .category-main {
-    background-color: var( --ion-background-color-second);
-    box-shadow: 10px 10px 5px -6px rgba(0, 0, 0, 0.33);
-    -webkit-box-shadow: 10px 10px 5px -6px rgba(0, 0, 0, 0.33);
-    -moz-box-shadow: 10px 10px 5px -6px rgba(0, 0, 0, 0.33);
-    border-radius: 8px;
-    padding: 8px;
+    background-color: #1e2025;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    padding: 12px 8px;
+    margin-bottom: 8px;
 }
 
 ion-item {

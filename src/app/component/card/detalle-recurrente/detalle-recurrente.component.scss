@@ -1,22 +1,98 @@
-.items-detalle {
-    width: 100%;
-    margin: 8px 0px;
-    margin-left: 8px;
-}
+.recurrente-card {
+    background-color: #1e2025;
+    border-radius: 20px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 
-ion-item {
-    border-radius: 8px;
-    --inner-padding-start: 0;
-    --inner-padding-end: 0;
-    --padding-start: 0;
+    .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
 
-    --min-height: 24px;
-}
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #00d09c;
+            margin-right: 12px;
+            box-shadow: 0 0 8px rgba(0, 208, 156, 0.5);
 
-ion-label {
-    margin: 0px !important;
-}
+            &.inactive {
+                background-color: #ff4961;
+                box-shadow: 0 0 8px rgba(255, 73, 97, 0.5);
+            }
+        }
 
-ion-icon {
-    margin-right: 8px;
+        .header-title {
+            flex: 1;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .btn-edit {
+            --color: #00d09c;
+            margin: 0;
+            --padding-end: 0;
+
+            ion-icon {
+                font-size: 20px;
+            }
+        }
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .label {
+                color: #8c9ba5;
+                font-size: 0.8rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .value {
+                color: #ffffff;
+                font-size: 1rem;
+                font-weight: 600;
+
+                &.highlight {
+                    color: #00d09c;
+                }
+            }
+        }
+    }
+
+    .divider {
+        height: 1px;
+        background-color: rgba(255, 255, 255, 0.05);
+        margin: 16px 0;
+    }
+
+    .toggle-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        ion-label {
+            color: #9fa2ac;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        ion-toggle {
+            --background: rgba(255, 255, 255, 0.1);
+            --background-checked: #ff4961;
+            --handle-background: #ffffff;
+        }
+    }
 }

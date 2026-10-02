@@ -84,38 +84,35 @@ export class GastoServiceService {
         const result = await db.query(`SELECT last_insert_rowid() as id`);
         const id = result.values?.[0]?.id;
 
-        // if (!recurrente && g.tipo === 'cuota') {
-        //   //const data = await this.getNumeroCuota(fecha);
-        //   //console.log("COMO BIENE:",data)
-        //   const date = new Date(dateSearch(g.fecha)[0]);
-        //   const fechaCu = new Date(date);
-        //   fechaCu.setMonth(fechaCu.getMonth() + (numCuota || 1));
+        if (!recurrente && g.tipo === 'cuota' && g.cuotas) {
+          const totalCuotas = g.cuotas;
+          const cuotasPagadas = numCuota || 0;
+          const fechaBase = new Date(dateSearch(g.fecha)[0]);
 
+          for (let i = 1; i <= totalCuotas; i++) {
+            const fechaCuota = new Date(fechaBase);
+            fechaCuota.setMonth(fechaBase.getMonth() + (i - 1));
 
-        //   const c: GastoCuota = {
-        //     gasto_id: id,
-        //     monto_cuota: g.monto,
-        //     numero_cuota: numCuota || 1,
-        //     estado_cuota: 0,
-        //     fecha_pago: formatDate(fechaCu)
-        //   }
-        //   await db.run(
-        //     `INSERT INTO gasto_cuota (
-        //   gasto_id,
-        //   numero_cuota,
-        //   monto_cuota,
-        //   fecha_pago,
-        //   estado_cuota
-        // ) VALUES (?, ?, ?, ?, ?)`,
-        //     [
-        //       c.gasto_id,
-        //       c.numero_cuota,
-        //       c.monto_cuota,
-        //       c.fecha_pago ?? null,
-        //       c.estado_cuota ?? 0
-        //     ]
-        //   );
-        // }
+            const estadoCuota = (i <= cuotasPagadas) ? 1 : 0;
+
+            await db.run(
+              `INSERT INTO gasto_cuota (
+                gasto_id,
+                numero_cuota,
+                monto_cuota,
+                fecha_pago,
+                estado_cuota
+              ) VALUES (?, ?, ?, ?, ?)`,
+              [
+                id,
+                i,
+                g.monto,
+                formatDate(fechaCuota),
+                estadoCuota
+              ]
+            );
+          }
+        }
 
         resolve(id);
       } catch (error) {
@@ -507,6 +504,65 @@ export class GastoServiceService {
 
       } catch (error) {
         console.error('Error obteniendo total:', error);
+        reject(error);
+      }
+    });
+  }
+
+  async getTotalGastosPorMes(fecha: string): Promise<number> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await this.dbService.getDB();
+        const [fechaInicio, fechaFin] = dateSearch(fecha);
+
+        // Sumar gastos normales y recurrentes en el mes
+        const resultNormal = await db.query(
+          `SELECT SUM(monto) as total FROM gasto 
+           WHERE fecha >= ? AND fecha < ? 
+           AND (tipo = 'normal' OR tipo = 'recurrente') 
+           AND estado != 2`,
+          [fechaInicio, fechaFin]
+        );
+        const totalNormal = resultNormal.values?.[0]?.total || 0;
+
+        // Sumar gastos de cuota en el mes
+        const resultCuota = await db.query(
+          `SELECT SUM(monto_cuota) as total FROM gasto_cuota 
+           WHERE fecha_pago >= ? AND fecha_pago < ? 
+           AND estado_cuota != 2`,
+          [fechaInicio, fechaFin]
+        );
+        const totalCuota = resultCuota.values?.[0]?.total || 0;
+
+        resolve(totalNormal + totalCuota);
+
+      } catch (error) {
+        console.error('Error obteniendo total por mes:', error);
+        reject(error);
+      }
+    });
+  }
+
+  async getUltimosMovimientos(fecha: string, limit: number = 4): Promise<any[]> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await this.dbService.getDB();
+        const [fechaInicio, fechaFin] = dateSearch(fecha);
+
+        // Para simplificar, traemos los ultimos gastos (normal, recurrente, o cuotas base) 
+        const result = await db.query(
+          `SELECT g.id, g.titulo, g.monto, g.fecha, g.tipo, c.icono as cat_icono, c.color as cat_color
+           FROM gasto g
+           LEFT JOIN categoria c ON g.categoria_id = c.id
+           WHERE g.fecha >= ? AND g.fecha < ? AND g.estado != 2
+           ORDER BY g.fecha DESC LIMIT ?`,
+          [fechaInicio, fechaFin, limit]
+        );
+
+        resolve(result.values || []);
+
+      } catch (error) {
+        console.error('Error obteniendo ultimos movimientos:', error);
         reject(error);
       }
     });

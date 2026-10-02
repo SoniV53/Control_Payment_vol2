@@ -253,4 +253,8 @@ export class ControlRecurrentesPage extends BasePage {
   printStado(estado: number): string {
     return estado === 2 ? 'Eliminado' : estado === 1 ? 'Pagado' : 'Pendiente';
   }
+
+  override getIcon(icon: string) {
+    return `assets/ionicons/${icon}.svg`;
+  }
 }

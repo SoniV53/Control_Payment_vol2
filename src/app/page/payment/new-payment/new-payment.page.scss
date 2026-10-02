@@ -42,3 +42,87 @@
             margin-right: 8px;
         }
     }
+
+/* Nuevos estilos de UI/UX para New Payment */
+.content-bg {
+    --background: #121317; /* Mismo fondo base oscuro */
+}
+
+.segment-container {
+    margin: 10px 0 24px 0;
+    
+    .custom-segment {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 4px;
+        border-radius: 12px;
+        
+        ion-segment-button {
+            --color: #9fa2ac;
+            --color-checked: #ffffff;
+            --indicator-color: #00d09c; /* Color de acento primario */
+            --border-radius: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: none;
+            min-height: 40px;
+        }
+    }
+}
+
+.input-wrapper {
+    margin-bottom: 16px;
+    /* Las mejoras visuales internas dependen de input-simple y selector-simple */
+}
+
+.toggle-container {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    
+    .recurrente-item {
+        --background: #1e2025;
+        --border-radius: 16px;
+        --padding-start: 16px;
+        --padding-end: 16px;
+        --padding-top: 8px;
+        --padding-bottom: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        
+        .recurrente-icon {
+            color: #00d09c;
+            font-size: 24px;
+            background: rgba(0, 208, 156, 0.15);
+            padding: 8px;
+            border-radius: 12px;
+            margin-right: 12px;
+        }
+        
+        h3 {
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        p {
+            color: #9fa2ac;
+            font-size: 0.8rem;
+            margin: 0;
+        }
+    }
+}
+
+.footer-button-container {
+    margin-top: 32px;
+    margin-bottom: 20px;
+    
+    .button-action-main {
+        --background: #00d09c;
+        --background-hover: #00b889;
+        --background-activated: #00b889;
+        --color: #ffffff;
+        --box-shadow: 0 8px 16px rgba(0, 208, 156, 0.3);
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+}

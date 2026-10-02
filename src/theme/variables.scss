@@ -56,3 +56,57 @@
     --background: var(--ion-color-success);
     --color: var(--ion-background-color);
 }
+
+/* Customización global del ion-datetime para un diseño elegante Fintech */
+ion-datetime.custom-date {
+    --background: transparent;
+    --background-rgb: 30, 32, 37;
+    --title-color: #ffffff;
+    --wheel-highlight-background: rgba(0, 208, 156, 0.1);
+    --wheel-highlight-border-radius: 16px;
+    --wheel-fade-background-rgb: 30, 32, 37;
+    --color: #ffffff;
+    
+    border-radius: 24px;
+    margin: 0 auto;
+    width: 100%;
+
+    /* Ajustes del contenedor del calendario */
+    &::part(calendar-body) {
+        margin: 16px;
+    }
+
+    /* Personalizar los botones inferiores (Cancelar / OK) */
+    &::part(cancel-button) {
+        color: #9fa2ac;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-right: 16px;
+    }
+    
+    &::part(confirm-button) {
+        background: #00d09c;
+        color: #ffffff;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 8px 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 208, 156, 0.3);
+    }
+
+    /* Estilos para las opciones de la rueda (meses/años) */
+    &::part(wheel-item) {
+        color: #8c9ba5;
+        font-size: 1.1rem;
+        font-weight: 500;
+        opacity: 0.5;
+    }
+    &::part(wheel-item active) {
+        color: #00d09c;
+        font-weight: 800;
+        font-size: 1.3rem;
+        opacity: 1;
+    }
+}

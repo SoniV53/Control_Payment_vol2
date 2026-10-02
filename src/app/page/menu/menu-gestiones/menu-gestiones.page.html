@@ -1,16 +1,27 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="content-bg">
     <ion-header class="ion-no-border">
         <ion-toolbar>
             <app-banner-top [toolBarData]="toolBar"></app-banner-top>
         </ion-toolbar>
     </ion-header>
-    <div>
-        <div *ngFor="let cat of categoriaRow" style="margin: 8px;">
-            <div class="label-title">
-                <p>{{cat.title}}</p>
-            </div>
-            <div *ngFor="let col of cat.listado">
-                <app-card-option [dataCard]="col" [routerLink]="[col?.routerLink || '/home']" [tipo]="'list'"></app-card-option>
+
+    <div class="menu-container">
+        <div *ngFor="let cat of categoriaRow" class="menu-section">
+            <h2 class="section-title">{{ cat.title }}</h2>
+            
+            <div class="menu-list">
+                <ion-item *ngFor="let col of cat.listado" [routerLink]="[col?.routerLink || '/home']" lines="none" class="menu-item" detail="false">
+                    <div class="menu-icon" slot="start">
+                        <ion-icon [name]="col.icon || 'folder-outline'"></ion-icon>
+                    </div>
+                    
+                    <ion-label>
+                        <h3>{{ col.title }}</h3>
+                        <p *ngIf="col.desc">{{ col.desc }}</p>
+                    </ion-label>
+                    
+                    <ion-icon name="chevron-forward-outline" slot="end" class="chevron-icon"></ion-icon>
+                </ion-item>
             </div>
         </div>
     </div>

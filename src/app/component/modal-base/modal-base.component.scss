@@ -3,16 +3,18 @@
     inset: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--color-black-text-opacity70);
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     align-items: center;
+    justify-content: center;
     z-index: 3000;
     padding: 24px;
 }
 
 .popup-content {
-    background-color: var(--ion-background-color-second);
-    border-radius: var(--esquina-04);
+    background-color: #1e2025;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     width: 100%;
     position: relative;
     display: flex;
@@ -65,8 +67,10 @@
     padding: 0px;
     .popup-content {
         border-radius: 0px;
-        background-color: var(--ion-background-color-second);
-        border-top-left-radius: var(--esquina-04);
-        border-top-right-radius: var(--esquina-04);
+        background-color: #1e2025;
+        border-top-left-radius: 24px;
+        border-top-right-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: none;
     }
 }

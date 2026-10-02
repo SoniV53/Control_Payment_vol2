@@ -1,67 +1,5 @@
-.content-segment {
-    box-sizing: content-box;
-}
-
-ion-segment-view {
-    width: 100%;
-    height: 92%;
-    box-sizing: content-box;
-}
-
-// ion-segment-content {
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-// }
-
-.listado-gastos {
-    margin: 16px 0px;
-}
-
-/* Eliminación agresiva de líneas y fondos en el Acordeón */
-ion-accordion-group {
-  margin-top: 8px;
-}
-
-ion-accordion {
-  background: transparent !important;
-  margin: 0 !important;
-
-  /* Forzamos al Shadow DOM a quitar la línea izquierda que sale en Android (mode="md") */
-  &::part(content) {
-    border: none !important;
-    border-left: none !important;
-  }
-  &::part(header) {
-    border: none !important;
-  }
-
-  .cat-title-container {
-    --background: transparent; 
-    --color: #8c9ba5;
-    font-weight: 700;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border: none !important; 
-    --border-width: 0 !important;
-    --inner-border-width: 0 !important;
-    margin: 8px 16px 0; 
-    --padding-start: 0; 
-    --inner-padding-end: 0; 
-    --min-height: 36px;
-    box-shadow: none; 
-    
-    ion-icon[slot="start"] {
-      font-size: 20px;
-      color: #b0bec5;
-      margin-right: 8px;
-    }
-  }
-}
-
-.listado-gastos {
-  margin: 8px 0px 16px;
+ion-content {
+  --background: #121317;
 }
 
 .content-segment {
@@ -70,32 +8,63 @@ ion-accordion {
 
 ion-segment-view {
   width: 100%;
-  height: 92%;
+  height: 100%;
   box-sizing: content-box;
 }
 
+/* Título de la categoría */
+.cat-title-container {
+  display: flex;
+  align-items: center;
+  color: #9fa2ac;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 24px 16px 8px; 
+  
+  ion-icon {
+    font-size: 18px;
+    color: #00d09c;
+    margin-right: 8px;
+    background: rgba(0, 208, 156, 0.1);
+    padding: 4px;
+    border-radius: 8px;
+  }
+}
+
+.listado-gastos {
+  margin: 0px 0px 16px;
+}
+
 .cuota-card {
-  background: #2D3740;
+  background: #1e2025;
   color: white;
-  border-radius: 12px;
+  border-radius: 20px;
   margin: 0 16px 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  ion-card-content {
+    padding: 16px;
+  }
 
   .header-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     
     h3 {
       margin: 0;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
+      color: #ffffff;
     }
 
     .monto-total {
-      color: #E57368;
-      font-weight: bold;
+      color: #00d09c;
+      font-weight: 800;
       font-size: 15px;
     }
   }
@@ -103,14 +72,14 @@ ion-segment-view {
   .card-dates {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     color: #8c9ba5;
-    font-size: 12px;
-    margin-bottom: 14px;
+    font-size: 13px;
+    margin-bottom: 16px;
     
     ion-icon {
-      font-size: 14px;
-      color: #b0bec5;
+      font-size: 16px;
+      color: #00d09c;
     }
   }
 }
@@ -118,32 +87,20 @@ ion-segment-view {
 .info-grid {
   display: flex;
   justify-content: space-between;
-  margin: 12px 0;
+  margin: 16px 0 12px;
   font-size: 13px;
-  color: #b0bec5;
+  color: #8c9ba5;
 
   b {
     color: #ffffff;
   }
 }
 
-.cuota-detail-item {
-  background: #1E252B;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  --background: transparent;
-  box-shadow: none;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.cuota-amount {
-  margin-right: 15px;
-  font-weight: bold;
-  color: #2ecc71;
-}
-
-.modal-bg {
-  --background: #1a2026;
+ion-progress-bar {
+  --background: rgba(255, 255, 255, 0.1);
+  --progress-background: #00d09c;
+  height: 6px;
+  border-radius: 3px;
 }
 
 .actions { 
@@ -151,6 +108,9 @@ ion-segment-view {
   justify-content: flex-end; 
   padding: 0 16px 16px; 
   gap: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 12px;
+  margin-top: -8px;
   
   ion-icon { 
     font-size: 22px; 
@@ -163,10 +123,59 @@ ion-segment-view {
       color: white; 
     }
 
-    &[name="trash-outline"]:active {
-      color: #E57368;
+    &[name="create-outline"] {
+      color: #00d09c;
+    }
+
+    &[name="trash-outline"] {
+      color: #ff4961;
     }
   }
+}
+
+/* Detalles Cuotas Modal */
+.modal-bg {
+  --background: #121317;
+}
+
+.cuota-detail-item {
+  background: #1e2025;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  --background: transparent;
+  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  ion-item {
+    --background: transparent;
+    --padding-start: 16px;
+    --inner-padding-end: 16px;
+
+    h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    p {
+      color: #8c9ba5;
+      font-size: 13px;
+    }
+  }
+}
+
+.cuota-amount {
+  margin-right: 16px;
+  font-weight: 700;
+  color: #00d09c;
+  font-size: 15px;
+}
+
+ion-checkbox {
+  --border-color: #8c9ba5;
+  --background-checked: #00d09c;
+  --border-color-checked: #00d09c;
+  --checkmark-color: #ffffff;
 }
 
 /* Empty state styling */
@@ -178,56 +187,61 @@ ion-segment-view {
   height: 30vh;
   color: #8c9ba5;
   text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  margin: 24px;
+  border-radius: 20px;
   
   ion-icon { 
-    font-size: 64px; 
+    font-size: 48px; 
     margin-bottom: 16px; 
     opacity: 0.5;
+    color: #00d09c;
   }
 }
 
-/* Nuevos Estilos para los Inputs Solid del Bottom Sheet */
+/* Formulario Editar */
 .form-section { 
-  padding-top: 10px;
-  padding-bottom: 20px; 
+  padding-top: 16px;
+  padding-bottom: 24px; 
 }
 
 .custom-input {
-  --background: #2D3740;
+  --background: #1e2025;
   --color: #ffffff;
   --placeholder-color: #8c9ba5;
   --padding-start: 16px;
   margin-bottom: 16px;
-  border-radius: 8px;
+  border-radius: 16px;
   font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   
   &::part(native) {
     color: #ffffff;
   }
 }
 
-/* Arreglo específico para ion-select */
 ion-select.custom-input {
-  --padding-top: 12px;
-  --padding-bottom: 12px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
   
   &::part(icon) {
-    color: #8c9ba5;
+    color: #00d09c;
   }
 }
 
 .btn-save {
-  --background: #E57368;
+  --background: #00d09c;
+  --background-activated: #00b889;
   --color: #ffffff;
-  font-weight: bold;
-  margin-top: 20px;
-  --border-radius: 8px;
-  height: 48px;
+  font-weight: 700;
+  margin-top: 24px;
+  --border-radius: 16px;
+  height: 50px;
+  box-shadow: 0 8px 16px rgba(0, 208, 156, 0.2);
 }
 
-/* Bottom Sheet Configuration */
 ion-modal.bottom-sheet {
-  --border-radius: 20px 20px 0 0;
+  --border-radius: 24px 24px 0 0;
   align-items: flex-end;
   
   ::ng-deep .ion-page {
@@ -237,25 +251,8 @@ ion-modal.bottom-sheet {
   }
   
   ion-toolbar {
-    --background: #1a2026;
+    --background: #1e2025;
     --border-color: transparent;
-  }
-}
-
-.cat-title-container {
-  display: flex;
-  align-items: center;
-  background: transparent; 
-  color: #8c9ba5;
-  font-weight: 700;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 16px 16px 4px; 
-  
-  ion-icon {
-    font-size: 20px;
-    color: #b0bec5;
-    margin-right: 8px;
+    --color: #ffffff;
   }
 }
