@@ -1,9 +1,10 @@
 .content-input,
-ion-item {
-    background-color: rgba(255, 255, 255, 0.05);
+ion-item.ion-item {
+    background-color: #1e2025;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.2s ease;
+    overflow: hidden;
 }
 
 label {
@@ -23,10 +24,11 @@ label {
     --background: transparent !important;
     --padding-start: 16px;
     --padding-end: 16px;
+    --inner-padding-end: 0px;
     --min-height: 56px;
     
     &:active {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: #25282e;
     }
     
     .icon {
@@ -43,5 +45,18 @@ label {
     .icon-flecha {
         font-size: 16px;
         color: #9fa2ac;
+        margin-left: 12px;
     }
+}
+
+ion-select {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 14px;
+    --padding-bottom: 14px;
+    --background: transparent;
+    --border-width: 0;
+    --border-style: none;
+    font-size: 1rem;
+    color: #ffffff;
 }

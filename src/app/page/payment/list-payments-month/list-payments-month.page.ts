@@ -11,7 +11,7 @@ import { Categoria } from 'src/app/core/models/categoria.model';
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
 import { InputSimpleComponent } from "src/app/component/input/input-simple/input-simple.component";
-import { CatalogoTipoGasto, dateSearch, eNumber, formatDate, formatearMonto, getMesActual, getMesAnterior } from 'src/app/utils/Utils';
+import { CatalogoTipoGasto, dateSearch, eNumber, formatDate, formatearMonto, getMesActual, getMesAnterior, getIconPath } from 'src/app/utils/Utils';
 import { Presupuesto } from 'src/app/core/models/presupuesto.model';
 import { UpdateListado } from 'src/app/utils/update-params';
 import { DetalleGastoComponent } from "src/app/component/card/detalle-gasto/detalle-gasto.component";
@@ -59,99 +59,9 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
   };
 
 
+ 
+
   async ngOnInit() {
-    // this.listCategoria = [
-    //   {
-    //     "id": 1,
-    //     "icono": "fast-food-outline",
-    //     "nombre": "comida",
-    //     "totalMonto": 0,
-    //     "dataGasto": [
-    //       {
-    //         "id": 3,
-    //         "titulo": "recurrete",
-    //         "monto": 3600,
-    //         "descripcion": "",
-    //         "cuotas": 1,
-    //         "fecha": "2026-02-01",
-    //         "fechaEnd": null,
-    //         "tipo": "normal",
-    //         "etiquetas": "",
-    //         "categoria_id": 1,
-    //         "recurrente_id": 1,
-    //         "estado": 0
-    //       },
-    //       {
-    //         "id": 2,
-    //         "titulo": "cuota",
-    //         "monto": 3600,
-    //         "descripcion": "",
-    //         "cuotas": 12,
-    //         "fecha": "2026-02-01",
-    //         "fechaEnd": "2027-01-01",
-    //         "tipo": "cuota",
-    //         "etiquetas": "",
-    //         "categoria_id": 1,
-    //         "recurrente_id": null,
-    //         "estado": 0,
-    //         "gastoCuota": {
-    //           "id": 1,
-    //           "gasto_id": 2,
-    //           "numero_cuota": 1,
-    //           "monto_cuota": 300,
-    //           "fecha_pago": "2026-02-01",
-    //           "estado_cuota": 0
-    //         }
-    //       },
-
-    //       {
-    //         "id": 3,
-    //         "titulo": "cuota ss",
-    //         "monto": 3600,
-    //         "descripcion": "",
-    //         "cuotas": 12,
-    //         "fecha": "2026-02-01",
-    //         "fechaEnd": "2027-01-01",
-    //         "tipo": "cuota",
-    //         "etiquetas": "",
-    //         "categoria_id": 1,
-    //         "recurrente_id": null,
-    //         "estado": 0,
-    //         "gastoCuota": {
-    //           "id": 1,
-    //           "gasto_id": 2,
-    //           "numero_cuota": 1,
-    //           "monto_cuota": 300,
-    //           "fecha_pago": "2026-02-01",
-    //           "estado_cuota": 0
-    //         }
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "id": 2,
-    //     "icono": "business-outline",
-    //     "nombre": "papas",
-    //     "totalMonto": 0,
-    //     "dataGasto": [
-    //       {
-    //         "id": 7,
-    //         "titulo": "hwh",
-    //         "monto": 64,
-    //         "descripcion": "",
-    //         "cuotas": 1,
-    //         "fecha": "2026-02-01",
-    //         "fechaEnd": null,
-    //         "tipo": "recurrente",
-    //         "etiquetas": "",
-    //         "categoria_id": 2,
-    //         "recurrente_id": 4,
-    //         "estado": 0
-    //       },
-    //     ]
-    //   }
-    // ];
-
   }
 
   ngOnDestroy(): void {

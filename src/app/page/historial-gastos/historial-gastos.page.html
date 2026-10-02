@@ -61,7 +61,9 @@
         <div class="mes-list">
           <div class="transaction-row" *ngFor="let item of grupo.items; let last = last" [class.no-border]="last" (click)="verDetalleGasto(item)">
             <div class="tx-icon">
-              <ion-icon [name]="item.cat_icono || 'cash-outline'"></ion-icon>
+              <!-- Indicador de estado para cuotas y recurrentes -->
+              <div class="status-indicator" *ngIf="item.tipo !== 'normal'" [class.paid]="item.estado === 1" [class.pending]="item.estado === 0"></div>
+              <ion-icon [src]="getIcon(item.cat_icono || '')"></ion-icon>
             </div>
             
             <div class="tx-info">

@@ -1,12 +1,15 @@
 .content-input {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: #1e2025;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.2s ease;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
     
     &:focus-within {
         border-color: #00d09c;
-        background-color: rgba(0, 208, 156, 0.05);
+        background-color: #25282e;
     }
 
     ion-input {
@@ -14,13 +17,28 @@
         --padding-end: 16px;
         --padding-top: 14px;
         --padding-bottom: 14px;
+        --background: transparent;
+        --border-width: 0;
+        --border-style: none;
+        --highlight-color-focused: transparent;
+        --box-shadow: none;
+        margin: 0;
+        min-height: 48px;
         font-size: 1rem;
         color: #ffffff;
+        width: 100%;
+    }
+}
+
+ion-input{
+    margin-bottom: 0px !important;
+    label {
+        margin-bottom: 0px !important;
     }
 }
 
 .read-input-content {
-    height: 56px !important;
+    height: 48px !important;
     display: flex;
     padding: 0px 16px;
     align-items: center;
@@ -45,4 +63,8 @@ label {
     span {
         color: #ff4961;
     }
+}
+
+.input-wrapper {
+   margin-bottom: 0px !important;
 }

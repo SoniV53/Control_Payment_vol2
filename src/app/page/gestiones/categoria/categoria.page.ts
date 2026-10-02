@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonFooter, IonItem, IonIcon, IonButton, IonLabel, IonCol, IonGrid, IonRow, IonDatetime } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonFooter, IonItem, IonIcon, IonButton, IonLabel, IonCol, IonGrid, IonRow, IonDatetime, IonModal, IonButtons } from '@ionic/angular/standalone';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
 import { BasePage } from '../../main/base/base.page';
 import { EmptyBaseComponent } from "src/app/component/card/empty-base/empty-base.component";
@@ -17,8 +17,9 @@ import { UpdateListado, updateParams } from 'src/app/utils/update-params';
   selector: 'app-categoria',
   templateUrl: './categoria.page.html',
   styleUrls: ['./categoria.page.scss'],
+  encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonDatetime, IonRow, IonGrid, IonLabel, IonButton, IonIcon, IonItem, IonFooter, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, BannerTopComponent, EmptyBaseComponent, InputSimpleComponent, IonCol, ModalBaseComponent]
+  imports: [IonDatetime, IonRow, IonGrid, IonLabel, IonButton, IonIcon, IonItem, IonFooter, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButtons, CommonModule, FormsModule, BannerTopComponent, EmptyBaseComponent, InputSimpleComponent, IonCol, ModalBaseComponent]
 })
 export class CategoriaPage extends BasePage implements OnInit {
   toolBar = {

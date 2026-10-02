@@ -49,7 +49,7 @@
                 <!-- HEADER DE CATEGORÍA -->
                 <div class="category-header" (click)="categoria.mostrar = categoria.mostrar === false ? true : false">
                     <div class="cat-icon-container">
-                        <ion-icon [name]="categoria.icono || 'pricetag'"></ion-icon>
+                        <ion-icon [src]="getIcon(categoria.icono || '')"></ion-icon>
                     </div>
                     <div class="cat-title">
                         <h3>{{ categoria.nombre }}</h3>
@@ -66,7 +66,11 @@
                     <div class="transaction-row" *ngFor="let gasto of categoria?.dataGasto; let last = last" [class.no-border]="last" (click)="clickItem(gasto)">
                         
                         <div class="tx-info">
-                            <h4>{{ gasto.titulo }}</h4>
+                            <div class="title-with-status" style="display: flex; align-items: center; gap: 6px;">
+                                <!-- Dot de estado -->
+                                <div class="status-dot" *ngIf="gasto.tipo !== 'normal'" [class.paid]="gasto.estado === 1" [class.pending]="gasto.estado === 0"></div>
+                                <h4>{{ gasto.titulo }}</h4>
+                            </div>
                             <p>{{ gasto.fecha | date:'dd MMM yyyy' }}</p>
                         </div>
                         

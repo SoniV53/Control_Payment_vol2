@@ -550,15 +550,15 @@ export class GastoServiceService {
         const [fechaInicio, fechaFin] = dateSearch(fecha);
 
         const result = await db.query(
-          `SELECT id, titulo, monto, fecha, tipo, cat_icono, cat_color FROM (
-            SELECT g.id, g.titulo, g.monto, g.fecha, g.tipo, c.icono as cat_icono, c.color as cat_color
+          `SELECT id, titulo, monto, fecha, tipo, cat_icono FROM (
+            SELECT g.id, g.titulo, g.monto, g.fecha, g.tipo, c.icono as cat_icono
             FROM gasto g
             LEFT JOIN categoria c ON g.categoria_id = c.id
             WHERE g.fecha >= ? AND g.fecha < ? AND g.estado != 2 AND (g.tipo = 'normal' OR g.tipo = 'recurrente')
             
             UNION ALL
             
-            SELECT g.id, g.titulo, gc.monto_cuota as monto, gc.fecha_pago as fecha, 'cuota' as tipo, c.icono as cat_icono, c.color as cat_color
+            SELECT g.id, g.titulo, gc.monto_cuota as monto, gc.fecha_pago as fecha, 'cuota' as tipo, c.icono as cat_icono
             FROM gasto_cuota gc
             INNER JOIN gasto g ON gc.gasto_id = g.id
             LEFT JOIN categoria c ON g.categoria_id = c.id

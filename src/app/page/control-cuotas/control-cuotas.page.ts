@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { IonicModule, ToastController, AlertController } from '@ionic/angular';
@@ -17,6 +18,7 @@ import { CuotaServiceService } from 'src/app/services/cuota-service.service';
   selector: 'app-control-cuotas',
   templateUrl: './control-cuotas.page.html',
   styleUrls: ['./control-cuotas.page.scss'],
+  encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent]
 })

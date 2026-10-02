@@ -81,8 +81,8 @@
           <!-- Aquí irá el ngFor de recentExpenses cuando lo conectemos a SQLite -->
           <div class="transactions-list" *ngIf="recentExpenses.length > 0">
               <div class="transaction-item" *ngFor="let exp of recentExpenses">
-                  <div class="trans-icon" [ngStyle]="{'background-color': (exp.cat_color || '#00d09c') + '20'}">
-                      <ion-icon [name]="exp.cat_icono || 'pricetag-outline'" [ngStyle]="{'color': exp.cat_color || '#00d09c'}"></ion-icon>
+                  <div class="trans-icon" [ngStyle]="{'background-color': '#00d09c20'}">
+                      <ion-icon [src]="getIcon(exp.cat_icono || '')" [ngStyle]="{'color': '#00d09c'}"></ion-icon>
                   </div>
                   <div class="trans-info">
                       <h4>{{ exp.titulo }}</h4>

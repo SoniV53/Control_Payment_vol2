@@ -34,7 +34,7 @@
     <div *ngFor="let g of gruposProgreso" class="category-block">
       <div class="block-header">
         <div class="title-wrap">
-          <ion-icon [name]="g.icono || 'pricetag'"></ion-icon>
+          <ion-icon [src]="getIcon(g.icono || '')"></ion-icon>
           <h2>{{ g.nombre }}</h2>
           <span class="count-badge">{{ g.items.length }}</span>
         </div>
@@ -98,7 +98,7 @@
     <div *ngFor="let g of gruposPagados" class="category-block">
       <div class="block-header">
         <div class="title-wrap">
-          <ion-icon [name]="g.icono || 'pricetag'"></ion-icon>
+          <ion-icon [src]="getIcon(g.icono || '')"></ion-icon>
           <h2>{{ g.nombre }}</h2>
           <span class="count-badge">{{ g.items.length }}</span>
         </div>
@@ -109,7 +109,7 @@
 
           <div class="item-main" (click)="abrirGestionCuotas(item)">
             <div class="icon-box done">
-              <ion-icon name="checkmark-outline"></ion-icon>
+              <ion-icon [src]="getIcon(g.icono || '')"></ion-icon>
             </div>
             <div class="text-col">
               <h4>{{ item.titulo }}</h4>
@@ -146,7 +146,7 @@
   </div>
 
   <!-- ═══════════════ Modal Detalle Cuotas ═══════════════ -->
-  <ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false" mode="ios" class="detail-modal">
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false" mode="ios" class="detail-modal bottom-sheet" initialBreakpoint="0.85" [breakpoints]="[0, 0.85, 1]">
     <ng-template>
       <ion-header class="ion-no-border">
         <ion-toolbar>
@@ -212,10 +212,10 @@
       </ion-header>
       <ion-content class="ion-padding modal-bg">
         <div class="form-section">
-          <ion-input label="Título" labelPlacement="floating" fill="solid" [(ngModel)]="editData.titulo" class="custom-input"></ion-input>
-          <ion-input label="Monto Total (GTQ)" type="number" labelPlacement="floating" fill="solid" [(ngModel)]="editData.monto" class="custom-input"></ion-input>
-          <ion-input label="Total de Cuotas" type="number" labelPlacement="floating" fill="solid" [(ngModel)]="editData.cuotas" class="custom-input"></ion-input>
-          <ion-select label="Categoría" labelPlacement="stacked" interface="action-sheet" fill="solid" [(ngModel)]="editData.categoria_id" class="custom-input" mode="ios" placeholder="Selecciona categoría">
+          <ion-input label="Título" labelPlacement="floating" mode="ios" [(ngModel)]="editData.titulo" class="custom-input"></ion-input>
+          <ion-input label="Monto Total (GTQ)" type="number" labelPlacement="floating" mode="ios" [(ngModel)]="editData.monto" class="custom-input"></ion-input>
+          <ion-input label="Total de Cuotas" type="number" labelPlacement="floating" mode="ios" [(ngModel)]="editData.cuotas" class="custom-input"></ion-input>
+          <ion-select label="Categoría" labelPlacement="stacked" interface="action-sheet" mode="ios" [(ngModel)]="editData.categoria_id" class="custom-input" mode="ios" placeholder="Selecciona categoría">
             <ion-select-option *ngFor="let cat of categoriasDisponibles" [value]="cat.id">{{ cat.nombre }}</ion-select-option>
           </ion-select>
           <ion-button expand="block" class="btn-save ion-margin-top" (click)="guardarEdicion()">

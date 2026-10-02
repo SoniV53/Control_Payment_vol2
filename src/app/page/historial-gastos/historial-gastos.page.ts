@@ -13,6 +13,7 @@ import { ControlGastosAutomaticosService } from 'src/app/services/control-gastos
 import { NavCtrl } from 'src/app/services/nav-ctrl';
 
 import { HistorialServiceService } from 'src/app/services/historial-service.service';
+import { getIconPath } from 'src/app/utils/Utils';
 
 @Component({
   selector: 'app-historial-gastos',
@@ -57,6 +58,8 @@ export class HistorialGastosPage extends BasePage {
   ionViewWillEnter() {
     this.cargarHistorial();
   }
+
+
 
   cargarHistorial() {
     this.baseService(

@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
 import { ItemInputData, ItemInputListData } from 'src/app/models/ItemInputData.model';
 import Swal from 'sweetalert2';
 import { BasePage } from '../../main/base/base.page';
-import { IonToolbar, IonSegmentButton, IonLabel, IonSegment, IonContent, IonSelectOption, IonToggle, IonButton, IonDatetime, IonHeader, IonFooter, IonItem, IonIcon } from "@ionic/angular/standalone";
+import { IonToolbar, IonSegmentButton, IonLabel, IonSegment, IonContent, IonSelectOption, IonToggle, IonButton, IonDatetime, IonHeader, IonModal, IonTitle, IonButtons, IonFooter, IonItem, IonIcon } from "@ionic/angular/standalone";
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
 import { InputSimpleComponent } from 'src/app/component/input/input-simple/input-simple.component';
 import { SelectorSimpleComponent } from "src/app/component/input/selector-simple/selector-simple.component";
@@ -29,6 +29,7 @@ export default Swal;
   selector: 'app-new-payment',
   templateUrl: './new-payment.page.html',
   styleUrls: ['./new-payment.page.scss'],
+  encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [IonIcon, IonItem,
     CommonModule,
@@ -42,7 +43,7 @@ export default Swal;
     IonToggle,
     IonButton,
     IonDatetime,
-    IonHeader,
+    IonHeader, IonModal, IonTitle, IonButtons,
     ModalBaseComponent,
     InputSimpleComponent,
     SelectorSimpleComponent,
@@ -197,6 +198,13 @@ export class NewPaymentPage extends BasePage implements OnInit {
     this.showPopup = false;
     this.validButton();
     this.changeDate();
+  }
+
+  goToNuevaCategoria() {
+    this.showPopup = false;
+    setTimeout(() => {
+      this.router.navigate(['/categoria']);
+    }, 150);
   }
 
 

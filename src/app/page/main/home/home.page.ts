@@ -9,6 +9,7 @@ import { calendarOutline, chevronDownOutline, addOutline, listOutline, pieChartO
 import { BasePage } from '../base/base.page';
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
 import { UpdateListado } from 'src/app/utils/update-params';
+import { getIconPath } from 'src/app/utils/Utils';
 
 addIcons({
   'calendar-outline': calendarOutline,
@@ -41,6 +42,8 @@ export class HomePage extends BasePage implements OnInit {
   // Variables para el Dashboard UI
   totalGastos: number = 0;
   recentExpenses: any[] = []; 
+
+ 
 
   ngOnInit() {
   }

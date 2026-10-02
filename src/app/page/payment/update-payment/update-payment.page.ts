@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToggle, IonToolbar, IonFooter, IonButton, IonDatetime, IonItem, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToggle, IonToolbar, IonFooter, IonButton, IonDatetime, IonItem, IonIcon, IonLabel, IonModal, IonButtons } from '@ionic/angular/standalone';
 import { BasePage } from '../../main/base/base.page';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
 import { Gasto } from 'src/app/core/models/gasto.model';
@@ -21,8 +21,9 @@ import { ButtonSimpleComponent } from "src/app/component/input/button-simple/but
   selector: 'app-update-payment',
   templateUrl: './update-payment.page.html',
   styleUrls: ['./update-payment.page.scss'],
+  encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, RouterLink, IonToolbar, CommonModule, FormsModule,
+  imports: [IonContent, IonHeader, IonTitle, RouterLink, IonToolbar, CommonModule, FormsModule, IonModal, IonButtons,
     BannerTopComponent, IonFooter, SelectorSimpleComponent, InputSimpleComponent, IonButton, ModalBaseComponent,
     IonDatetime, IonItem, IonIcon, IonLabel, EmptyBaseComponent, IonToggle, ButtonSimpleComponent]
 })
@@ -254,6 +255,13 @@ export class UpdatePaymentPage extends BasePage implements OnInit {
     this.showPopup = false;
     this.validButton();
     this.changeDate();
+  }
+
+  goToNuevaCategoria() {
+    this.showPopup = false;
+    setTimeout(() => {
+      this.router.navigate(['/categoria']);
+    }, 150);
   }
 
 
