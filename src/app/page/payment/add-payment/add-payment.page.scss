@@ -255,4 +255,655 @@ ion-modal.bottom-sheet {
     --border-color: transparent;
     --color: #ffffff;
   }
+}ion-content {
+  --background: #121317;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 40vh;
+  text-align: center;
+  
+  .icon-glow {
+    background: rgba(0, 208, 156, 0.1);
+    padding: 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    
+    ion-icon { 
+      font-size: 40px; 
+      color: #00d09c;
+    }
+  }
+
+  p {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  span {
+    color: #8c9ba5;
+    font-size: 13px;
+  }
+}
+
+.category-block {
+  margin: 24px 16px;
+
+  .block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 0 4px;
+
+    .title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      ion-icon {
+        color: #8c9ba5;
+        font-size: 18px;
+      }
+
+      h2 {
+        color: #8c9ba5;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+      }
+
+      .count-badge {
+        background: rgba(255, 255, 255, 0.05);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 8px;
+      }
+    }
+
+    .total-text {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+  }
+
+  .block-card {
+    background: #1e2025;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+
+    .sub-item {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
+      &.no-border {
+        border-bottom: none;
+      }
+
+      .sub-item-main {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 12px;
+
+        .icon-box {
+          width: 44px;
+          height: 44px;
+          background: rgba(0, 208, 156, 0.1);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          ion-icon {
+            font-size: 20px;
+            color: #00d09c;
+          }
+
+          &.paused {
+            background: rgba(255, 73, 97, 0.1);
+            ion-icon {
+              color: #ff4961;
+            }
+          }
+        }
+
+        .text-data {
+          flex: 1;
+
+          h4 {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+          }
+
+          p {
+            color: #8c9ba5;
+            font-size: 13px;
+            margin: 0;
+          }
+        }
+
+        .amount-data {
+          text-align: right;
+
+          h4 {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+          }
+
+          .status-dot {
+            font-size: 12px;
+            color: #ff4961;
+            font-weight: 600;
+
+            &.active {
+              color: #00d09c;
+            }
+          }
+        }
+      }
+
+      .sub-item-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.15);
+        padding: 8px 12px;
+        border-radius: 12px;
+
+        .action-left {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          ion-toggle {
+            --background: rgba(255, 255, 255, 0.1);
+            --background-checked: #00d09c !important;
+            --handle-background: #ffffff !important;
+            margin: 0;
+            
+            &::part(track) {
+              width: 50px;
+              height: 32px;
+            }
+          }
+
+          span {
+            color: #8c9ba5;
+            font-size: 13px;
+            font-weight: 500;
+          }
+        }
+
+        .btn-edit {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: transparent;
+          color: #00d09c;
+          font-size: 13px;
+          font-weight: 600;
+          padding: 6px 12px;
+          border-radius: 8px;
+          cursor: pointer;
+
+          ion-icon {
+            font-size: 16px;
+          }
+
+          &:active {
+            background: rgba(0, 208, 156, 0.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Modal Edici√≥n
+.modal-content-bg {
+  --background: #121317;
+  color: #ffffff;
+}
+
+.edit-modal {
+  --border-radius: 24px 24px 0 0;
+}
+
+ion-toolbar {
+  --background: #1e2025;
+  --color: #ffffff;
+  --border-color: rgba(255, 255, 255, 0.05);
+}
+
+.custom-input-item {
+  --background: #1e2025;
+  --color: #ffffff;
+  border-radius: 16px;
+  --padding-start: 16px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  
+  ion-label {
+    color: #8c9ba5 !important;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 12px;
+  }
+  
+  ion-input {
+    --color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+.btn-save {
+  --background: #00d09c;
+  --background-activated: #00b889;
+  --color: #ffffff;
+  font-weight: 700;
+  margin-top: 24px;
+  --border-radius: 16px;
+  height: 50px;
+  box-shadow: 0 8px 16px rgba(0, 208, 156, 0.2);
+}
+
+.history-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 24px;
+
+  .history-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .no-history {
+    color: #8c9ba5;
+    font-size: 14px;
+    text-align: center;
+    padding: 24px 0;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
+  }
+
+  .history-list {
+    background: transparent;
+  }
+
+  .history-item {
+    --background: #1e2025;
+    --color: #ffffff;
+    margin-bottom: 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    --padding-start: 12px;
+    --inner-padding-end: 12px;
+    
+    h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    
+    .gasto-date {
+      color: #8c9ba5;
+      font-size: 12px;
+    }
+
+    .history-end {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .gasto-amount {
+        font-weight: bold;
+        color: #ffffff;
+        font-size: 15px;
+        margin-right: 8px;
+      }
+
+      .edit-history-btn {
+        color: #00d09c; 
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      .delete-history-btn {
+        color: #ff4961;
+        font-size: 22px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.custom-toggle-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 16px;
+  margin-top: 16px;
+
+  ion-label {
+    color: #8c9ba5 !important;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  ion-toggle {
+    --background-checked: #00d09c !important; 
+    --handle-background-checked: #ffffff !important;
+  }
+}
+
+.history-checkbox {
+  --border-color: #8c9ba5;
+  --background-checked: #00d09c;
+  --border-color-checked: #00d09c;
+  --checkmark-color: #ffffff;
+  margin-right: 16px;
+}
+/* ==== CUOTAS (NUEVO DISE—O) ==== */
+.cuota-item {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
+  &.no-border {
+    border-bottom: none;
+  }
+
+  &.completed {
+    opacity: 0.8;
+  }
+
+  .item-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+    cursor: pointer;
+
+    .icon-box {
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 208, 156, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      ion-icon {
+        font-size: 20px;
+        color: #00d09c;
+      }
+
+      &.done {
+        background: rgba(0, 208, 156, 0.15);
+        ion-icon {
+          color: #00d09c;
+        }
+      }
+    }
+
+    .text-col {
+      flex: 1;
+      min-width: 0;
+
+      h4 {
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        margin: 0 0 3px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      p {
+        color: #8c9ba5;
+        font-size: 12px;
+        margin: 0;
+      }
+    }
+
+    .amount-col {
+      text-align: right;
+      flex-shrink: 0;
+
+      h4 {
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        margin: 0 0 3px 0;
+      }
+
+      .cuota-label {
+        font-size: 12px;
+        color: #00d09c;
+        font-weight: 600;
+
+        &.done {
+          color: #8c9ba5;
+        }
+      }
+    }
+  }
+
+  /* Progress Bar Custom */
+  .progress-section {
+    margin-bottom: 12px;
+    cursor: pointer;
+
+    .progress-track {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 6px;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #00d09c, #00e8b0);
+        border-radius: 3px;
+        transition: width 0.4s ease;
+      }
+
+      &.full .progress-fill {
+        background: linear-gradient(90deg, #00d09c, #00e8b0);
+      }
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #8c9ba5;
+
+      b {
+        color: #ffffff;
+      }
+    }
+  }
+
+  /* Action Buttons */
+  .item-actions {
+    display: flex;
+    gap: 8px;
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      ion-icon {
+        font-size: 15px;
+      }
+
+      &.edit {
+        background: rgba(0, 208, 156, 0.08);
+        color: #00d09c;
+
+        &:active {
+          background: rgba(0, 208, 156, 0.2);
+        }
+      }
+
+      &.delete {
+        background: rgba(255, 73, 97, 0.08);
+        color: #ff4961;
+
+        &:active {
+          background: rgba(255, 73, 97, 0.2);
+        }
+      }
+    }
+  }
+}
+
+.modal-summary {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #1e2025;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  .summary-item {
+    text-align: center;
+
+    span {
+      font-size: 12px;
+      color: #8c9ba5;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    h3 {
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
+      margin: 4px 0 0;
+    }
+  }
+
+  .summary-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.cuotas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cuota-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1e2025;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: border-color 0.2s;
+
+  &.paid {
+    border-color: rgba(0, 208, 156, 0.2);
+    background: rgba(0, 208, 156, 0.03);
+  }
+
+  .cuota-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    span {
+      font-size: 12px;
+      font-weight: 700;
+      color: #8c9ba5;
+    }
+  }
+
+  &.paid .cuota-number {
+    background: rgba(0, 208, 156, 0.1);
+    span {
+      color: #00d09c;
+    }
+  }
+
+  .cuota-info {
+    flex: 1;
+
+    h4 {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 2px 0;
+    }
+
+    p {
+      color: #8c9ba5;
+      font-size: 12px;
+      margin: 0;
+    }
+  }
+
+  .cuota-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .cuota-monto {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    ion-checkbox {
+      --size: 22px;
+      --border-radius: 6px;
+      --border-color: rgba(255, 255, 255, 0.15);
+      --background-checked: #00d09c;
+      --border-color-checked: #00d09c;
+      --checkmark-color: #ffffff;
+    }
+  }
 }

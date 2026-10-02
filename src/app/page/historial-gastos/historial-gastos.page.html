@@ -2,78 +2,83 @@
   <ion-toolbar>
     <app-banner-top [toolBarData]="toolBar" [loader]="loaderNav"></app-banner-top>
   </ion-toolbar>
-  
-  <ion-toolbar class="toolbar-filtros">
-    <!-- Selector de Vista (Lista / Gráfica) -->
-    <ion-segment [(ngModel)]="vistaActual" mode="md" class="segment-vista">
-      <ion-segment-button value="lista">
-        <ion-icon name="list-outline"></ion-icon>
-        <ion-label>Lista</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="grafica">
-        <ion-icon name="bar-chart-outline"></ion-icon>
-        <ion-label>Gráficas</ion-label>
-      </ion-segment-button>
-    </ion-segment>
 
-    <!-- Filtro de Año Global -->
-    <div class="year-filter-container">
+  <div class="premium-filters-wrapper">
+    <!-- Top Row: View Toggles & Year Selector -->
+    <div class="filter-top-row">
+      
+      <!-- Selector de Vista (Lista / Gráfica) -->
+      <div class="view-toggles">
+        <button class="view-btn" [class.active]="vistaActual === 'lista'" (click)="vistaActual = 'lista'">
+          <ion-icon name="list-outline"></ion-icon>
+          <span>Lista</span>
+        </button>
+        <button class="view-btn" [class.active]="vistaActual === 'grafica'" (click)="vistaActual = 'grafica'">
+          <ion-icon name="bar-chart-outline"></ion-icon>
+          <span>Gráficas</span>
+        </button>
+      </div>
+
+      <!-- Filtro de Año Global -->
       <div class="year-selector-box">
         <ion-icon name="calendar-outline"></ion-icon>
         <ion-select [(ngModel)]="anioSeleccionado" (ionChange)="cambiarFiltroOAno()" interface="popover" mode="md">
           <ion-select-option *ngFor="let anio of aniosDisponibles" [value]="anio">{{ anio }}</ion-select-option>
         </ion-select>
       </div>
+      
     </div>
-  </ion-toolbar>
 
-  <!-- Filtro de Tipo (Solo visible en modo lista) -->
-  <ion-toolbar *ngIf="vistaActual === 'lista'">
-    <ion-segment [(ngModel)]="tabFiltro" (ionChange)="cambiarFiltroOAno()" mode="md">
-      <ion-segment-button value="todos"><ion-label>Todos</ion-label></ion-segment-button>
-      <ion-segment-button value="recurrentes"><ion-label>Servicios</ion-label></ion-segment-button>
-      <ion-segment-button value="cuotas"><ion-label>Cuotas</ion-label></ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
+    <!-- Bottom Row: Type Chips (Only in List View) -->
+    <div class="chips-container" *ngIf="vistaActual === 'lista'">
+      <button class="chip" [class.active]="tabFiltro === 'todos'" (click)="tabFiltro = 'todos'; cambiarFiltroOAno()">Todos</button>
+      <button class="chip" [class.active]="tabFiltro === 'normal'" (click)="tabFiltro = 'normal'; cambiarFiltroOAno()">Únicos</button>
+      <button class="chip" [class.active]="tabFiltro === 'recurrentes'" (click)="tabFiltro = 'recurrentes'; cambiarFiltroOAno()">Recurrentes</button>
+      <button class="chip" [class.active]="tabFiltro === 'cuotas'" (click)="tabFiltro = 'cuotas'; cambiarFiltroOAno()">Cuotas</button>
+    </div>
+  </div>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
+<ion-content class="ion-padding custom-bg">
   
   <!-- ==================== VISTA DE LISTA ==================== -->
   <div *ngIf="vistaActual === 'lista'">
     <div *ngIf="gruposHistorial.length === 0" class="empty-state">
-      <ion-icon name="document-text-outline"></ion-icon>
+      <div class="icon-glow">
+        <ion-icon name="document-text-outline"></ion-icon>
+      </div>
       <p>No hay registros para este año.</p>
     </div>
 
     <div class="historial-container" *ngIf="gruposHistorial.length > 0">
-      <ion-item-group *ngFor="let grupo of gruposHistorial" class="mes-grupo">
+      <div class="mes-grupo" *ngFor="let grupo of gruposHistorial">
         
-        <ion-item-divider sticky="true" class="mes-divider" lines="none">
-          <ion-label>{{ grupo.titulo | uppercase }}</ion-label>
-          <ion-badge slot="end" class="badge-count">{{ grupo.items.length }}</ion-badge>
-        </ion-item-divider>
+        <div class="mes-header sticky">
+          <h3>{{ grupo.titulo | uppercase }}</h3>
+          <span class="count-badge">{{ grupo.items.length }}</span>
+        </div>
 
-        <div class="listado-items">
-          <div *ngFor="let item of grupo.items" class="historial-card" (click)="verDetalleGasto(item)">
-            <div class="icon-box">
+        <div class="mes-list">
+          <div class="transaction-row" *ngFor="let item of grupo.items; let last = last" [class.no-border]="last" (click)="verDetalleGasto(item)">
+            <div class="tx-icon">
               <ion-icon [name]="item.cat_icono || 'cash-outline'"></ion-icon>
             </div>
             
-            <div class="item-details">
-              <h3>{{ item.titulo }}</h3>
+            <div class="tx-info">
+              <h4>{{ item.titulo }}</h4>
               <p>{{ item.cat_nombre || 'Sin categoría' }} &bull; {{ item.fecha | date:'dd MMM' }}</p>
             </div>
             
-            <div class="item-amount">
-              <span>GTQ {{ item.monto | number:'1.2-2' }}</span>
-              <small *ngIf="item.tipo === 'cuota'" class="tag-cuota">Cuota</small>
-              <small *ngIf="item.tipo !== 'cuota'" class="tag-recurrente">Servicio</small>
+            <div class="tx-amount-col">
+              <span class="tx-amount">GTQ {{ item.monto | number:'1.2-2' }}</span>
+              <span class="tx-tag cuota" *ngIf="item.tipo === 'cuota'">Cuota</span>
+              <span class="tx-tag recurrente" *ngIf="item.tipo === 'recurrente'">Recurrente</span>
+              <span class="tx-tag unico" *ngIf="item.tipo === 'normal' || !item.tipo">Único</span>
             </div>
           </div>
         </div>
 
-      </ion-item-group>
+      </div>
     </div>
   </div>
 
@@ -81,29 +86,22 @@
   <div *ngIf="vistaActual === 'grafica'" class="grafica-container">
     
     <div class="resumen-header">
-      <h2>Resumen Anual {{ anioSeleccionado }}</h2>
+      <h2>Resumen {{ anioSeleccionado }}</h2>
       <div class="total-badge">
         <ion-icon name="wallet-outline"></ion-icon>
         <span>GTQ {{ totalAnio | number:'1.2-2' }}</span>
       </div>
     </div>
 
-    <!-- Gráfico de Barras CSS -->
     <div class="chart-card">
       <div class="bar-chart-wrapper">
         <div class="bar-item" *ngFor="let d of datosGrafica">
-          <!-- Tooltip (Valor arriba de la barra) -->
           <div class="bar-value" [class.show-value]="d.total > 0">
             {{ (d.total >= 1000 ? (d.total/1000 | number:'1.0-1') + 'k' : d.total | number:'1.0-0') }}
           </div>
-          
-          <!-- Pista de la barra -->
           <div class="bar-track">
-            <!-- Relleno dinámico -->
             <div class="bar-fill" [style.height.%]="d.porcentaje"></div>
           </div>
-          
-          <!-- Mes -->
           <div class="bar-label">{{ d.mes }}</div>
         </div>
       </div>

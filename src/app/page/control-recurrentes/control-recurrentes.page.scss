@@ -2,168 +2,217 @@ ion-content {
   --background: #121317;
 }
 
-.tab-content {
-  padding: 16px;
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 40vh;
+  text-align: center;
+  
+  .icon-glow {
+    background: rgba(0, 208, 156, 0.1);
+    padding: 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    
+    ion-icon { 
+      font-size: 40px; 
+      color: #00d09c;
+    }
+  }
+
+  p {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  span {
+    color: #8c9ba5;
+    font-size: 13px;
+  }
 }
 
-/* Fix específico para tarjetas Ionic */
-ion-card.category-card {
-  --background: #1e2025;
-  background: #1e2025;
-  border-radius: 20px;
-  margin: 0 0 20px 0 !important;
-  padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.category-block {
+  margin: 24px 16px;
 
-  .category-header {
+  .block-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    padding: 0 4px;
 
-    .cat-info {
+    .title-wrap {
       display: flex;
       align-items: center;
       gap: 8px;
 
       ion-icon {
-        font-size: 22px;
-        color: #00d09c;
-        /* Quitamos el background/padding del icon para evitar glitches en Webview */
-      }
-
-      .cat-name {
-        text-transform: capitalize;
-      }
-    }
-
-    .cat-total {
-      color: #8c9ba5;
-      font-size: 14px;
-      font-weight: 600;
-    }
-  }
-
-  .divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.05);
-    margin: 16px 0;
-  }
-}
-
-/* FIX AGRESIVO PARA EL ACORDEON EN ANDROID (quitar las líneas grises raras a la izquierda) */
-ion-accordion-group {
-  margin-top: 8px;
-}
-
-ion-accordion {
-  background: transparent !important;
-  margin: 0 !important;
-
-  /* Forzamos al Shadow DOM a quitar la línea izquierda que sale en Android (mode="md") */
-  &::part(content) {
-    border: none !important;
-    border-left: none !important;
-  }
-  &::part(header) {
-    border: none !important;
-  }
-  
-  .item-header {
-    --background: transparent;
-    --color: #ffffff;
-    --min-height: 48px;
-    --padding-start: 0;
-    --inner-padding-end: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    
-    .item-title {
-      font-size: 15px;
-      font-weight: 600;
-    }
-  }
-
-  .item-content-box {
-    background: rgba(255, 255, 255, 0.03); 
-    border-radius: 16px;
-    padding: 16px;
-    margin-top: 12px;
-    margin-bottom: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-
-    .detail-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-
-      .detail-label {
         color: #8c9ba5;
-        font-weight: 600;
-        font-size: 13px;
+        font-size: 18px;
+      }
+
+      h2 {
+        color: #8c9ba5;
+        font-size: 14px;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        margin: 0;
       }
 
-      .detail-value {
+      .count-badge {
+        background: rgba(255, 255, 255, 0.05);
         color: #ffffff;
-        font-size: 15px;
-        font-weight: 600;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 8px;
       }
     }
 
-    .divider-dark {
-      height: 1px;
-      background: rgba(255, 255, 255, 0.05);
-      margin: 16px 0;
+    .total-text {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
     }
+  }
 
-    .actions-footer-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+  .block-card {
+    background: #1e2025;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
 
-      .toggle-box {
-        display: flex;
-        align-items: center;
-        gap: 12px;
+    .sub-item {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 
-        .detail-label {
-          color: #ffffff;
-          font-weight: 500;
-          font-size: 14px;
-        }
-
-        ion-toggle {
-          --background: rgba(255, 255, 255, 0.1);
-          --background-checked: #ff4961 !important; 
-          --handle-background: #ffffff !important;
-        }
+      &.no-border {
+        border-bottom: none;
       }
 
-      .action-buttons {
+      .sub-item-main {
         display: flex;
         align-items: center;
+        gap: 16px;
+        margin-bottom: 12px;
 
-        .icon-btn {
-          font-size: 24px;
-          cursor: pointer;
-          transition: transform 0.1s ease;
+        .icon-box {
+          width: 44px;
+          height: 44px;
+          background: rgba(0, 208, 156, 0.1);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
-          &:active {
-            transform: scale(0.9);
+          ion-icon {
+            font-size: 20px;
+            color: #00d09c;
+          }
+
+          &.paused {
+            background: rgba(255, 73, 97, 0.1);
+            ion-icon {
+              color: #ff4961;
+            }
           }
         }
 
-        .edit-btn {
+        .text-data {
+          flex: 1;
+
+          h4 {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+          }
+
+          p {
+            color: #8c9ba5;
+            font-size: 13px;
+            margin: 0;
+          }
+        }
+
+        .amount-data {
+          text-align: right;
+
+          h4 {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+          }
+
+          .status-dot {
+            font-size: 12px;
+            color: #ff4961;
+            font-weight: 600;
+
+            &.active {
+              color: #00d09c;
+            }
+          }
+        }
+      }
+
+      .sub-item-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.15);
+        padding: 8px 12px;
+        border-radius: 12px;
+
+        .action-left {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          ion-toggle {
+            --background: rgba(255, 255, 255, 0.1);
+            --background-checked: #00d09c !important;
+            --handle-background: #ffffff !important;
+            margin: 0;
+            
+            &::part(track) {
+              width: 50px;
+              height: 32px;
+            }
+          }
+
+          span {
+            color: #8c9ba5;
+            font-size: 13px;
+            font-weight: 500;
+          }
+        }
+
+        .btn-edit {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: transparent;
           color: #00d09c;
-          padding: 8px;
-          background: rgba(0, 208, 156, 0.1);
-          border-radius: 12px;
+          font-size: 13px;
+          font-weight: 600;
+          padding: 6px 12px;
+          border-radius: 8px;
+          cursor: pointer;
+
+          ion-icon {
+            font-size: 16px;
+          }
+
+          &:active {
+            background: rgba(0, 208, 156, 0.1);
+          }
         }
       }
     }

@@ -17,6 +17,7 @@ import { CategoriaServiceService } from 'src/app/services/categoria-service.serv
 import { ControlGastosAutomaticosService } from 'src/app/services/control-gastos-automaticos.service';
 import { NavCtrl } from 'src/app/services/nav-ctrl';
 import { CuotaServiceService } from 'src/app/services/cuota-service.service';
+import { DatabaseServiceService } from 'src/app/core/database/database-service.service';
 
 @Component({
   selector: 'app-add-payment',
@@ -42,6 +43,12 @@ export class AddPaymentPage extends BasePage implements OnInit {
   isModalOpen = false;
   detalleCuotas: any[] = [];
 
+  // Lógica para el modal de Recurrentes
+  isModalRecurrenteOpen = false;
+  recurrenteSeleccionado: any = null;
+  editDataRec = { titulo: '', monto: 0, aplicarAtodos: false };
+  gastosHistoricos: any[] = [];
+
   constructor(
     public override router: Router,
     public override myApp: AppComponent,
@@ -52,7 +59,8 @@ export class AddPaymentPage extends BasePage implements OnInit {
     public override toastController: ToastController,
     public override navCtrl: NavCtrl,
     public override alertController: AlertController,
-    private cuotaService: CuotaServiceService
+    private cuotaService: CuotaServiceService,
+    private dbService: DatabaseServiceService
   ) {
     super(router, myApp, gastoService, fb, categoriaService, controlService, toastController, navCtrl, alertController);
   }
@@ -126,30 +134,201 @@ export class AddPaymentPage extends BasePage implements OnInit {
     );
   }
 
-  clickItem(cate: Gasto) {
-    console.log("nania")
+  async clickItem(item: any) {
+    this.recurrenteSeleccionado = item;
+    this.editDataRec.titulo = item.titulo || '';
+    this.editDataRec.monto = item.monto || 0;
+    this.editDataRec.aplicarAtodos = false;
+    this.isModalRecurrenteOpen = true;
 
+    await this.obtenerHistorialGastos(item.id);
   }
 
-  changeToggle(data: any) {
-    console.log(data)
-    if (!data) {
-      return;
+  async obtenerHistorialGastos(recurrenteId: number | undefined) {
+    try {
+      const db = await this.dbService.getDB();
+      const res = await db.query(
+        'SELECT * FROM gasto WHERE recurrente_id = ? ORDER BY fecha DESC',
+        [recurrenteId]
+      );
+      this.gastosHistoricos = res.values || [];
+    } catch (error) {
+      this.getAlertError(error);
     }
-    const gasto: Gasto = data.gasto;
-    const isCheck: boolean = data.isCheck;
+  }
 
+  toggleAllHistorial(event: any) {
+    // Ya no chequeamos los items individualmente, este toggle ahora sirve
+    // para indicar si se actualizará el texto y monto en todo el historial.
+    this.editDataRec.aplicarAtodos = event.detail.checked;
+  }
+
+  async guardarEdicionRecurrente() {
+    if (!this.recurrenteSeleccionado) return;
+
+    this.showLoader();
+    try {
+      const db = await this.dbService.getDB();
+
+      await db.run(
+        'UPDATE gasto_recurrente SET titulo = ?, monto = ? WHERE id = ?',
+        [this.editDataRec.titulo, this.editDataRec.monto, this.recurrenteSeleccionado.id]
+      );
+
+      // 1. Si el toggle está activado, aplicamos nombre y monto a todos los meses
+      if (this.editDataRec.aplicarAtodos) {
+        for (const gasto of this.gastosHistoricos) {
+          await db.run(
+            'UPDATE gasto SET titulo = ?, monto = ? WHERE id = ?',
+            [this.editDataRec.titulo, this.editDataRec.monto, gasto.id]
+          );
+        }
+      }
+
+      // 2. Guardamos el estado de los checkboxes (si lo marcó como pagado o pendiente)
+      for (const gasto of this.gastosHistoricos) {
+        await db.run(
+          'UPDATE gasto SET estado = ? WHERE id = ?',
+          [gasto.estado, gasto.id]
+        );
+      }
+
+      this.getAlertSuccess('Cambios guardados correctamente');
+      this.isModalRecurrenteOpen = false;
+      await this.getRecurrentes();
+    } catch (error) {
+      this.getAlertError(error);
+    } finally {
+      this.dissmissLoader();
+    }
+  }
+
+  async editarGastoHistorico(gasto: any) {
+    const alert = await this.alertController.create({
+      header: 'Editar Gasto del Mes',
+      subHeader: this.getNameMonth(gasto.fecha.split('-')[1]),
+      mode: 'ios',
+      inputs: [
+        { name: 'titulo', type: 'text', value: gasto.titulo, placeholder: 'Nombre' },
+        { name: 'monto', type: 'number', value: gasto.monto, placeholder: 'Monto (GTQ)' }
+      ],
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Guardar',
+          handler: async (data) => {
+            if (!data.titulo || !data.monto) return false;
+
+            this.showLoader();
+            try {
+              const db = await this.dbService.getDB();
+              await db.run(
+                'UPDATE gasto SET titulo = ?, monto = ? WHERE id = ?',
+                [data.titulo, Number(data.monto), gasto.id]
+              );
+
+              if (this.recurrenteSeleccionado) {
+                await this.obtenerHistorialGastos(this.recurrenteSeleccionado.id);
+              }
+              await this.getRecurrentes();
+              this.toastMessage('Mes actualizado correctamente');
+            } catch (error) {
+              this.getAlertError(error);
+            } finally {
+              this.dissmissLoader();
+            }
+            return true;
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async pagarGastoHistorico(gasto: any) {
     this.baseService(async () => {
-      this.showLoader()
-      await this.gastoService.desactivarGastoRecurrente(gasto.id || 0, isCheck);
-
-      this.toastMessage("Se actualizo correctamente")
+      if (gasto) {
+        this.showLoader();
+        await this.gastoService.updateStateGasto(gasto.id.toString(), 1);
+        this.getAlertSuccess('Gasto marcado como pagado');
+        gasto.estado = 1;
+        
+        // Refresh full lists to reflect in other views if necessary
+        await this.getRecurrentes();
+      }
     }, async () => {
-      this.getAlertError('No se pudieron cargar.');
+      this.getAlertError('Error al marcar como pagado.');
     }, async () => {
       this.dissmissLoader();
     });
+  }
 
+  async restablecerGastoHistorico(gasto: any) {
+    this.baseService(async () => {
+      if (gasto) {
+        this.showLoader();
+        await this.gastoService.updateStateGasto(gasto.id.toString(),0);
+        this.getAlertSuccess('Gasto restablecido a pendiente');
+        gasto.estado = 0; 
+        
+        await this.getRecurrentes();
+      }
+
+    }, async () => {
+      this.getAlertError('Error al restablecer.');
+    }, async () => {
+      this.dissmissLoader();
+    });
+  }
+
+  eliminarGastoHistorico(gastoId: number) {
+    this.modalDelete(async () => {
+      this.showLoader();
+      try {
+        const db = await this.dbService.getDB();
+        await db.run('DELETE FROM gasto WHERE id = ?', [gastoId]);
+
+        if (this.recurrenteSeleccionado) {
+          await this.obtenerHistorialGastos(this.recurrenteSeleccionado.id);
+        }
+        await this.getRecurrentes();
+        this.getAlertSuccess('Gasto eliminado del historial');
+      } catch (error) {
+        this.getAlertError(error);
+      } finally {
+        this.dissmissLoader();
+      }
+    });
+  }
+
+  printStado(estado: number): string {
+    return estado === 2 ? 'Eliminado' : estado === 1 ? 'Pagado' : 'Pendiente';
+  }
+
+  changeToggle(data: any) {
+    if (!data) return;
+    const gasto: Gasto = data.gasto;
+    const isChecked: boolean = data.isCheck;
+
+    // Evitar bug de rebote táctil
+    if ((isChecked && gasto.estado === 1) || (!isChecked && gasto.estado === 0)) {
+      return;
+    }
+
+    this.baseService(async () => {
+      this.showLoader();
+      
+      await this.gastoService.desactivarGastoRecurrente(gasto.id || 0, !isChecked);
+      gasto.estado = isChecked ? 1 : 0;
+      
+      this.toastMessage(isChecked ? 'Servicio habilitado' : 'Servicio deshabilitado');
+    }, async () => {
+      this.getAlertError('No se pudieron cargar.');
+      gasto.estado = isChecked ? 0 : 1;
+    }, async () => {
+      this.dissmissLoader();
+    });
   }
 
   modelAToModelB(a: GastoRecurrente): Gasto {
@@ -182,12 +361,39 @@ export class AddPaymentPage extends BasePage implements OnInit {
     );
   }
 
-  togglePagoCuota(c: any, e: any) {
-    this.baseService(async () => {
-      const estado = e.detail.checked ? 1 : 0;
-      await this.cuotaService.toggleEstadoCuota(c.id, estado);
-      this.cargarCuotas();
+  async togglePagoCuota(c: any, e: any) {
+    const nuevoEstado = e.detail.checked ? 1 : 0;
+    const accion = nuevoEstado === 1 ? 'marcar como pagada' : 'desmarcar';
+
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: `¿Deseas ${accion} la Cuota #${c.numero_cuota}?`,
+      cssClass: 'custom-alert',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            // Revertir el checkbox al estado anterior
+            c.estado_cuota = nuevoEstado === 1 ? 0 : 1;
+            // Forzar re-render
+            this.detalleCuotas = [...this.detalleCuotas];
+          }
+        },
+        {
+          text: 'Confirmar',
+          handler: () => {
+            this.baseService(async () => {
+              await this.cuotaService.toggleEstadoCuota(c.id, nuevoEstado);
+              c.estado_cuota = nuevoEstado;
+              this.getAlertSuccess(nuevoEstado === 1 ? 'Cuota marcada como pagada' : 'Cuota desmarcada');
+              this.cargarCuotas();
+            });
+          }
+        }
+      ]
     });
+    await alert.present();
   }
 
   abrirEditarGasto(gasto: any) {

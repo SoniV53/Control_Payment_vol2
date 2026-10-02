@@ -549,14 +549,23 @@ export class GastoServiceService {
         const db = await this.dbService.getDB();
         const [fechaInicio, fechaFin] = dateSearch(fecha);
 
-        // Para simplificar, traemos los ultimos gastos (normal, recurrente, o cuotas base) 
         const result = await db.query(
-          `SELECT g.id, g.titulo, g.monto, g.fecha, g.tipo, c.icono as cat_icono, c.color as cat_color
-           FROM gasto g
-           LEFT JOIN categoria c ON g.categoria_id = c.id
-           WHERE g.fecha >= ? AND g.fecha < ? AND g.estado != 2
-           ORDER BY g.fecha DESC LIMIT ?`,
-          [fechaInicio, fechaFin, limit]
+          `SELECT id, titulo, monto, fecha, tipo, cat_icono, cat_color FROM (
+            SELECT g.id, g.titulo, g.monto, g.fecha, g.tipo, c.icono as cat_icono, c.color as cat_color
+            FROM gasto g
+            LEFT JOIN categoria c ON g.categoria_id = c.id
+            WHERE g.fecha >= ? AND g.fecha < ? AND g.estado != 2 AND (g.tipo = 'normal' OR g.tipo = 'recurrente')
+            
+            UNION ALL
+            
+            SELECT g.id, g.titulo, gc.monto_cuota as monto, gc.fecha_pago as fecha, 'cuota' as tipo, c.icono as cat_icono, c.color as cat_color
+            FROM gasto_cuota gc
+            INNER JOIN gasto g ON gc.gasto_id = g.id
+            LEFT JOIN categoria c ON g.categoria_id = c.id
+            WHERE gc.fecha_pago >= ? AND gc.fecha_pago < ? AND gc.estado_cuota != 2
+          ) 
+          ORDER BY fecha DESC LIMIT ?`,
+          [fechaInicio, fechaFin, fechaInicio, fechaFin, limit]
         );
 
         resolve(result.values || []);

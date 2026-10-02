@@ -21,9 +21,15 @@ export class CuotaServiceService {
     let res = await db.query("SELECT * FROM gasto_cuota WHERE gasto_id = ? ORDER BY numero_cuota ASC", [gasto.id]);
     let cuotasActuales = res.values || [];
 
-    // Validar si faltan cuotas por generar según el total indicado en el gasto
-    if (cuotasActuales.length < gasto.cuotas) {
-      const nuevoMontoCuota = gasto.monto / gasto.cuotas;
+    // Obtener el número de cuota más alto ya existente (para no crear duplicados)
+    const maxRes = await db.query("SELECT MAX(numero_cuota) as maxNum FROM gasto_cuota WHERE gasto_id = ?", [gasto.id]);
+    const maxNumExistente = maxRes.values?.[0]?.maxNum || 0;
+
+    // Solo crear cuotas faltantes si hay menos registros que el total indicado
+    // Y empezar desde maxNumExistente + 1 para evitar duplicados de numero_cuota
+    const totalEsperado = gasto.cuotas || 0;
+    if (cuotasActuales.length < totalEsperado) {
+      const nuevoMontoCuota = gasto.monto / totalEsperado;
       
       let fechaBase = new Date(gasto.fecha || new Date());
       if (cuotasActuales.length > 0) {
@@ -31,7 +37,15 @@ export class CuotaServiceService {
         if (ultimaFecha) fechaBase = new Date(ultimaFecha);
       }
 
-      for (let i = cuotasActuales.length + 1; i <= gasto.cuotas; i++) {
+      const startFrom = Math.max(maxNumExistente + 1, cuotasActuales.length + 1);
+
+      for (let i = startFrom; i <= totalEsperado; i++) {
+        // Verificar que no exista ya esta cuota por numero_cuota
+        const existeCheck = await db.query(
+          "SELECT id FROM gasto_cuota WHERE gasto_id = ? AND numero_cuota = ?", [gasto.id, i]
+        );
+        if (existeCheck.values && existeCheck.values.length > 0) continue;
+
         fechaBase.setMonth(fechaBase.getMonth() + 1);
         const fechaStr = fechaBase.toISOString().split('T')[0];
         

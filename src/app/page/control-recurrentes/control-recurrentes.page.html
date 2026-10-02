@@ -5,47 +5,66 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <div class="tab-content">
-    <ion-card class="category-card" *ngFor="let grupo of grupos">
-      <div class="category-header">
-        <div class="cat-info">
-          <ion-icon [name]="grupo.categoria.icono || 'car-outline'"></ion-icon>
-          <span class="cat-name">{{ grupo.categoria.nombre | lowercase }} ({{ grupo.totalCantidad }})</span>
-        </div>
-        <div class="cat-total">
-          <span>(GTQ {{ grupo.totalMonto | number:'1.2-2' }})</span>
-        </div>
+  
+  <!-- Empty State -->
+  <div *ngIf="grupos.length === 0" class="empty-state">
+    <div class="icon-glow">
+      <ion-icon name="folder-open-outline"></ion-icon>
+    </div>
+    <p>No tienes gastos recurrentes</p>
+    <span>Tus suscripciones y pagos fijos aparecerán aquí.</span>
+  </div>
+
+  <!-- Category Blocks -->
+  <div *ngFor="let grupo of grupos" class="category-block">
+    
+    <!-- Block Header -->
+    <div class="block-header">
+      <div class="title-wrap">
+        <ion-icon [name]="grupo.categoria.icono || 'pricetag'"></ion-icon>
+        <h2>{{ grupo.categoria.nombre | titlecase }}</h2>
+        <span class="count-badge">{{ grupo.totalCantidad }}</span>
       </div>
-      <div class="divider"></div>
-      <ion-accordion-group multiple="true" mode="md">
-        <ion-accordion *ngFor="let item of grupo.recurrentes" [value]="item.id">
-          <ion-item slot="header" class="item-header" lines="none">
-            <ion-label class="item-title">{{ item.titulo }}</ion-label>
-          </ion-item>
-          <div slot="content" class="item-content-box">
-            <div class="detail-row">
-              <span class="detail-label">Fecha:</span>
-              <span class="detail-value">{{ item.fechaInicio | date:'yyyy / MMMM' }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">Monto:</span>
-              <span class="detail-value">GTQ {{ item.monto | number:'1.2-2' }}</span>
-            </div>
-            <div class="divider-dark"></div>
-            <div class="actions-footer-row">
-              <div class="toggle-box">
-                <span class="detail-label">Deshabilitar:</span>
-                <ion-toggle mode="ios" [checked]="item.activo === 0"
-                  (ionChange)="toggleDeshabilitar(item, $event)"></ion-toggle>
-              </div>
-              <div class="action-buttons">
-                <ion-icon name="create-outline" class="icon-btn edit-btn" (click)="editarRecurrente(item)"></ion-icon>
-              </div>
-            </div>
+      <span class="total-text">GTQ {{ grupo.totalMonto | number:'1.2-2' }}</span>
+    </div>
+
+    <!-- Unified Card -->
+    <div class="block-card">
+      <div class="sub-item" *ngFor="let item of grupo.recurrentes; let last = last" [class.no-border]="last">
+        
+        <!-- Main Data Row -->
+        <div class="sub-item-main">
+          <div class="icon-box" [class.paused]="item.activo === 0">
+             <ion-icon [name]="item.activo === 1 ? 'sync-outline' : 'pause-outline'"></ion-icon>
           </div>
-        </ion-accordion>
-      </ion-accordion-group>
-    </ion-card>
+          
+          <div class="text-data">
+            <h4>{{ item.titulo }}</h4>
+            <p>{{ item.fechaInicio | date:'MMM yyyy' }}</p>
+          </div>
+
+          <div class="amount-data">
+            <h4>GTQ {{ item.monto | number:'1.2-2' }}</h4>
+            <span class="status-dot" [class.active]="item.activo === 1">
+              {{ item.activo === 1 ? 'Activo' : 'Pausado' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Inline Actions -->
+        <div class="sub-item-actions">
+          <div class="action-left">
+            <ion-toggle mode="ios" [checked]="item.activo === 1" (ionChange)="toggleDeshabilitar(item, $event)"></ion-toggle>
+            <span>Habilitado</span>
+          </div>
+          <button class="btn-edit" (click)="editarRecurrente(item)">
+            <ion-icon name="create-outline"></ion-icon>
+            Editar
+          </button>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false" mode="ios" class="edit-modal">
@@ -63,17 +82,17 @@
         <div class="form-section">
           <ion-item lines="none" class="custom-input-item">
             <ion-label position="stacked">Nombre del Servicio</ion-label>
-            <ion-input type="text" [(ngModel)]="editTitulo" placeholder="Ej. Netflix"></ion-input>
+            <ion-input type="text" [(ngModel)]="editData.titulo" placeholder="Ej. Netflix"></ion-input>
           </ion-item>
 
           <ion-item lines="none" class="custom-input-item ion-margin-top">
             <ion-label position="stacked">Monto Base (GTQ)</ion-label>
-            <ion-input type="number" [(ngModel)]="editMonto" placeholder="0.00"></ion-input>
+            <ion-input type="number" [(ngModel)]="editData.monto" placeholder="0.00"></ion-input>
           </ion-item>
 
           <ion-item lines="none" class="custom-toggle-item ion-margin-top">
-            <ion-label class="toggle-text" class="ion-text-wrap">Seleccionar todos los meses</ion-label>
-            <ion-toggle mode="ios" [(ngModel)]="aplicarAtodos" (ionChange)="toggleAllHistorial($event)"
+            <ion-label class="toggle-text" class="ion-text-wrap">Aplicar nuevo nombre y monto a los meses generados</ion-label>
+            <ion-toggle mode="ios" [(ngModel)]="editData.aplicarAtodos" (ionChange)="toggleAllHistorial($event)"
               slot="end"></ion-toggle>
           </ion-item>
 
@@ -92,16 +111,20 @@
           <ion-list lines="none" class="history-list" *ngIf="gastosHistoricos.length > 0">
             <ion-item *ngFor="let gasto of gastosHistoricos" class="history-item">
 
-              <ion-checkbox slot="start" mode="ios" [(ngModel)]="gasto.seleccionado"
+              <ion-checkbox slot="start" mode="ios" [checked]="gasto.estado === 1"
+                (ionChange)="gasto.estado = $event.detail.checked ? 1 : 0"
                 class="history-checkbox"></ion-checkbox>
 
               <ion-label>
                 <h2>{{ gasto.titulo }}</h2>
                 <p class="gasto-date">{{ gasto.fecha | date:'MMMM yyyy' | titlecase }}</p>
-                <p class="gasto-date">{{ printStado(gasto.estado) }}</p>
+                <p class="gasto-date" [style.color]="gasto.estado === 1 ? '#00d09c' : '#8c9ba5'">
+                  {{ printStado(gasto.estado) }}
+                </p>
               </ion-label>
               <div slot="end" class="history-end">
                 <span class="gasto-amount">GTQ {{ gasto.monto | number:'1.2-2' }}</span>
+                
                 <ion-icon name="create-outline" class="edit-history-btn"
                   (click)="editarGastoHistorico(gasto)"></ion-icon>
                 <ion-icon name="trash-outline" class="delete-history-btn"
@@ -118,10 +141,4 @@
     </ng-template>
   </ion-modal>
 
-  <!-- Funcionalidad solicitada: Botón flotante para agregar nuevos recurrentes -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 24px; margin-right: 16px;">
-    <ion-fab-button style="--background: #00d09c; --color: #ffffff; box-shadow: 0 4px 12px rgba(0,208,156,0.4);" (click)="navCtrl.push('NewPaymentPage')">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

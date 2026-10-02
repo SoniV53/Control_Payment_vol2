@@ -51,30 +51,41 @@ export const getMesSiguiente = (today: Date): string => {
 }
 
 export const dateSearch = (valor: string | Date): string[] => {
-    if (!valor) {
-        return [];
+    if (!valor) return [];
+
+    let anio: number, mes: number;
+
+    if (typeof valor === 'string' && valor.includes('-')) {
+        const parts = valor.split('-');
+        anio = parseInt(parts[0], 10);
+        mes = parseInt(parts[1], 10);
+    } else {
+        const d = new Date(valor);
+        anio = d.getFullYear();
+        mes = d.getMonth() + 1;
     }
-    const date = formatDate(new Date(valor));
-    let fechaS = date.toString();
-    let [anio, mes] = fechaS.split('-');
-    let inicio = `${anio}-${mes}-01`;
 
-    const fecha = new Date(valor);
-    fecha.setMonth(fecha.getMonth() + 1);
-    const dateFormat = formatDate(fecha);
+    const formatYM = (y: number, m: number) => `${y}-${String(m).padStart(2, '0')}-01`;
 
-    let fechaN = dateFormat.toString();
-    let [anioN, mesN] = fechaN.split('-');
-    let siguienteMes = `${anioN}-${mesN}-01`;
+    let inicio = formatYM(anio, mes);
 
+    // Calcular siguiente mes
+    let anioSiguiente = anio;
+    let mesSiguiente = mes + 1;
+    if (mesSiguiente > 12) {
+        mesSiguiente = 1;
+        anioSiguiente++;
+    }
+    let siguienteMes = formatYM(anioSiguiente, mesSiguiente);
 
-    const fechaL = new Date(valor);
-    fechaL.setMonth(fechaL.getMonth() - 1);
-    const dateLFormat = formatDate(fechaL);
-
-    let fechaSl = dateLFormat.toString();
-    let [anioL, mesL] = fechaSl.split('-');
-    let anteriorMes = `${anioL}-${mesL}-01`;
+    // Calcular anterior mes
+    let anioAnterior = anio;
+    let mesAnterior = mes - 1;
+    if (mesAnterior < 1) {
+        mesAnterior = 12;
+        anioAnterior--;
+    }
+    let anteriorMes = formatYM(anioAnterior, mesAnterior);
 
     return [inicio, siguienteMes, anteriorMes];
 }

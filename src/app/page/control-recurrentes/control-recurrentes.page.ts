@@ -39,9 +39,7 @@ export class ControlRecurrentesPage extends BasePage {
 
   isModalOpen: boolean = false;
   recurrenteSeleccionado: GastoRecurrente | null = null;
-  editTitulo: string = '';
-  editMonto: number = 0;
-  aplicarAtodos: boolean = false;
+  editData = { titulo: '', monto: 0, aplicarAtodos: false };
   gastosHistoricos: any[] = [];
 
   constructor(
@@ -89,14 +87,24 @@ export class ControlRecurrentesPage extends BasePage {
 
   async toggleDeshabilitar(recurrente: any, event: any) {
     const isChecked = event.detail.checked;
+    
+    // Evitar que se dispare si el valor ya es correcto (evita el bug de rebote táctil)
+    if ((isChecked && recurrente.activo === 1) || (!isChecked && recurrente.activo === 0)) {
+      return;
+    }
+
     this.showLoader();
     try {
-      await this.gastoService.desactivarGastoRecurrente(recurrente.id, isChecked);
-      recurrente.activo = isChecked ? 0 : 1;
-      this.toastMessage(isChecked ? 'Servicio deshabilitado' : 'Servicio habilitado');
+      // El servicio recibe isCheck, que usaba lógica invertida. Le mandamos !isChecked para compensar
+      // o mejor arreglamos la asignación local directa.
+      await this.gastoService.desactivarGastoRecurrente(recurrente.id, !isChecked);
+      recurrente.activo = isChecked ? 1 : 0;
+      this.toastMessage(isChecked ? 'Servicio habilitado' : 'Servicio deshabilitado');
     } catch (error) {
       this.getAlertError(error);
-      recurrente.activo = isChecked ? 1 : 0;
+      // Revertir en caso de error
+      recurrente.activo = isChecked ? 0 : 1;
+      event.target.checked = !isChecked;
     } finally {
       this.dissmissLoader();
     }
@@ -104,9 +112,9 @@ export class ControlRecurrentesPage extends BasePage {
 
   async editarRecurrente(recurrente: GastoRecurrente) {
     this.recurrenteSeleccionado = recurrente;
-    this.editTitulo = recurrente.titulo || '';
-    this.editMonto = recurrente.monto || 0;
-    this.aplicarAtodos = false; // Por defecto apagado para evitar errores
+    this.editData.titulo = recurrente.titulo || '';
+    this.editData.monto = recurrente.monto || 0;
+    this.editData.aplicarAtodos = false; // Por defecto apagado para evitar errores
     this.isModalOpen = true;
 
     await this.obtenerHistorialGastos(recurrente.id);
@@ -119,20 +127,15 @@ export class ControlRecurrentesPage extends BasePage {
         'SELECT * FROM gasto WHERE recurrente_id = ? ORDER BY fecha DESC',
         [recurrenteId]
       );
-      // Mapeamos para agregar la propiedad 'seleccionado' a cada item
-      this.gastosHistoricos = (res.values || []).map((g: any) => ({
-        ...g,
-        seleccionado: this.aplicarAtodos
-      }));
+      this.gastosHistoricos = res.values || [];
     } catch (error) {
       this.getAlertError(error);
     }
   }
 
-  // --- NUEVO: Controla todos los checkboxes de los historiales a la vez ---
+  // --- NUEVO: Controla si se actualizan todos los nombres/montos del historial ---
   toggleAllHistorial(event: any) {
-    const isChecked = event.detail.checked;
-    this.gastosHistoricos.forEach(gasto => gasto.seleccionado = isChecked);
+    this.editData.aplicarAtodos = event.detail.checked;
   }
 
   // --- ACTUALIZADO: Guarda el principal y los meses que estén marcados con el Checkbox ---
@@ -146,21 +149,28 @@ export class ControlRecurrentesPage extends BasePage {
       // 1. Actualizamos la plantilla principal
       await db.run(
         'UPDATE gasto_recurrente SET titulo = ?, monto = ? WHERE id = ?',
-        [this.editTitulo, this.editMonto, this.recurrenteSeleccionado.id]
+        [this.editData.titulo, this.editData.monto, this.recurrenteSeleccionado.id]
       );
 
-      // 2. Filtramos los historiales que el usuario dejó marcados con el checkbox
-      const seleccionados = this.gastosHistoricos.filter(g => g.seleccionado);
+      // 2. Si el toggle está activado, aplicamos nombre y monto a todos los meses
+      if (this.editData.aplicarAtodos) {
+        for (const gasto of this.gastosHistoricos) {
+          await db.run(
+            'UPDATE gasto SET titulo = ?, monto = ? WHERE id = ?',
+            [this.editData.titulo, this.editData.monto, gasto.id]
+          );
+        }
+      }
 
-      // 3. Actualizamos uno a uno los marcados
-      for (const gasto of seleccionados) {
+      // 3. Guardamos el estado de los checkboxes (si lo marcó como pagado o pendiente)
+      for (const gasto of this.gastosHistoricos) {
         await db.run(
-          'UPDATE gasto SET titulo = ?, monto = ? WHERE id = ?',
-          [this.editTitulo, this.editMonto, gasto.id]
+          'UPDATE gasto SET estado = ? WHERE id = ?',
+          [gasto.estado, gasto.id]
         );
       }
 
-      this.getAlertSuccess(seleccionados.length > 0 ? `Servicio y ${seleccionados.length} meses actualizados` : 'Servicio actualizado');
+      this.getAlertSuccess('Cambios guardados correctamente');
       this.isModalOpen = false;
       await this.cargarDatos();
     } catch (error) {
@@ -214,17 +224,36 @@ export class ControlRecurrentesPage extends BasePage {
   }
 
 
+  async pagarGastoHistorico(gasto: any) {
+    this.baseService(async () => {
+      if (gasto) {
+        this.showLoader();
+        await this.gastoService.updateStateGasto(gasto.id.toString(), 1);
+        this.getAlertSuccess('Gasto marcado como pagado');
+        gasto.estado = 1;
+        
+        await this.cargarDatos();
+      }
+    }, async () => {
+      this.getAlertError('Error al marcar como pagado.');
+    }, async () => {
+      this.dissmissLoader();
+    });
+  }
+
   async restablecerGastoHistorico(gasto: any) {
     this.baseService(async () => {
       if (gasto) {
         this.showLoader();
         await this.gastoService.updateStateGasto(gasto.id.toString(),0);
-        this.getAlertSuccess('Gasto restablecido correctamente');
+        this.getAlertSuccess('Gasto restablecido a pendiente');
         gasto.estado = 0; 
+        
+        await this.cargarDatos();
       }
 
     }, async () => {
-      this.getAlertError('No se pudieron cargar.');
+      this.getAlertError('Error al restablecer.');
     }, async () => {
       this.dissmissLoader();
     });

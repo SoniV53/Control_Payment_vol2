@@ -92,6 +92,10 @@ export class ResumenGastosPage extends BasePage {
     });
   }
 
+  calcularTotal(datos: any[]): number {
+    return datos.reduce((sum, item) => sum + (item.montoTotal || 0), 0);
+  }
+
   toggleExpand(item: any) {
     item.expanded = !item.expanded;
   }

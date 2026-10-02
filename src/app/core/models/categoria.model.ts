@@ -7,5 +7,6 @@ export interface Categoria {
   icono: string;
   activo?: number;
   totalMonto?: number;
-  dataGasto?: Gasto[],
+  dataGasto?: Gasto[];
+  mostrar?: boolean;
 }

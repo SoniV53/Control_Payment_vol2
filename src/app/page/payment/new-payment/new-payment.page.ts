@@ -167,7 +167,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
         {
           id: 'fecha',
           titulo: `Fecha Inicio: `, isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'read', required: false,
-          valueSelect: this.formatearFecha(new Date(this.myApp.dateToday))
+          valueSelect: this.myApp.dateToday
         }
       )
       this.listaFormulario.push({
@@ -225,6 +225,11 @@ export class NewPaymentPage extends BasePage implements OnInit {
   }
 
   async saveNewPayment() {
+    // Guard contra doble-tap: si ya se está procesando, ignorar
+    if (this.isStartLoad) return;
+    this.isStartLoad = true;
+    this.disabledButton = true;
+
    return this.baseService(async () => {
       const g: Gasto = {
         titulo: this.listaFormulario.find(item => item.id === 'titulo')?.valueSelect || '',
@@ -243,6 +248,8 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
         if (!ok) {
           this.getAlertError('Rango de fechas no valida');
+          this.isStartLoad = false;
+          this.disabledButton = false;
           return;
         }
       }
@@ -253,9 +260,12 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
       this.getAlertSuccess('El gasto se ha guardado correctamente.');
       this.resetInputs();
+      this.isStartLoad = false;
       this.resetNavigation();
     }, async () => {
       this.getAlertError('No se pudieron cargar los gastos.');
+      this.isStartLoad = false;
+      this.disabledButton = false;
     });
 
 
@@ -317,7 +327,12 @@ export class NewPaymentPage extends BasePage implements OnInit {
         const cuota = this.listaFormulario.find(item => item.id === 'cuota');
 
         if (fechaInicial) {
-          fechaInicial.valueSelect = this.sumarMeses(this.myApp.dateToday, -(cuotasPagadas - 1));
+          // Calcular fecha restando meses directamente con strings para evitar bug UTC
+          const [y, m, d] = this.myApp.dateToday.split('-').map(Number);
+          const totalMonths = y * 12 + (m - 1) - (cuotasPagadas - 1);
+          const newYear = Math.floor(totalMonths / 12);
+          const newMonth = (totalMonths % 12) + 1;
+          fechaInicial.valueSelect = `${newYear}-${String(newMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
         }
 
         if (cuota?.valueSelect) {

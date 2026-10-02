@@ -58,9 +58,8 @@ export class ControlCuotasPage extends BasePage {
     await this.cargarCuotas(); 
   }
 
-  clickSegment() {
-    // Evento disparado al cambiar de pestaña
-    console.log("Pestaña cambiada a:", this.tabEstado);
+  countItems(grupos: any[]): number {
+    return grupos.reduce((total: number, g: any) => total + g.items.length, 0);
   }
 
   async cargarCategorias() {
@@ -128,12 +127,39 @@ export class ControlCuotasPage extends BasePage {
     );
   }
 
-  togglePagoCuota(c: any, e: any) {
-    this.baseService(async () => {
-      const estado = e.detail.checked ? 1 : 0;
-      await this.cuotaService.toggleEstadoCuota(c.id, estado);
-      this.cargarCuotas();
+  async togglePagoCuota(c: any, e: any) {
+    const nuevoEstado = e.detail.checked ? 1 : 0;
+    const accion = nuevoEstado === 1 ? 'marcar como pagada' : 'desmarcar';
+
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: `¿Deseas ${accion} la Cuota #${c.numero_cuota}?`,
+      cssClass: 'custom-alert',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            // Revertir el checkbox al estado anterior
+            c.estado_cuota = nuevoEstado === 1 ? 0 : 1;
+            // Forzar re-render
+            this.detalleCuotas = [...this.detalleCuotas];
+          }
+        },
+        {
+          text: 'Confirmar',
+          handler: () => {
+            this.baseService(async () => {
+              await this.cuotaService.toggleEstadoCuota(c.id, nuevoEstado);
+              c.estado_cuota = nuevoEstado;
+              this.getAlertSuccess(nuevoEstado === 1 ? '✓ Cuota marcada como pagada' : 'Cuota desmarcada');
+              this.cargarCuotas();
+            });
+          }
+        }
+      ]
     });
+    await alert.present();
   }
 
   abrirEditarGasto(gasto: any) {

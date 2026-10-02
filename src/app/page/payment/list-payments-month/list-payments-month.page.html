@@ -42,9 +42,46 @@
     </div>
 
     <div class="listado-gastos">
-        <div *ngFor="let categoria of listCategoria">
-            <app-category-payment *ngIf="categoria.dataGasto?.length" (clickItem)="clickItem($event)"
-                [dataCategoria]="categoria" [dataGasto]="categoria.dataGasto || []"></app-category-payment>
+        <div class="category-block" *ngFor="let categoria of listCategoria">
+            
+            <ng-container *ngIf="categoria?.dataGasto?.length">
+                
+                <!-- HEADER DE CATEGORÍA -->
+                <div class="category-header" (click)="categoria.mostrar = categoria.mostrar === false ? true : false">
+                    <div class="cat-icon-container">
+                        <ion-icon [name]="categoria.icono || 'pricetag'"></ion-icon>
+                    </div>
+                    <div class="cat-title">
+                        <h3>{{ categoria.nombre }}</h3>
+                        <span>{{ categoria?.dataGasto?.length || 0 }} gastos</span>
+                    </div>
+                    <div class="cat-total-col">
+                        <div class="cat-total">GTQ {{ categoria.totalMonto | number:'1.2-2' }}</div>
+                        <ion-icon class="expand-icon" [name]="categoria.mostrar !== false ? 'chevron-up' : 'chevron-down'"></ion-icon>
+                    </div>
+                </div>
+
+                <!-- LISTA DE GASTOS (Se oculta si mostrar es false) -->
+                <div class="category-items" *ngIf="categoria.mostrar !== false">
+                    <div class="transaction-row" *ngFor="let gasto of categoria?.dataGasto; let last = last" [class.no-border]="last" (click)="clickItem(gasto)">
+                        
+                        <div class="tx-info">
+                            <h4>{{ gasto.titulo }}</h4>
+                            <p>{{ gasto.fecha | date:'dd MMM yyyy' }}</p>
+                        </div>
+                        
+                        <div class="tx-amount-col">
+                            <span class="tx-amount">GTQ {{ gasto.monto | number:'1.2-2' }}</span>
+                            <span class="tx-tag cuota" *ngIf="gasto.tipo === 'cuota'">Cuota</span>
+                            <span class="tx-tag recurrente" *ngIf="gasto.tipo === 'recurrente'">Recurrente</span>
+                            <span class="tx-tag unico" *ngIf="gasto.tipo === 'normal' || !gasto.tipo">Único</span>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </ng-container>
+
         </div>
     </div>
 </ion-content>

@@ -20,11 +20,50 @@
     <div [ngSwitch]="valueSegment">
 
         <div *ngSwitchCase="'recurrente'">
-            <div class="listado-gastos" *ngFor="let categoria of listCategoria">
-                <app-category-payment *ngIf="categoria.dataGasto?.length" (clickItem)="clickItem($event)"
-                    (changeToggle)="changeToggle($event)" [dataCategoria]="categoria"
-                    [dataGasto]="categoria.dataGasto || []" [isRecurrente]="true">
-                </app-category-payment>
+            <div *ngIf="listCategoria.length === 0" class="empty-state">
+                <ion-icon name="folder-open-outline"></ion-icon>
+                <p>No tienes gastos recurrentes</p>
+            </div>
+
+            <div class="category-block" *ngFor="let categoria of listCategoria">
+                <ng-container *ngIf="categoria.dataGasto?.length">
+                    <div class="block-header">
+                        <div class="title-wrap">
+                            <ion-icon [name]="categoria.icono || 'pricetag'"></ion-icon>
+                            <h2>{{ categoria.nombre | titlecase }}</h2>
+                            <span class="count-badge">{{ categoria.dataGasto!.length }}</span>
+                        </div>
+                    </div>
+                    <div class="block-card">
+                        <div class="sub-item" *ngFor="let item of categoria.dataGasto; let last = last" [class.no-border]="last">
+                            <div class="sub-item-main">
+                                <div class="icon-box" [class.paused]="item.estado === 0">
+                                   <ion-icon [name]="item.estado === 1 ? 'sync-outline' : 'pause-outline'"></ion-icon>
+                                </div>
+                                <div class="text-data">
+                                    <h4>{{ item.titulo }}</h4>
+                                    <p>{{ item.fecha | date:'MMM yyyy' }}</p>
+                                </div>
+                                <div class="amount-data">
+                                    <h4>GTQ {{ item.monto | number:'1.2-2' }}</h4>
+                                    <span class="status-dot" [class.active]="item.estado === 1">
+                                      {{ item.estado === 1 ? 'Activo' : 'Pausado' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="sub-item-actions">
+                                <div class="action-left">
+                                    <ion-toggle mode="ios" [checked]="item.estado === 1" (ionChange)="changeToggle({gasto: item, isCheck: $event.detail.checked})"></ion-toggle>
+                                    <span>Habilitado</span>
+                                </div>
+                                <button class="btn-edit" (click)="clickItem(item)">
+                                    <ion-icon name="create-outline"></ion-icon>
+                                    Editar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
             </div>
         </div>
 
@@ -34,75 +73,115 @@
                 <p>No tienes cuotas en progreso.</p>
             </div>
 
-            <!-- Iteramos directamente sobre divs en lugar de un acordeón -->
-            <div *ngFor="let g of gruposProgreso" class="categoria-grupo">
-
-                <!-- Título de la categoría -->
-                <div class="cat-title-container">
-                    <ion-icon [name]="g.icono || 'pricetag-outline'"></ion-icon>
-                    <span>{{g.nombre}} ({{g.items.length}})</span>
+            <div *ngFor="let g of gruposProgreso" class="category-block">
+              <div class="block-header">
+                <div class="title-wrap">
+                  <ion-icon [name]="g.icono || 'pricetag'"></ion-icon>
+                  <h2>{{ g.nombre }}</h2>
+                  <span class="count-badge">{{ g.items.length }}</span>
                 </div>
+              </div>
 
-                <!-- Lista de tarjetas de esa categoría -->
-                <div class="listado-gastos">
-                    <ion-card *ngFor="let item of g.items" class="cuota-card">
-                        <ion-card-content (click)="abrirGestionCuotas(item)">
-                            <div class="header-row">
-                                <h3>{{item.titulo}}</h3>
-                                <span class="monto-total">GTQ {{item.monto | number:'1.2-2'}}</span>
-                            </div>
+              <div class="block-card">
+                <div class="cuota-item" *ngFor="let item of g.items; let last = last" [class.no-border]="last">
 
-                            <div class="card-dates" *ngIf="item.fecha">
-                                <ion-icon name="calendar-outline"></ion-icon>
-                                <span>{{ item.fecha | date:'MMM yyyy' }} <span *ngIf="item.fechaEnd">- {{ item.fechaEnd
-                                        | date:'MMM yyyy' }}</span></span>
-                            </div>
+                  <div class="item-main" (click)="abrirGestionCuotas(item)">
+                    <div class="icon-box">
+                      <ion-icon name="calendar-outline"></ion-icon>
+                    </div>
+                    <div class="text-col">
+                      <h4>{{ item.titulo }}</h4>
+                      <p *ngIf="item.fecha">{{ item.fecha | date:'MMM yyyy' }}<span *ngIf="item.fechaEnd"> — {{ item.fechaEnd | date:'MMM yyyy' }}</span></p>
+                    </div>
+                    <div class="amount-col">
+                      <h4>GTQ {{ item.monto | number:'1.2-2' }}</h4>
+                      <span class="cuota-label">{{ item.pagadas }}/{{ item.cuotas }} cuotas</span>
+                    </div>
+                  </div>
 
-                            <div class="info-grid">
-                                <span>Valor Cuota: <b>GTQ {{(item.monto / item.cuotas) | number:'1.2-2'}}</b></span>
-                                <span>Progreso: <b>{{item.pagadas}} / {{item.cuotas}}</b></span>
-                            </div>
-                            <ion-progress-bar [value]="item.pagadas / item.cuotas"></ion-progress-bar>
-                        </ion-card-content>
-                        <div class="actions">
-                            <ion-icon name="create-outline" (click)="abrirEditarGasto(item)"></ion-icon>
-                            <ion-icon name="trash-outline" (click)="eliminarGasto(item)"></ion-icon>
-                        </div>
-                    </ion-card>
+                  <div class="progress-section" (click)="abrirGestionCuotas(item)">
+                    <div class="progress-track">
+                      <div class="progress-fill" [style.width.%]="(item.pagadas / item.cuotas) * 100"></div>
+                    </div>
+                    <div class="progress-meta">
+                      <span>Cuota: <b>GTQ {{ (item.monto / item.cuotas) | number:'1.2-2' }}</b></span>
+                      <span>{{ ((item.pagadas / item.cuotas) * 100) | number:'1.0-0' }}%</span>
+                    </div>
+                  </div>
+
+                  <div class="item-actions">
+                    <button class="action-btn edit" (click)="abrirEditarGasto(item)">
+                      <ion-icon name="create-outline"></ion-icon> Editar
+                    </button>
+                    <button class="action-btn delete" (click)="eliminarGasto(item)">
+                      <ion-icon name="trash-outline"></ion-icon> Eliminar
+                    </button>
+                  </div>
+
                 </div>
-
+              </div>
             </div>
         </div>
     </div>
 
 
     <!-- Modal Detalle Cuotas -->
-    <ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false">
+    <ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false" mode="ios" class="detail-modal">
         <ng-template>
-            <ion-header>
-                <ion-toolbar>
-                    <ion-title>Detalle: {{ gastoSeleccionado?.titulo }}</ion-title>
-                    <ion-buttons slot="end"><ion-button (click)="isModalOpen = false">Cerrar</ion-button></ion-buttons>
-                </ion-toolbar>
-            </ion-header>
-            <ion-content class="ion-padding modal-bg">
-                <div *ngIf="detalleCuotas.length === 0" class="empty-state">No hay cuotas registradas.</div>
-                <ion-card *ngFor="let c of detalleCuotas" class="cuota-detail-item">
-                    <ion-item lines="none">
-                        <ion-label>
-                            <h2>Cuota #{{c.numero_cuota}}</h2>
-                            <p>Vence: {{c.fecha_pago | date:'dd/MM/yyyy'}}</p>
-                        </ion-label>
-                        <div slot="end" class="cuota-amount">GTQ {{c.monto_cuota | number:'1.2-2'}}</div>
-                        <ion-checkbox [checked]="c.estado_cuota === 1"
-                            (ionChange)="togglePagoCuota(c, $event)"></ion-checkbox>
-                    </ion-item>
-                </ion-card>
-            </ion-content>
+          <ion-header class="ion-no-border">
+            <ion-toolbar>
+              <ion-title>{{ gastoSeleccionado?.titulo }}</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="isModalOpen = false" color="medium">Cerrar</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding modal-bg">
+    
+            <!-- Resumen rápido -->
+            <div class="modal-summary" *ngIf="gastoSeleccionado">
+              <div class="summary-item">
+                <span>Total</span>
+                <h3>GTQ {{ gastoSeleccionado.monto | number:'1.2-2' }}</h3>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-item">
+                <span>Por cuota</span>
+                <h3>GTQ {{ (gastoSeleccionado.monto / gastoSeleccionado.cuotas) | number:'1.2-2' }}</h3>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-item">
+                <span>Progreso</span>
+                <h3>{{ gastoSeleccionado.pagadas }}/{{ gastoSeleccionado.cuotas }}</h3>
+              </div>
+            </div>
+    
+            <div *ngIf="detalleCuotas.length === 0" class="empty-state small">
+              <p>No hay cuotas registradas.</p>
+            </div>
+    
+            <!-- Lista de cuotas -->
+            <div class="cuotas-list">
+              <div *ngFor="let c of detalleCuotas" class="cuota-row" [class.paid]="c.estado_cuota === 1">
+                <div class="cuota-number">
+                  <span>#{{ c.numero_cuota }}</span>
+                </div>
+                <div class="cuota-info">
+                  <h4>Cuota #{{ c.numero_cuota }}</h4>
+                  <p>Vence: {{ c.fecha_pago | date:'dd/MM/yyyy' }}</p>
+                </div>
+                <div class="cuota-right">
+                  <span class="cuota-monto">GTQ {{ c.monto_cuota | number:'1.2-2' }}</span>
+                  <ion-checkbox mode="ios" [checked]="c.estado_cuota === 1" (ionChange)="togglePagoCuota(c, $event)"></ion-checkbox>
+                </div>
+              </div>
+            </div>
+    
+          </ion-content>
         </ng-template>
     </ion-modal>
 
-    <!-- Bottom Sheet Modal para Editar -->
+    <!-- Bottom Sheet Modal para Editar Cuota -->
     <ion-modal [isOpen]="isEditModalOpen" (didDismiss)="isEditModalOpen = false" [initialBreakpoint]="0.75"
         [breakpoints]="[0, 0.75, 1]" class="bottom-sheet">
         <ng-template>
@@ -140,10 +219,78 @@
         </ng-template>
     </ion-modal>
 
-    <!-- Funcionalidad solicitada: Botón flotante para agregar nuevos -->
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 24px; margin-right: 16px;">
-        <ion-fab-button style="--background: #00d09c; --color: #ffffff; box-shadow: 0 4px 12px rgba(0,208,156,0.4);" (click)="navCtrl.push('NewPaymentPage')">
-            <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
+    <!-- Modal Editar Recurrente -->
+    <ion-modal [isOpen]="isModalRecurrenteOpen" (didDismiss)="isModalRecurrenteOpen = false" mode="ios" class="edit-modal">
+        <ng-template>
+          <ion-header class="ion-no-border">
+            <ion-toolbar>
+              <ion-title>Editar Servicio</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="isModalRecurrenteOpen = false" color="medium">Cerrar</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+    
+          <ion-content class="ion-padding modal-content-bg">
+            <div class="form-section">
+              <ion-item lines="none" class="custom-input-item">
+                <ion-label position="stacked">Nombre del Servicio</ion-label>
+                <ion-input type="text" [(ngModel)]="editDataRec.titulo" placeholder="Ej. Netflix"></ion-input>
+              </ion-item>
+    
+              <ion-item lines="none" class="custom-input-item ion-margin-top">
+                <ion-label position="stacked">Monto Base (GTQ)</ion-label>
+                <ion-input type="number" [(ngModel)]="editDataRec.monto" placeholder="0.00"></ion-input>
+              </ion-item>
+    
+              <ion-item lines="none" class="custom-toggle-item ion-margin-top">
+                <ion-label class="toggle-text" class="ion-text-wrap">Aplicar nuevo nombre y monto a los meses generados</ion-label>
+                <ion-toggle mode="ios" [(ngModel)]="editDataRec.aplicarAtodos" (ionChange)="toggleAllHistorial($event)"
+                  slot="end"></ion-toggle>
+              </ion-item>
+    
+              <ion-button expand="block" class="btn-save ion-margin-top" (click)="guardarEdicionRecurrente()">
+                Guardar Cambios
+              </ion-button>
+            </div>
+    
+            <div class="history-section ion-margin-top">
+              <h3 class="history-title">Historial Generado</h3>
+    
+              <div *ngIf="gastosHistoricos.length === 0" class="no-history">
+                <p>No hay gastos registrados para este servicio todavía.</p>
+              </div>
+    
+              <ion-list lines="none" class="history-list" *ngIf="gastosHistoricos.length > 0">
+                <ion-item *ngFor="let gasto of gastosHistoricos" class="history-item">
+    
+                  <ion-checkbox slot="start" mode="ios" [checked]="gasto.estado === 1"
+                    (ionChange)="gasto.estado = $event.detail.checked ? 1 : 0"
+                    class="history-checkbox"></ion-checkbox>
+    
+                  <ion-label>
+                    <h2>{{ gasto.titulo }}</h2>
+                    <p class="gasto-date">{{ gasto.fecha | date:'MMMM yyyy' | titlecase }}</p>
+                    <p class="gasto-date" [style.color]="gasto.estado === 1 ? '#00d09c' : '#8c9ba5'">
+                      {{ printStado(gasto.estado) }}
+                    </p>
+                  </ion-label>
+                  <div slot="end" class="history-end">
+                    <span class="gasto-amount">GTQ {{ gasto.monto | number:'1.2-2' }}</span>
+                    
+                    <ion-icon name="create-outline" class="edit-history-btn"
+                      (click)="editarGastoHistorico(gasto)"></ion-icon>
+                    <ion-icon name="trash-outline" class="delete-history-btn"
+                      (click)="eliminarGastoHistorico(gasto.id)"></ion-icon>
+                    <div *ngIf="gasto.estado == 2" (click)="restablecerGastoHistorico(gasto)"> <ion-icon
+                        name="refresh-outline"></ion-icon>
+                    </div>
+                  </div>
+                </ion-item>
+              </ion-list>
+            </div>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+
 </ion-content>

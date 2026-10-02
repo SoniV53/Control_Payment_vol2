@@ -101,7 +101,8 @@ export class HistorialGastosPage extends BasePage {
       if (gastoAnio !== this.anioSeleccionado) return false;
 
       // Filtro de Pestaña (Tipo)
-      if (this.tabFiltro === 'recurrentes' && gasto.tipo === 'cuota') return false;
+      if (this.tabFiltro === 'normal' && gasto.tipo !== 'normal') return false;
+      if (this.tabFiltro === 'recurrentes' && gasto.tipo !== 'recurrente') return false;
       if (this.tabFiltro === 'cuotas' && gasto.tipo !== 'cuota') return false;
       
       return true;

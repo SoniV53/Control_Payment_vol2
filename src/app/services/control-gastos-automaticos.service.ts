@@ -83,7 +83,13 @@ export class ControlGastosAutomaticosService {
 
         const numeroCuota = this.diferenciaMeses(res.fecha, fechaInicioMes) + 1;
 
-        if (!cuotaExiste.values?.length) {
+        // Verificar también si ya existe por numero_cuota (evitar duplicado #1)
+        const cuotaNumExiste = await db.query(
+          `SELECT id FROM gasto_cuota WHERE gasto_id = ? AND numero_cuota = ?`,
+          [res.id, numeroCuota]
+        );
+
+        if (!cuotaExiste.values?.length && !cuotaNumExiste.values?.length) {
           await db.run(
             `INSERT INTO gasto_cuota (
             gasto_id,
@@ -95,7 +101,7 @@ export class ControlGastosAutomaticosService {
             [
               res.id,
               numeroCuota,
-              res.monto / (res.cuotas || 0),
+              res.monto / (res.cuotas || 1),
               fechaInicioMes,
               0
             ]
