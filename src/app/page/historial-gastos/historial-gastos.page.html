@@ -10,18 +10,18 @@
       <!-- Selector de Vista (Lista / Gráfica) -->
       <div class="view-toggles">
         <button class="view-btn" [class.active]="vistaActual === 'lista'" (click)="vistaActual = 'lista'">
-          <ion-icon name="list-outline"></ion-icon>
+          <ion-icon [src]="getIcon('list-outline')" ></ion-icon>
           <span>Lista</span>
         </button>
         <button class="view-btn" [class.active]="vistaActual === 'grafica'" (click)="vistaActual = 'grafica'">
-          <ion-icon name="bar-chart-outline"></ion-icon>
+          <ion-icon [src]="getIcon('bar-chart-outline')" ></ion-icon>
           <span>Gráficas</span>
         </button>
       </div>
 
       <!-- Filtro de Año Global -->
       <div class="year-selector-box">
-        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-icon [src]="getIcon('calendar-outline')" ></ion-icon>
         <ion-select [(ngModel)]="anioSeleccionado" (ionChange)="cambiarFiltroOAno()" interface="popover" mode="md">
           <ion-select-option *ngFor="let anio of aniosDisponibles" [value]="anio">{{ anio }}</ion-select-option>
         </ion-select>
@@ -45,7 +45,7 @@
   <div *ngIf="vistaActual === 'lista'">
     <div *ngIf="gruposHistorial.length === 0" class="empty-state">
       <div class="icon-glow">
-        <ion-icon name="document-text-outline"></ion-icon>
+        <ion-icon [src]="getIcon('document-text-outline')" ></ion-icon>
       </div>
       <p>No hay registros para este año.</p>
     </div>
@@ -90,7 +90,7 @@
     <div class="resumen-header">
       <h2>Resumen {{ anioSeleccionado }}</h2>
       <div class="total-badge">
-        <ion-icon name="wallet-outline"></ion-icon>
+        <ion-icon [src]="getIcon('wallet-outline')" ></ion-icon>
         <span>GTQ {{ totalAnio | number:'1.2-2' }}</span>
       </div>
     </div>

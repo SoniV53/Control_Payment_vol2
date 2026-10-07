@@ -6,12 +6,12 @@
   <div class="premium-filters-wrapper">
     <div class="filter-top-row">
       <div class="search-bar-custom">
-        <ion-icon name="search-outline"></ion-icon>
+        <ion-icon [src]="getIcon('search-outline')" ></ion-icon>
         <input type="text" placeholder="Buscar pagos..." [(ngModel)]="textoBusqueda" (keyup)="aplicarFiltros()">
       </div>
       
       <div class="category-selector-box">
-        <ion-icon name="funnel-outline"></ion-icon>
+        <ion-icon [src]="getIcon('funnel-outline')" ></ion-icon>
         <ion-select [(ngModel)]="categoriaSeleccionada" (ionChange)="aplicarFiltros()" interface="popover" mode="md">
           <ion-select-option value="todas">Todas</ion-select-option>
           <ion-select-option *ngFor="let cat of categoriasActivas" [value]="cat.id">{{cat.nombre}}</ion-select-option>
@@ -42,7 +42,7 @@
 
   <div *ngIf="datosFiltrados.length === 0" class="empty-state">
     <div class="icon-glow">
-      <ion-icon name="folder-open-outline"></ion-icon>
+      <ion-icon [src]="getIcon('folder-open-outline')" ></ion-icon>
     </div>
     <p>No hay resultados para mostrar.</p>
   </div>

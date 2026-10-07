@@ -265,3 +265,74 @@ ion-modal {
         }
     }
 }
+/* Date Picker Premium V2 */
+ion-modal.date-modal {
+    --width: 320px;
+    --height: 360px;
+    --border-radius: 24px;
+    --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    
+    ::ng-deep .ion-page {
+        position: relative;
+        contain: content;
+        border-radius: 24px;
+        background: #1e2025;
+        overflow: hidden;
+    }
+}
+
+.modal-toolbar {
+    --background: #1e2025;
+    --border-color: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    
+    ion-title {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+    
+    .btn-cancel-modal {
+        color: #9fa2ac;
+        font-weight: 600;
+        text-transform: none;
+        font-size: 1rem;
+    }
+    
+    .btn-save-modal {
+        color: #00d09c;
+        font-weight: 700;
+        text-transform: none;
+        font-size: 1rem;
+    }
+}
+
+.datetime-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    
+    ion-datetime.custom-date-premium {
+        --background: #1e2025;
+        background: #1e2025;
+        border-radius: 16px;
+        --wheel-highlight-background: rgba(0, 208, 156, 0.1);
+        --wheel-highlight-border-radius: 12px;
+        --wheel-fade-background-rgb: 30, 32, 37;
+        
+        &::part(wheel-item) {
+            color: #8c9ba5;
+            font-size: 1.1rem;
+        }
+        &::part(wheel-item active) {
+            color: #00d09c;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+    }
+}
+.custom-bg {
+    --background: #1e2025;
+}

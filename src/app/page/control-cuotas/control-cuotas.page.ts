@@ -9,6 +9,8 @@ import { BasePage } from '../main/base/base.page';
 import { GastoServiceService } from 'src/app/services/gasto-service.service';
 import { CategoriaServiceService } from 'src/app/services/categoria-service.service';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
+import { InputSimpleComponent } from "src/app/component/input/input-simple/input-simple.component";
+import { SelectorSimpleComponent } from "src/app/component/input/selector-simple/selector-simple.component";
 import { AppComponent } from 'src/app/app.component';
 import { ControlGastosAutomaticosService } from 'src/app/services/control-gastos-automaticos.service';
 import { NavCtrl } from 'src/app/services/nav-ctrl';
@@ -20,7 +22,7 @@ import { CuotaServiceService } from 'src/app/services/cuota-service.service';
   styleUrls: ['./control-cuotas.page.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent]
+  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent]
 })
 export class ControlCuotasPage extends BasePage {
   toolBar = { title: "Control de Cuotas", description: "Administra tus cuotas." };
@@ -64,9 +66,12 @@ export class ControlCuotasPage extends BasePage {
     return grupos.reduce((total: number, g: any) => total + g.items.length, 0);
   }
 
+    categoriasMapped: any[] = [];
+
   async cargarCategorias() {
     await this.baseService(async () => {
       this.categoriasDisponibles = await this.categoriaService.getCategoriasActivas();
+      this.categoriasMapped = this.categoriasDisponibles.map(c => ({ code: c.id, value: c.nombre, icon: c.icono }));
     });
   }
 
@@ -188,4 +193,41 @@ export class ControlCuotasPage extends BasePage {
       async () => { this.dissmissLoader(); }
     );
   }
+  showPopup = false;
+  tipoModalUse = 'select';
+  dataListaSelect: any[] = [];
+
+  getCategoryName(id: any) {
+    const cat = this.categoriasMapped.find(c => c.code === id);
+    return cat ? cat.value : '';
+  }
+
+  getCategoryIcon(id: any) {
+    const cat = this.categoriasMapped.find(c => c.code === id);
+    return cat ? cat.icon : '';
+  }
+
+  onClickItemAction() {
+    this.showPopup = true;
+    this.tipoModalUse = 'select';
+    this.dataListaSelect = this.categoriasMapped;
+  }
+
+  closePopupClick() {
+    this.showPopup = false;
+  }
+
+  onClickItem(item: any) {
+    this.showPopup = false;
+    this.editData.categoria_id = item.code;
+  }
+
+  goToNuevaCategoria() {
+    this.showPopup = false;
+    setTimeout(() => {
+      this.router.navigateByUrl('/categoria');
+    }, 150);
+  }
 }
+
+

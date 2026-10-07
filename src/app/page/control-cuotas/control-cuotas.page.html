@@ -9,12 +9,12 @@
   <!-- Custom Tabs (sin ion-segment-view que bugea en mobile) -->
   <div class="tab-bar">
     <button class="tab-btn" [class.active]="tabEstado === 'progreso'" (click)="tabEstado = 'progreso'">
-      <ion-icon name="hourglass-outline"></ion-icon>
+      <ion-icon [src]="getIcon('hourglass-outline')" ></ion-icon>
       En Progreso
       <span class="badge" *ngIf="gruposProgreso.length > 0">{{ countItems(gruposProgreso) }}</span>
     </button>
     <button class="tab-btn" [class.active]="tabEstado === 'pagados'" (click)="tabEstado = 'pagados'">
-      <ion-icon name="checkmark-done-outline"></ion-icon>
+      <ion-icon [src]="getIcon('checkmark-done-outline')" ></ion-icon>
       Pagados
       <span class="badge done" *ngIf="gruposPagados.length > 0">{{ countItems(gruposPagados) }}</span>
     </button>
@@ -25,7 +25,7 @@
 
     <div *ngIf="gruposProgreso.length === 0" class="empty-state">
       <div class="icon-glow">
-        <ion-icon name="wallet-outline"></ion-icon>
+        <ion-icon [src]="getIcon('checkmark-done-circle-outline')" ></ion-icon>
       </div>
       <p>No tienes cuotas en progreso</p>
       <span>Cuando registres un gasto en cuotas aparecerá aquí.</span>
@@ -46,7 +46,7 @@
           <!-- Row principal -->
           <div class="item-main" (click)="abrirGestionCuotas(item)">
             <div class="icon-box">
-              <ion-icon name="card-outline"></ion-icon>
+              <ion-icon [src]="getIcon('card-outline')" ></ion-icon>
             </div>
             <div class="text-col">
               <h4>{{ item.titulo }}</h4>
@@ -72,10 +72,10 @@
           <!-- Acciones -->
           <div class="item-actions">
             <button class="action-btn edit" (click)="abrirEditarGasto(item)">
-              <ion-icon name="create-outline"></ion-icon> Editar
+              <ion-icon [src]="getIcon('create-outline')" ></ion-icon> Editar
             </button>
             <button class="action-btn delete" (click)="eliminarGasto(item)">
-              <ion-icon name="trash-outline"></ion-icon> Eliminar
+              <ion-icon [src]="getIcon('trash-outline')" ></ion-icon> Eliminar
             </button>
           </div>
 
@@ -89,7 +89,7 @@
 
     <div *ngIf="gruposPagados.length === 0" class="empty-state">
       <div class="icon-glow">
-        <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+        <ion-icon [src]="getIcon('checkmark-done-circle-outline')" ></ion-icon>
       </div>
       <p>No tienes cuotas finalizadas</p>
       <span>Cuando completes todas las cuotas de un gasto, aparecerá aquí.</span>
@@ -133,10 +133,10 @@
 
           <div class="item-actions">
             <button class="action-btn edit" (click)="abrirEditarGasto(item)">
-              <ion-icon name="create-outline"></ion-icon> Editar
+              <ion-icon [src]="getIcon('create-outline')" ></ion-icon> Editar
             </button>
             <button class="action-btn delete" (click)="eliminarGasto(item)">
-              <ion-icon name="trash-outline"></ion-icon> Eliminar
+              <ion-icon [src]="getIcon('trash-outline')" ></ion-icon> Eliminar
             </button>
           </div>
 
@@ -148,16 +148,10 @@
   <!-- ═══════════════ Modal Detalle Cuotas ═══════════════ -->
   <ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false" mode="ios" class="detail-modal bottom-sheet" initialBreakpoint="0.85" [breakpoints]="[0, 0.85, 1]">
     <ng-template>
-      <ion-header class="ion-no-border">
-        <ion-toolbar>
-          <ion-title>{{ gastoSeleccionado?.titulo }}</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="isModalOpen = false" color="medium">Cerrar</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
+      
       <ion-content class="ion-padding modal-bg">
 
+        <h2 style="color: #ffffff; font-size: 18px; font-weight: 700; margin-top: 16px; margin-bottom: 24px; padding-left: 4px;">{{ gastoSeleccionado?.titulo }}</h2>
         <!-- Resumen rápido -->
         <div class="modal-summary" *ngIf="gastoSeleccionado">
           <div class="summary-item">
@@ -202,28 +196,63 @@
   </ion-modal>
 
   <!-- ═══════════════ Bottom Sheet Editar ═══════════════ -->
-  <ion-modal [isOpen]="isEditModalOpen" (didDismiss)="isEditModalOpen = false" [initialBreakpoint]="0.75" [breakpoints]="[0, 0.75, 1]" class="bottom-sheet" mode="ios">
+        <ion-modal [isOpen]="isEditModalOpen" (didDismiss)="isEditModalOpen = false" [initialBreakpoint]="0.75" [breakpoints]="[0, 0.75, 1]" class="bottom-sheet" mode="ios">
     <ng-template>
-      <ion-header class="ion-no-border">
-        <ion-toolbar>
-          <ion-title>Editar Cuota</ion-title>
-          <ion-buttons slot="end"><ion-button (click)="isEditModalOpen = false" color="medium">Cerrar</ion-button></ion-buttons>
-        </ion-toolbar>
-      </ion-header>
+      
       <ion-content class="ion-padding modal-bg">
-        <div class="form-section">
-          <ion-input label="Título" labelPlacement="floating" mode="ios" [(ngModel)]="editData.titulo" class="custom-input"></ion-input>
-          <ion-input label="Monto Total (GTQ)" type="number" labelPlacement="floating" mode="ios" [(ngModel)]="editData.monto" class="custom-input"></ion-input>
-          <ion-input label="Total de Cuotas" type="number" labelPlacement="floating" mode="ios" [(ngModel)]="editData.cuotas" class="custom-input"></ion-input>
-          <ion-select label="Categoría" labelPlacement="stacked" interface="action-sheet" mode="ios" [(ngModel)]="editData.categoria_id" class="custom-input" mode="ios" placeholder="Selecciona categoría">
-            <ion-select-option *ngFor="let cat of categoriasDisponibles" [value]="cat.id">{{ cat.nombre }}</ion-select-option>
-          </ion-select>
-          <ion-button expand="block" class="btn-save ion-margin-top" (click)="guardarEdicion()">
-            Guardar Cambios
+        <div class="inputs-form form-section">
+          <h2 style="color: #ffffff; font-size: 18px; font-weight: 700; margin-top: 0px; margin-bottom: 24px; padding-left: 4px;">Editar Cuota</h2>
+          <input-simple label="Ttulo" name="titulo" [(ngModel)]="editData.titulo" placeholder="Ingrese el ttulo"></input-simple>
+          <input-simple label="Monto Total (GTQ)" type="number" name="monto" [(ngModel)]="editData.monto" placeholder="0.00"></input-simple>
+          <input-simple label="Total de Cuotas" type="number" name="cuotas" [(ngModel)]="editData.cuotas" placeholder="0"></input-simple>
+          
+          <selector-simple label="Categoria" name="categoria" [defaultSelect]="false"
+            [open]="showPopup && tipoModalUse === 'select'"
+            [valueSelect]="getCategoryName(editData.categoria_id)" 
+            [icon]="getCategoryIcon(editData.categoria_id)"
+            (clickItem)="onClickItemAction()" 
+            [list]="categoriasMapped" 
+            [(ngModel)]="editData.categoria_id" 
+            placeholder="Selecciona categoria"></selector-simple>
+
+          <ion-button expand="block" class="button-action-main ion-margin-top" shape="round" (click)="guardarEdicion()">
+            GUARDAR CAMBIOS
           </ion-button>
         </div>
       </ion-content>
     </ng-template>
   </ion-modal>
 
-</ion-content>
+    <!-- Modal Selector de Categoria Premium -->
+  <ion-modal [isOpen]="showPopup && tipoModalUse === 'select'" (didDismiss)="closePopupClick()" class="bottom-sheet" mode="ios" initialBreakpoint="0.6" [breakpoints]="[0, 0.6, 0.9]">
+      <ng-template>
+          <ion-content class="ion-padding modal-bg">
+              <h2 style="color: #ffffff; font-size: 18px; font-weight: 700; margin-top: 16px; margin-bottom: 24px; padding-left: 4px;">Elegir Categoria</h2>
+              
+              <div class="category-list-selector" *ngIf="dataListaSelect.length > 0">
+                  <div class="cat-item" *ngFor="let data of dataListaSelect" (click)="onClickItem(data)">
+                      <div class="icon-circle">
+                          <ion-icon [src]="getIcon(data.icon || '')"></ion-icon>
+                      </div>
+                      <span>{{data.value}}</span>
+                      <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
+                  </div>
+              </div>
+
+              <div *ngIf="dataListaSelect.length === 0" class="empty-state small">
+                  <p>No hay categorias registradas.</p>
+              </div>
+
+              <ion-button class="btn-create-cat" expand="block" shape="round" (click)="goToNuevaCategoria()">
+                  <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+                  CREAR NUEVA CATEGORIA
+              </ion-button>
+              
+          </ion-content>
+      </ng-template>
+  </ion-modal></ion-content>
+
+
+
+
+

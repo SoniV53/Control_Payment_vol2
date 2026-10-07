@@ -9,7 +9,7 @@
   <!-- Empty State -->
   <div *ngIf="grupos.length === 0" class="empty-state">
     <div class="icon-glow">
-      <ion-icon name="folder-open-outline"></ion-icon>
+      <ion-icon [src]="getIcon('folder-open-outline')" ></ion-icon>
     </div>
     <p>No tienes gastos recurrentes</p>
     <span>Tus suscripciones y pagos fijos aparecerán aquí.</span>
@@ -58,7 +58,7 @@
             <span>Habilitado</span>
           </div>
           <button class="btn-edit" (click)="editarRecurrente(item)">
-            <ion-icon name="create-outline"></ion-icon>
+            <ion-icon [src]="getIcon('create-outline')" ></ion-icon>
             Editar
           </button>
         </div>
@@ -125,9 +125,9 @@
               <div slot="end" class="history-end">
                 <span class="gasto-amount">GTQ {{ gasto.monto | number:'1.2-2' }}</span>
                 
-                <ion-icon name="create-outline" class="edit-history-btn"
+                <ion-icon [src]="getIcon('create-outline')"  class="edit-history-btn"
                   (click)="editarGastoHistorico(gasto)"></ion-icon>
-                <ion-icon name="trash-outline" class="delete-history-btn"
+                <ion-icon [src]="getIcon('trash-outline')"  class="delete-history-btn"
                   (click)="eliminarGastoHistorico(gasto.id)"></ion-icon>
                 <div *ngIf="gasto.estado == 2" (click)="restablecerGastoHistorico(gasto)"> <ion-icon
                     [src]="getIcon('refresh-outline')"></ion-icon>

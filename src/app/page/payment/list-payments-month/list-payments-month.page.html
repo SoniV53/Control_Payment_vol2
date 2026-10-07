@@ -5,12 +5,12 @@
         <!-- Tarjeta de Presupuesto -->
         <div class="metric-card budget-card" (click)="editarPresupuesto()">
             <div class="metric-header">
-                <ion-icon name="wallet-outline"></ion-icon>
+                <ion-icon [src]="getIcon('wallet-outline')" ></ion-icon>
                 <span>Presupuesto</span>
             </div>
             <div class="metric-value edit-value">
                 {{formatearMontoPr(form.valueSelect)}}
-                <ion-icon name="create-outline" class="edit-icon"></ion-icon>
+                <ion-icon [src]="getIcon('create-outline')"  class="edit-icon"></ion-icon>
             </div>
         </div>
 
@@ -57,7 +57,7 @@
                     </div>
                     <div class="cat-total-col">
                         <div class="cat-total">GTQ {{ categoria.totalMonto | number:'1.2-2' }}</div>
-                        <ion-icon class="expand-icon" [name]="categoria.mostrar !== false ? 'chevron-up' : 'chevron-down'"></ion-icon>
+                        <ion-icon class="expand-icon" [src]="getIcon(categoria.mostrar !== false ? 'chevron-up-outline' : 'chevron-down-outline')" ></ion-icon>
                     </div>
                 </div>
 
