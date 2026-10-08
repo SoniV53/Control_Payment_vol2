@@ -91,7 +91,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
     this.listaFormularioMain = [
       { id: 'titulo', titulo: 'Titulo', isError: false, placeholder: 'Ingrese el titulo del gasto', tipo: 'text', required: true },
       //{ id: 'descripcion', titulo: 'Descripcion', isError: false, placeholder: 'Ingrese la descripcion del gasto', tipo: 'text', required: false },
-      { id: 'monto', titulo: 'Monto', isError: false, placeholder: 'Ingrese el monto del gasto', tipo: 'number', required: true },
+      { id: 'monto', titulo: 'Monto Cuota', isError: false, placeholder: 'Ingrese el monto de la cuota', tipo: 'number', required: true },
       {
         id: 'categoria', titulo: 'Categoria', isError: false, placeholder: 'Seleccione la categoria del gasto', tipo: 'select', required: true, list: []
       },
