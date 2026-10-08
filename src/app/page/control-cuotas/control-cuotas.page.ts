@@ -17,6 +17,7 @@ import { NavCtrl } from 'src/app/services/nav-ctrl';
 import { CuotaServiceService } from 'src/app/services/cuota-service.service';
 import { CategoryBlockComponent } from 'src/app/component/cuotas/category-block/category-block.component';
 import { EmptyStateComponent } from 'src/app/component/empty-state/empty-state.component';
+import { ModalDetalleCuotasComponent } from 'src/app/component/cuotas/modal-detalle-cuotas/modal-detalle-cuotas.component';
 
 @Component({
   selector: 'app-control-cuotas',
@@ -24,7 +25,7 @@ import { EmptyStateComponent } from 'src/app/component/empty-state/empty-state.c
   styleUrls: ['./control-cuotas.page.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent, CategoryBlockComponent, EmptyStateComponent]
+  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent, CategoryBlockComponent, EmptyStateComponent, ModalDetalleCuotasComponent]
 })
 export class ControlCuotasPage extends BasePage {
   toolBar = { title: "Control de Cuotas", description: "Administra tus cuotas." };
@@ -136,39 +137,16 @@ export class ControlCuotasPage extends BasePage {
     );
   }
 
-  async togglePagoCuota(c: any, e: any) {
-    const nuevoEstado = e.detail.checked ? 1 : 0;
-    const accion = nuevoEstado === 1 ? 'marcar como pagada' : 'desmarcar';
-
-    const alert = await this.alertController.create({
-      header: 'Confirmar',
-      message: `¿Deseas ${accion} la Cuota #${c.numero_cuota}?`,
-      cssClass: 'custom-alert',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          handler: () => {
-            // Revertir el checkbox al estado anterior
-            c.estado_cuota = nuevoEstado === 1 ? 0 : 1;
-            // Forzar re-render
-            this.detalleCuotas = [...this.detalleCuotas];
-          }
-        },
-        {
-          text: 'Confirmar',
-          handler: () => {
-            this.baseService(async () => {
-              await this.cuotaService.toggleEstadoCuota(c.id, nuevoEstado);
-              c.estado_cuota = nuevoEstado;
-              this.getAlertSuccess(nuevoEstado === 1 ? '✓ Cuota marcada como pagada' : 'Cuota desmarcada');
-              this.cargarCuotas();
-            });
-          }
-        }
-      ]
+  manejarConfirmacionToggle(event: {cuota: any, nuevoEstado: number}) {
+    const { cuota, nuevoEstado } = event;
+    this.baseService(async () => {
+      this.showLoader();
+      await this.cuotaService.toggleEstadoCuota(cuota.id, nuevoEstado);
+      cuota.estado_cuota = nuevoEstado;
+      this.getAlertSuccess(nuevoEstado === 1 ? '✓ Cuota marcada como pagada' : 'Cuota desmarcada');
+      this.cargarCuotas();
+      this.dissmissLoader();
     });
-    await alert.present();
   }
 
   abrirEditarGasto(gasto: any) {

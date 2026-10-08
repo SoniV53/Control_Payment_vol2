@@ -1,0 +1,53 @@
+<ion-modal [isOpen]="isOpen" (didDismiss)="cerrarModal()" mode="ios" class="detail-modal bottom-sheet" initialBreakpoint="0.85" [breakpoints]="[0, 0.85, 1]" style="--border-radius: 24px 24px 0 0;">
+  <ng-template>
+    <ion-content class="ion-padding modal-bg" style="--border-radius: 24px 24px 0 0;">
+
+      <h2 style="color: #ffffff; font-size: 18px; font-weight: 700; margin-top: 16px; margin-bottom: 24px; padding-left: 4px;">
+        {{ gastoSeleccionado?.titulo }}
+      </h2>
+      
+      <!-- Resumen rápido -->
+      <div class="modal-summary" *ngIf="gastoSeleccionado">
+        <div class="summary-item">
+          <span>Total</span>
+          <h3>GTQ {{ gastoSeleccionado.monto | number:'1.2-2' }}</h3>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item">
+          <span>Por cuota</span>
+          <h3>GTQ {{ (gastoSeleccionado.monto / gastoSeleccionado.cuotas) | number:'1.2-2' }}</h3>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item">
+          <span>Progreso</span>
+          <h3>{{ gastoSeleccionado.pagadas }}/{{ gastoSeleccionado.cuotas }}</h3>
+        </div>
+      </div>
+
+      <app-empty-state 
+        *ngIf="detalleCuotas.length === 0"
+        icon="alert-circle-outline"
+        title="No hay cuotas registradas.">
+      </app-empty-state>
+
+      <!-- Lista de cuotas -->
+      <div class="cuotas-list" *ngIf="detalleCuotas.length > 0">
+        <div *ngFor="let c of detalleCuotas" class="cuota-row" [class.paid]="c.estado_cuota === 1">
+          <div class="cuota-number">
+            <span>#{{ c.numero_cuota }}</span>
+          </div>
+          <div class="cuota-info">
+            <h4>Cuota #{{ c.numero_cuota }}</h4>
+            <p>Vence: {{ c.fecha_pago | date:'dd/MM/yyyy' }}</p>
+          </div>
+          <div class="cuota-right">
+            <span class="cuota-monto">GTQ {{ c.monto_cuota | number:'1.2-2' }}</span>
+            <ion-checkbox mode="ios" [checked]="c.estado_cuota === 1" (ionChange)="togglePagoCuota(c, $event)"></ion-checkbox>
+          </div>
+        </div>
+      </div>
+
+    </ion-content>
+  </ng-template>
+</ion-modal>
+

@@ -149,3 +149,9 @@ ion-toolbar {
     // background-color: var(--ion-background-color-second);
     border-radius: 16px;
 }
+
+ion-modal.detail-modal::part(content) {
+  border-top-left-radius: 32px;       
+  border-top-right-radius: 32px;       
+  box-shadow: 0 4px 8px #00d09c;
+}
