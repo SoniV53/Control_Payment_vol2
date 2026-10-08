@@ -15,6 +15,9 @@ import { CategoriaServiceService } from 'src/app/services/categoria-service.serv
 import { ControlGastosAutomaticosService } from 'src/app/services/control-gastos-automaticos.service';
 import { DatabaseServiceService } from 'src/app/core/database/database-service.service';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
+import { RecurrentesBlockComponent } from "src/app/component/recurrentes/recurrentes-block/recurrentes-block.component";
+import { EmptyStateComponent } from "src/app/component/empty-state/empty-state.component";
+import { ModalEditarRecurrenteComponent } from "src/app/component/recurrentes/modal-editar-recurrente/modal-editar-recurrente.component";
 
 interface GrupoCategoria {
   categoria: Categoria;
@@ -28,7 +31,7 @@ interface GrupoCategoria {
   templateUrl: './control-recurrentes.page.html',
   styleUrls: ['./control-recurrentes.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent]
+  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, RecurrentesBlockComponent, EmptyStateComponent, ModalEditarRecurrenteComponent]
 })
 export class ControlRecurrentesPage extends BasePage {
   toolBar = {

@@ -1,0 +1,137 @@
+.custom-input-item {
+  --background: #1e2025;
+  --color: #ffffff;
+  border-radius: 16px;
+  --padding-start: 16px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  
+  ion-label {
+    color: #8c9ba5 !important;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 12px;
+  }
+  
+  ion-input {
+    --color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+.btn-save {
+  --background: #00d09c;
+  --background-activated: #00b889;
+  --color: #ffffff;
+  font-weight: 700;
+  margin-top: 24px;
+  --border-radius: 16px;
+  height: 50px;
+  box-shadow: 0 8px 16px rgba(0, 208, 156, 0.2);
+}
+
+.history-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 24px;
+
+  .history-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .no-history {
+    color: #8c9ba5;
+    font-size: 14px;
+    text-align: center;
+    padding: 24px 0;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
+  }
+
+  .history-list {
+    background: transparent;
+  }
+
+  .history-item {
+    --background: #1e2025;
+    --color: #ffffff;
+    margin-bottom: 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    --padding-start: 12px;
+    --inner-padding-end: 12px;
+    
+    h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    
+    .gasto-date {
+      color: #8c9ba5;
+      font-size: 12px;
+    }
+
+    .history-end {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .gasto-amount {
+        font-weight: bold;
+        color: #ffffff;
+        font-size: 15px;
+        margin-right: 8px;
+      }
+
+      .edit-history-btn {
+        color: #00d09c; 
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      .delete-history-btn {
+        color: #ff4961;
+        font-size: 22px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.custom-toggle-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 16px;
+  margin-top: 16px;
+
+  ion-label {
+    color: #8c9ba5 !important;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  ion-toggle {
+    --background-checked: #00d09c !important; 
+    --handle-background-checked: #ffffff !important;
+  }
+}
+
+.history-checkbox {
+  --border-color: #8c9ba5;
+  --background-checked: #00d09c;
+  --border-color-checked: #00d09c;
+  --checkmark-color: #ffffff;
+  margin-right: 16px;
+}
+
+
+
+

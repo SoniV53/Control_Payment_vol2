@@ -1,0 +1,50 @@
+<div class="category-block" *ngIf="grupo">
+  <!-- Block Header -->
+  <div class="block-header">
+    <div class="title-wrap">
+      <ion-icon [src]="getIcon(grupo.categoria.icono || 'pricetag')"></ion-icon>
+      <h2>{{ grupo.categoria.nombre | titlecase }}</h2>
+      <span class="count-badge">{{ grupo.totalCantidad }}</span>
+    </div>
+    <span class="total-text">GTQ {{ grupo.totalMonto | number:'1.2-2' }}</span>
+  </div>
+
+  <!-- Unified Card -->
+  <div class="block-card">
+    <div class="sub-item" *ngFor="let item of grupo.recurrentes; let last = last" [class.no-border]="last">
+      
+      <!-- Main Data Row -->
+      <div class="sub-item-main">
+        <div class="icon-box" [class.paused]="item.activo === 0">
+           <ion-icon [src]="getIcon(item.activo === 1 ? 'sync-outline' : 'pause-outline')"></ion-icon>
+        </div>
+        
+        <div class="text-data">
+          <h4>{{ item.titulo }}</h4>
+          <p>{{ item.fechaInicio | date:'MMM yyyy' }}</p>
+        </div>
+
+        <div class="amount-data">
+          <h4>GTQ {{ item.monto | number:'1.2-2' }}</h4>
+          <span class="status-dot" [class.active]="item.activo === 1">
+            {{ item.activo === 1 ? 'Activo' : 'Pausado' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Inline Actions -->
+      <div class="sub-item-actions">
+        <div class="action-left">
+          <ion-toggle mode="ios" [checked]="item.activo === 1" (ionChange)="onToggle(item, $event)"></ion-toggle>
+          <span>Habilitado</span>
+        </div>
+        <button class="btn-edit" (click)="onEdit(item)">
+          <ion-icon [src]="getIcon('create-outline')" ></ion-icon>
+          Editar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+

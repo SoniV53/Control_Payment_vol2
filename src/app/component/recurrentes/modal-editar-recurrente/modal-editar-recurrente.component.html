@@ -1,0 +1,65 @@
+<app-modal-template [isOpen]="isOpen" (closeModal)="closeModal.emit()">
+  <ion-title modal-title style="font-size: 16px; font-weight: 700;">
+    Editar Servicio
+  </ion-title>
+  
+  <div class="form-section">
+    <ion-item lines="none" class="custom-input-item">
+      <ion-label position="stacked">Nombre del Servicio</ion-label>
+      <ion-input type="text" [(ngModel)]="editData.titulo" placeholder="Ej. Netflix"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none" class="custom-input-item ion-margin-top">
+      <ion-label position="stacked">Monto Base (GTQ)</ion-label>
+      <ion-input type="number" [(ngModel)]="editData.monto" placeholder="0.00"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none" class="custom-toggle-item ion-margin-top">
+      <ion-label class="toggle-text" class="ion-text-wrap">Aplicar nuevo nombre y monto a los meses generados</ion-label>
+      <ion-toggle mode="ios" [(ngModel)]="editData.aplicarAtodos" (ionChange)="toggleAll.emit($event)"
+        slot="end"></ion-toggle>
+    </ion-item>
+
+    <ion-button expand="block" class="btn-save ion-margin-top" (click)="save.emit()">
+      Guardar Cambios
+    </ion-button>
+  </div>
+
+  <div class="history-section ion-margin-top">
+    <h3 class="history-title">Historial Generado</h3>
+
+    <div *ngIf="gastosHistoricos.length === 0" class="no-history">
+      <p>No hay gastos registrados para este servicio todavía.</p>
+    </div>
+
+    <ion-list lines="none" class="history-list" *ngIf="gastosHistoricos.length > 0">
+      <ion-item *ngFor="let gasto of gastosHistoricos" class="history-item">
+
+        <ion-checkbox slot="start" mode="ios" [checked]="gasto.estado === 1"
+          (ionChange)="gasto.estado = $event.detail.checked ? 1 : 0"
+          class="history-checkbox"></ion-checkbox>
+
+        <ion-label>
+          <h2>{{ gasto.titulo }}</h2>
+          <p class="gasto-date">{{ gasto.fecha | date:'MMMM yyyy' | titlecase }}</p>
+          <p class="gasto-date" [style.color]="gasto.estado === 1 ? '#00d09c' : '#8c9ba5'">
+            {{ printStado(gasto.estado) }}
+          </p>
+        </ion-label>
+        <div slot="end" class="history-end">
+          <span class="gasto-amount">GTQ {{ gasto.monto | number:'1.2-2' }}</span>
+          
+          <ion-icon [src]="getIcon('create-outline')"  class="edit-history-btn"
+            (click)="editarGasto.emit(gasto)"></ion-icon>
+          <ion-icon [src]="getIcon('trash-outline')"  class="delete-history-btn"
+            (click)="eliminarGasto.emit(gasto.id)"></ion-icon>
+          <div *ngIf="gasto.estado == 2" (click)="restablecerGasto.emit(gasto)"> <ion-icon
+              [src]="getIcon('refresh-outline')"></ion-icon>
+          </div>
+
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
+</app-modal-template>
+

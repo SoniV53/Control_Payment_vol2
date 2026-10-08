@@ -1,0 +1,27 @@
+<ion-modal 
+  [isOpen]="isOpen" 
+  (didDismiss)="dismiss()" 
+  mode="ios" 
+  [class]="customClass"
+  [initialBreakpoint]="initialBreakpoint"
+  [breakpoints]="breakpoints"
+  handle="false">
+  <ng-template>
+    
+    <ion-item class="item-header" lines="none">
+        <ng-content select="[modal-title]"></ng-content>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()" class="close-btn-slim">
+                <ion-icon [src]="getIcon('close-outline')"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-item>
+
+    <ion-content class="custom-bg-slim">
+      <!-- Contenido principal -->
+      <ng-content></ng-content>
+    </ion-content>
+
+  </ng-template>
+</ion-modal>
+
