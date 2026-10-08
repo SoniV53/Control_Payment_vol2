@@ -19,6 +19,7 @@ import { CategoryBlockComponent } from 'src/app/component/cuotas/category-block/
 import { EmptyStateComponent } from 'src/app/component/empty-state/empty-state.component';
 import { ModalDetalleCuotasComponent } from 'src/app/component/cuotas/modal-detalle-cuotas/modal-detalle-cuotas.component';
 import { SelectorModalComponent } from 'src/app/component/input/selector-modal/selector-modal.component';
+import { ModalEditarCuotaComponent } from 'src/app/component/cuotas/modal-editar-cuota/modal-editar-cuota.component';
 
 @Component({
   selector: 'app-control-cuotas',
@@ -26,7 +27,7 @@ import { SelectorModalComponent } from 'src/app/component/input/selector-modal/s
   styleUrls: ['./control-cuotas.page.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent, CategoryBlockComponent, EmptyStateComponent, ModalDetalleCuotasComponent, SelectorModalComponent]
+  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent, CategoryBlockComponent, EmptyStateComponent, ModalDetalleCuotasComponent, SelectorModalComponent, ModalEditarCuotaComponent]
 })
 export class ControlCuotasPage extends BasePage {
   toolBar = { title: "Control de Cuotas", description: "Administra tus cuotas." };
@@ -150,18 +151,38 @@ export class ControlCuotasPage extends BasePage {
     });
   }
 
+  listaFormularioEditar: any[] = [];
+
   abrirEditarGasto(gasto: any) {
     this.gastoSeleccionado = gasto;
-    this.editData = {
-      titulo: gasto.titulo,
-      monto: gasto.monto,
-      cuotas: gasto.cuotas,
-      categoria_id: gasto.categoria_id
-    };
+    
+    // Configuramos el JSON del formulario dinámico usando los datos del gasto
+    this.listaFormularioEditar = [
+      { id: 'titulo', titulo: 'Título', placeholder: 'Ingrese el título', tipo: 'text', required: true, valueSelect: gasto.titulo },
+      { id: 'monto', titulo: 'Monto Total (GTQ)', placeholder: '0.00', tipo: 'number', required: true, valueSelect: gasto.monto },
+      { id: 'cuotas', titulo: 'Total de Cuotas', placeholder: '0', tipo: 'number', required: true, valueSelect: gasto.cuotas },
+      { id: 'categoria', titulo: 'Categoría', placeholder: 'Selecciona categoría', tipo: 'select', required: true, valueSelect: gasto.categoria_id, list: this.categoriasMapped }
+    ];
+
     this.isEditModalOpen = true;
   }
 
+  manejarAccionFormularioEditar(event: any) {
+    if (event.action === 'select-action') {
+      this.isEditModalOpen = false;
+      this.goToNuevaCategoria();
+    }
+  }
+
   guardarEdicion() {
+    // Reconstruimos editData desde los valores actualizados en el formulario dinámico
+    this.editData = {
+      titulo: this.listaFormularioEditar.find(f => f.id === 'titulo')?.valueSelect || '',
+      monto: this.listaFormularioEditar.find(f => f.id === 'monto')?.valueSelect || 0,
+      cuotas: this.listaFormularioEditar.find(f => f.id === 'cuotas')?.valueSelect || 1,
+      categoria_id: this.listaFormularioEditar.find(f => f.id === 'categoria')?.valueSelect || 0
+    };
+
     this.baseService(
       async () => {
         this.showLoader();

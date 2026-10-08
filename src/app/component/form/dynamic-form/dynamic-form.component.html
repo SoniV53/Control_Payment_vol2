@@ -1,0 +1,36 @@
+<form #f="ngForm">
+  <div class="input-wrapper-list" *ngFor="let form of fields">
+      <div [ngSwitch]="form.tipo">
+
+          <div *ngSwitchCase="'select'">
+              <app-selector-modal 
+                  [label]="form.titulo" 
+                  [name]="form.id"
+                  [required]="form.required" 
+                  [placeholder]="form.placeholder"
+                  [list]="form?.list || []" 
+                  [(ngModel)]="form.valueSelect"
+                  (ionChangeInput)="ionChangeInput(form)"
+                  [modalTitle]="form.modalTitle || 'Elegir Categoría'"
+                  [actionButtonText]="form.actionButtonText || 'Crear Nueva Categoría'"
+                  (actionButtonClick)="actionButtonClick(form)">
+              </app-selector-modal>
+          </div>
+          
+          <div *ngSwitchCase="'date'">
+              <input-simple (click)="clickDateModal(form)" [label]="form.titulo" [name]="form.id"
+                  [required]="form.required" type="date" [placeholder]="form.placeholder"
+                  [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)"
+                  (ionInput)="ionChangeInput(form)" [readonly]="true"></input-simple>
+          </div>
+
+          <div *ngSwitchDefault>
+              <input-simple [label]="form.titulo" [name]="form.id" [required]="form.required"
+                  [type]="form.tipo" [placeholder]="form.placeholder" [(ngModel)]="form.valueSelect"
+                  (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"></input-simple>
+          </div>
+
+      </div>
+  </div>
+</form>
+

@@ -1,0 +1,19 @@
+<ion-modal [isOpen]="isOpen" (didDismiss)="cerrarModal()" [initialBreakpoint]="0.75" [breakpoints]="[0, 0.75, 1]" class="detail-modal bottom-sheet" mode="ios" style="--border-radius: 24px 24px 0 0;">
+  <ng-template>
+    <ion-content class="ion-padding modal-bg" style="--border-radius: 24px 24px 0 0;">
+      <div class="inputs-form form-section">
+        <h2 style="color: #ffffff; font-size: 18px; font-weight: 700; margin-top: 0px; margin-bottom: 24px; padding-left: 4px;">Editar Cuota</h2>
+        
+        <app-dynamic-form 
+            [fields]="fields"
+            (formAction)="manejarAccionFormulario($event)">
+        </app-dynamic-form>
+
+        <ion-button expand="block" class="button-action-main ion-margin-top" shape="round" (click)="guardarCambios()">
+          GUARDAR CAMBIOS
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+

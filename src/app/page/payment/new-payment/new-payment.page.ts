@@ -20,6 +20,7 @@ import { RouterLink } from '@angular/router';
 import { UpdateListado } from 'src/app/utils/update-params';
 import { addIcons } from 'ionicons';
 import { syncOutline } from 'ionicons/icons';
+import { DynamicFormComponent } from 'src/app/component/form/dynamic-form/dynamic-form.component';
 
 addIcons({
   'sync-outline': syncOutline
@@ -49,7 +50,7 @@ export default Swal;
     ModalBaseComponent,
     InputSimpleComponent,
     SelectorSimpleComponent,
-    IonFooter, EmptyBaseComponent, RouterLink],
+    IonFooter, EmptyBaseComponent, RouterLink, DynamicFormComponent],
 })
 export class NewPaymentPage extends BasePage implements OnInit {
   toolBar = {
@@ -289,6 +290,14 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
     this.validarErrorInput(form);
     this.validButton();
+  }
+
+  manejarAccionFormulario(event: any) {
+    if (event.action === 'date-modal') {
+      this.clickDateModal(event.field);
+    } else if (event.action === 'select-action') {
+      this.goToNuevaCategoria();
+    }
   }
 
   validarErrorInput(form: ItemInputData) {
