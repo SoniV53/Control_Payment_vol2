@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonContent, IonItem, IonGrid, IonRow, IonCol, IonDatetime, IonIcon } from '@ionic/angular/standalone';
 import { CardOptionComponent } from "../../../component/card/card-option/card-option.component";
 import { addIcons } from 'ionicons';
-import { calendarOutline, chevronDownOutline, addOutline, listOutline, pieChartOutline, timeOutline, receiptOutline, walletOutline, arrowUpOutline } from 'ionicons/icons';
+import { calendarOutline, chevronDownOutline, addOutline, listOutline, pieChartOutline, timeOutline, receiptOutline, walletOutline, arrowUpOutline, arrowDownOutline } from 'ionicons/icons';
 
 import { BasePage } from '../base/base.page';
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
@@ -20,7 +20,8 @@ addIcons({
   'time-outline': timeOutline,
   'receipt-outline': receiptOutline,
   'wallet-outline': walletOutline,
-  'arrow-up-outline': arrowUpOutline
+  'arrow-up-outline': arrowUpOutline,
+  'arrow-down-outline': arrowDownOutline
 });
 
 @Component({
@@ -54,12 +55,35 @@ export class HomePage extends BasePage implements OnInit {
     this.loadDashboardData();
   }
 
+  // Tendencia
+  porcentajeTendencia: number | null = null;
+  esTendenciaPositiva: boolean = true;
+  totalMesAnterior: number = 0;
+
   async loadDashboardData() {
     this.baseService(async () => {
       if (this.myApp.dateSelected) {
         // Obtenemos el total de gastos del mes actual
         this.totalGastos = await this.gastoService.getTotalGastosPorMes(this.myApp.dateSelected);
         
+        // Calcular mes anterior
+        const currentDate = new Date(this.myApp.dateSelected);
+        // Evitamos problemas de zona horaria usando UTC o setMonth
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        const yyyy = currentDate.getFullYear();
+        const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const prevMonthDateStr = `${yyyy}-${mm}-01`;
+
+        this.totalMesAnterior = await this.gastoService.getTotalGastosPorMes(prevMonthDateStr);
+
+        if (this.totalMesAnterior > 0) {
+          const diff = this.totalGastos - this.totalMesAnterior;
+          this.porcentajeTendencia = Math.abs((diff / this.totalMesAnterior) * 100);
+          this.esTendenciaPositiva = diff <= 0; // Gastó menos o igual (bien)
+        } else {
+          this.porcentajeTendencia = null; // No hay referencia
+        }
+
         // Obtenemos los últimos movimientos del mes (límite 4)
         this.recentExpenses = await this.gastoService.getUltimosMovimientos(this.myApp.dateSelected, 4);
       }

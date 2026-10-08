@@ -68,7 +68,7 @@
                         <div class="tx-info">
                             <div class="title-with-status" style="display: flex; align-items: center; gap: 6px;">
                                 <!-- Dot de estado -->
-                                <div class="status-dot" *ngIf="gasto.tipo !== 'normal'" [class.paid]="gasto.estado === 1" [class.pending]="gasto.estado === 0"></div>
+                                <div class="status-dot" [class.paid]="gasto.estado === 1" [class.pending]="gasto.estado === 0"></div>
                                 <h4>{{ gasto.titulo }}</h4>
                             </div>
                             <p>{{ gasto.fecha | date:'dd MMM yyyy' }}</p>

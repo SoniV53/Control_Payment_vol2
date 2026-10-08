@@ -26,7 +26,14 @@
           <div class="balance-card">
               <div class="balance-info">
                   <p>Total de Gastos</p>
-                  <h1><span>$</span> {{ totalGastos | number:'1.2-2' }}</h1>
+                  <h1><span>GTQ</span> {{ totalGastos | number:'1.2-2' }}</h1>
+                  
+                  <div class="trend-indicator" *ngIf="porcentajeTendencia !== null" 
+                       [class.positive]="esTendenciaPositiva" 
+                       [class.negative]="!esTendenciaPositiva">
+                      <ion-icon [name]="esTendenciaPositiva ? 'arrow-down-outline' : 'arrow-up-outline'"></ion-icon>
+                      <span>{{ porcentajeTendencia | number:'1.0-0' }}% {{ esTendenciaPositiva ? 'menos' : 'más' }} que el mes pasado</span>
+                  </div>
               </div>
               <div class="balance-icon">
                   <ion-icon name="wallet-outline"></ion-icon>
@@ -89,7 +96,7 @@
                       <p>{{ exp.fecha | date:'dd/MM/yyyy' }} • {{ exp.tipo | titlecase }}</p>
                   </div>
                   <div class="trans-amount">
-                      <p>-$ {{ exp.monto | number:'1.2-2' }}</p>
+                      <p>-GTQ {{ exp.monto | number:'1.2-2' }}</p>
                   </div>
               </div>
           </div>

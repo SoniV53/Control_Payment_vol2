@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { DatabaseServiceService } from '../core/database/database-service.service';
 import { Gasto } from '../core/models/gasto.model';
 import { Capacitor } from '@capacitor/core';
@@ -564,7 +564,7 @@ export class GastoServiceService {
             LEFT JOIN categoria c ON g.categoria_id = c.id
             WHERE gc.fecha_pago >= ? AND gc.fecha_pago < ? AND gc.estado_cuota != 2
           ) 
-          ORDER BY fecha DESC LIMIT ?`,
+          ORDER BY id DESC LIMIT ?`,
           [fechaInicio, fechaFin, fechaInicio, fechaFin, limit]
         );
 
@@ -597,7 +597,7 @@ export class GastoServiceService {
         resolve(result.values ?? []);
 
       } catch (error) {
-        console.error('Error totales por categoría:', error);
+        console.error('Error totales por categorÃ­a:', error);
         reject(error);
       }
     });
@@ -984,7 +984,7 @@ export class GastoServiceService {
         );
       }
 
-      console.log('Presupuestos generados automáticamente para', mesActual);
+      console.log('Presupuestos generados automÃ¡ticamente para', mesActual);
 
     } catch (error) {
       console.error('Error generando presupuestos mensuales:', error);
