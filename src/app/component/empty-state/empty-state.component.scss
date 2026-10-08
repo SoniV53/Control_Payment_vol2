@@ -1,2 +1,36 @@
-// Los estilos se heredan del padre o se pueden agregar especificamente aca
+/* ═══════════════ EMPTY STATE ═══════════════ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 35vh;
+  text-align: center;
 
+  &.small {
+    height: 20vh;
+  }
+
+  .icon-glow {
+    background: rgba(0, 208, 156, 0.1);
+    padding: 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+
+    ion-icon {
+      font-size: 40px;
+      color: #00d09c;
+    }
+  }
+
+  p {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  span {
+    color: #8c9ba5;
+    font-size: 13px;
+  }
+}

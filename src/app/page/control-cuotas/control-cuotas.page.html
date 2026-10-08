@@ -6,19 +6,11 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
 
-  <!-- Custom Tabs (sin ion-segment-view que bugea en mobile) -->
-  <div class="tab-bar">
-    <button class="tab-btn" [class.active]="tabEstado === 'progreso'" (click)="tabEstado = 'progreso'">
-      <ion-icon [src]="getIcon('hourglass-outline')" ></ion-icon>
-      En Progreso
-      <span class="badge" *ngIf="gruposProgreso.length > 0">{{ countItems(gruposProgreso) }}</span>
-    </button>
-    <button class="tab-btn" [class.active]="tabEstado === 'pagados'" (click)="tabEstado = 'pagados'">
-      <ion-icon [src]="getIcon('checkmark-done-outline')" ></ion-icon>
-      Pagados
-      <span class="badge done" *ngIf="gruposPagados.length > 0">{{ countItems(gruposPagados) }}</span>
-    </button>
-  </div>
+  <app-custom-tabs 
+    [tabs]="misTabs" 
+    [selectedTabId]="tabEstado" 
+    (tabSelected)="tabEstado = $event">
+  </app-custom-tabs>
 
   <!-- ═══════════════════════════════════ EN PROGRESO ═══════════════════════════════════ -->
   <div *ngIf="tabEstado === 'progreso'">

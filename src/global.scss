@@ -159,3 +159,13 @@ ion-modal.detail-modal::part(content) {
 ion-modal{
    --background: #121212 !important;
 }
+
+.button-action-main {
+    --background: #00d09c;
+    --background-hover: #00b889;
+    --background-activated: #00b889;
+    --color: #ffffff;
+    --box-shadow: 0 8px 16px rgba(0, 208, 156, 0.3);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}

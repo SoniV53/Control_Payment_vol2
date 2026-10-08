@@ -1,2 +1,214 @@
 // Los estilos se heredan del page de cuotas o se pueden poner aqui
 
+/* ═══════════════ CATEGORY BLOCK (igual que recurrentes) ═══════════════ */
+.category-block {
+  margin: 20px 16px;
+
+  .block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 4px;
+
+    .title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      ion-icon {
+        color: #8c9ba5;
+        font-size: 18px;
+      }
+
+      h2 {
+        color: #8c9ba5;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+      }
+
+      .count-badge {
+        background: rgba(255, 255, 255, 0.05);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 8px;
+      }
+    }
+  }
+
+  .block-card {
+    background: #1e2025;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+}
+/* ═══════════════ CUOTA ITEM ═══════════════ */
+.cuota-item {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
+  &.no-border {
+    border-bottom: none;
+  }
+
+  &.completed {
+    opacity: 0.8;
+  }
+
+  .item-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+    cursor: pointer;
+
+    .icon-box {
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 208, 156, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      ion-icon {
+        font-size: 20px;
+        color: #00d09c;
+      }
+
+      &.done {
+        background: rgba(0, 208, 156, 0.15);
+        ion-icon {
+          color: #00d09c;
+        }
+      }
+    }
+
+    .text-col {
+      flex: 1;
+      min-width: 0;
+
+      h4 {
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        margin: 0 0 3px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      p {
+        color: #8c9ba5;
+        font-size: 12px;
+        margin: 0;
+      }
+    }
+
+    .amount-col {
+      text-align: right;
+      flex-shrink: 0;
+
+      h4 {
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        margin: 0 0 3px 0;
+      }
+
+      .cuota-label {
+        font-size: 12px;
+        color: #00d09c;
+        font-weight: 600;
+
+        &.done {
+          color: #8c9ba5;
+        }
+      }
+    }
+  }
+
+  /* ── Progress Bar Custom ── */
+  .progress-section {
+    margin-bottom: 12px;
+    cursor: pointer;
+
+    .progress-track {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 6px;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #00d09c, #00e8b0);
+        border-radius: 3px;
+        transition: width 0.4s ease;
+      }
+
+      &.full .progress-fill {
+        background: linear-gradient(90deg, #00d09c, #00e8b0);
+      }
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #8c9ba5;
+
+      b {
+        color: #ffffff;
+      }
+    }
+  }
+
+  /* ── Action Buttons ── */
+  .item-actions {
+    display: flex;
+    gap: 8px;
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      ion-icon {
+        font-size: 15px;
+      }
+
+      &.edit {
+        background: rgba(0, 208, 156, 0.08);
+        color: #00d09c;
+
+        &:active {
+          background: rgba(0, 208, 156, 0.2);
+        }
+      }
+
+      &.delete {
+        background: rgba(255, 73, 97, 0.08);
+        color: #ff4961;
+
+        &:active {
+          background: rgba(255, 73, 97, 0.2);
+        }
+      }
+    }
+  }
+}

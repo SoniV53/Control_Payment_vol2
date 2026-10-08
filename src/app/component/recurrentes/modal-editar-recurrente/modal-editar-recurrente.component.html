@@ -4,24 +4,21 @@
   </ion-title>
   
   <div class="form-section">
-    <ion-item lines="none" class="custom-input-item">
-      <ion-label position="stacked">Nombre del Servicio</ion-label>
-      <ion-input type="text" [(ngModel)]="editData.titulo" placeholder="Ej. Netflix"></ion-input>
-    </ion-item>
+    <app-dynamic-form [fields]="fields"></app-dynamic-form>
 
-    <ion-item lines="none" class="custom-input-item ion-margin-top">
-      <ion-label position="stacked">Monto Base (GTQ)</ion-label>
-      <ion-input type="number" [(ngModel)]="editData.monto" placeholder="0.00"></ion-input>
-    </ion-item>
+    <div class="sub-item-actions ion-margin-top" style="display: flex; align-items: center; background: rgba(0, 0, 0, 0.15); padding: 12px; border-radius: 12px; margin-bottom: 24px;">
+      <div class="action-left" style="display: flex; align-items: center; gap: 12px; width: 100%;">
+        <span style="color: #8c9ba5; font-size: 13px; font-weight: 500; flex: 1; line-height: 1.4;">Aplicar nuevo nombre y monto a los meses generados</span>
 
-    <ion-item lines="none" class="custom-toggle-item ion-margin-top">
-      <ion-label class="toggle-text" class="ion-text-wrap">Aplicar nuevo nombre y monto a los meses generados</ion-label>
-      <ion-toggle mode="ios" [(ngModel)]="editData.aplicarAtodos" (ionChange)="toggleAll.emit($event)"
-        slot="end"></ion-toggle>
-    </ion-item>
+        <div class="action-left">
+          <ion-toggle mode="ios"  [(ngModel)]="editData.aplicarAtodos" (ionChange)="toggleAll.emit($event)"></ion-toggle>
+        </div>
 
-    <ion-button expand="block" class="btn-save ion-margin-top" (click)="save.emit()">
-      Guardar Cambios
+      </div>
+    </div>
+
+    <ion-button expand="block" class="button-action-main ion-margin-top" shape="round" (click)="guardar()">
+     Guardar Cambios
     </ion-button>
   </div>
 

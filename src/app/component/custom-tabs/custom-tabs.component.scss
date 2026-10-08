@@ -1,0 +1,50 @@
+.tab-bar {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px;
+  margin-bottom: 8px;
+
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 0;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    color: #8c9ba5;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    ion-icon {
+      font-size: 16px;
+    }
+
+    .badge {
+      background: #00d09c;
+      color: #121317;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: 10px;
+      min-width: 18px;
+      text-align: center;
+
+      &.done {
+        background: #8c9ba5;
+        color: #ffffff;
+      }
+    }
+
+    &.active {
+      background: rgba(0, 208, 156, 0.1);
+      border-color: rgba(0, 208, 156, 0.3);
+      color: #00d09c;
+    }
+  }
+}
+

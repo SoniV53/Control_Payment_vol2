@@ -1,24 +1,3 @@
-.custom-input-item {
-  --background: #1e2025;
-  --color: #ffffff;
-  border-radius: 16px;
-  --padding-start: 16px;
-  margin-bottom: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  
-  ion-label {
-    color: #8c9ba5 !important;
-    font-size: 13px;
-    font-weight: 600;
-    margin-top: 12px;
-  }
-  
-  ion-input {
-    --color: #ffffff;
-    font-size: 16px;
-    font-weight: 500;
-  }
-}
 
 .btn-save {
   --background: #00d09c;
@@ -28,7 +7,6 @@
   margin-top: 24px;
   --border-radius: 16px;
   height: 50px;
-  box-shadow: 0 8px 16px rgba(0, 208, 156, 0.2);
 }
 
 .history-section {
@@ -105,24 +83,6 @@
   }
 }
 
-.custom-toggle-item {
-  --background: transparent;
-  --padding-start: 0;
-  --inner-padding-end: 0;
-  margin-bottom: 16px;
-  margin-top: 16px;
-
-  ion-label {
-    color: #8c9ba5 !important;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  ion-toggle {
-    --background-checked: #00d09c !important; 
-    --handle-background-checked: #ffffff !important;
-  }
-}
 
 .history-checkbox {
   --border-color: #8c9ba5;
@@ -135,3 +95,14 @@
 
 
 
+ion-toggle {
+  --background: rgba(255, 255, 255, 0.1);
+  --background-checked: #00d09c !important;
+  --handle-background: #ffffff !important;
+  margin: 0;
+  
+  &::part(track) {
+    width: 50px;
+    height: 32px;
+  }
+}

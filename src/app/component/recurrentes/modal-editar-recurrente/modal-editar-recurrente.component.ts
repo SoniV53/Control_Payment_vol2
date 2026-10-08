@@ -1,19 +1,21 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation, SimpleChanges, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { ModalTemplateComponent } from '../../modal/modal-template/modal-template.component';
 import { getIconPath } from 'src/app/utils/Utils';
+import { ItemInputData } from 'src/app/models/ItemInputData.model';
+import { DynamicFormComponent } from '../../form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-modal-editar-recurrente',
   templateUrl: './modal-editar-recurrente.component.html',
   styleUrls: ['./modal-editar-recurrente.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, FormsModule, ModalTemplateComponent],
+  imports: [CommonModule, IonicModule, FormsModule, ModalTemplateComponent, DynamicFormComponent],
   encapsulation: ViewEncapsulation.None
 })
-export class ModalEditarRecurrenteComponent {
+export class ModalEditarRecurrenteComponent implements OnChanges {
   @Input() isOpen: boolean = false;
   @Input() editData: any = { titulo: '', monto: 0, aplicarAtodos: false };
   @Input() gastosHistoricos: any[] = [];
@@ -25,12 +27,29 @@ export class ModalEditarRecurrenteComponent {
   @Output() eliminarGasto = new EventEmitter<number>();
   @Output() restablecerGasto = new EventEmitter<any>();
 
+  fields: ItemInputData[] = [];
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['editData'] && this.editData) {
+      this.fields = [
+        { id: 'titulo', titulo: 'Nombre del Servicio', placeholder: 'Ej. Netflix', tipo: 'text', required: true, isError: false, valueSelect: this.editData.titulo },
+        { id: 'monto', titulo: 'Monto Base (GTQ)', placeholder: '0.00', tipo: 'number', required: true, isError: false, valueSelect: this.editData.monto }
+      ];
+    }
+  }
+
   getIcon(icon: string) {
     return getIconPath(icon, 'assets/ionicons/bar-chart-outline.svg');
   }
 
   printStado(estado: number): string {
     return estado === 2 ? 'Eliminado' : estado === 1 ? 'Pagado' : 'Pendiente';
+  }
+
+  guardar() {
+    this.editData.titulo = this.fields.find(f => f.id === 'titulo')?.valueSelect;
+    this.editData.monto = this.fields.find(f => f.id === 'monto')?.valueSelect;
+    this.save.emit();
   }
 }
 

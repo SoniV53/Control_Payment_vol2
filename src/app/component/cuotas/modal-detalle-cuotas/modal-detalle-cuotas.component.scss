@@ -1,0 +1,123 @@
+/* ═══════════════ MODAL DETALLE ═══════════════ */
+.modal-bg {
+  --background: #121317;
+}
+
+.modal-summary {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #1e2025;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  .summary-item {
+    text-align: center;
+
+    span {
+      font-size: 12px;
+      color: #8c9ba5;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    h3 {
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
+      margin: 4px 0 0;
+    }
+  }
+
+  .summary-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.cuotas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cuota-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1e2025;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: border-color 0.2s;
+
+  &.paid {
+    border-color: rgba(0, 208, 156, 0.2);
+    background: rgba(0, 208, 156, 0.03);
+  }
+
+  .cuota-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    span {
+      font-size: 12px;
+      font-weight: 700;
+      color: #8c9ba5;
+    }
+  }
+
+  &.paid .cuota-number {
+    background: rgba(0, 208, 156, 0.1);
+    span {
+      color: #00d09c;
+    }
+  }
+
+  .cuota-info {
+    flex: 1;
+
+    h4 {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 2px 0;
+    }
+
+    p {
+      color: #8c9ba5;
+      font-size: 12px;
+      margin: 0;
+    }
+  }
+
+  .cuota-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .cuota-monto {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    ion-checkbox {
+      --size: 22px;
+      --border-radius: 6px;
+      --border-color: rgba(255, 255, 255, 0.15);
+      --background-checked: #00d09c;
+      --border-color-checked: #00d09c;
+      --checkmark-color: #ffffff;
+    }
+  }
+}

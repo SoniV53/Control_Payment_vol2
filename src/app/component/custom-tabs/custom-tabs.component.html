@@ -1,0 +1,18 @@
+<div class="tab-bar">
+  <button 
+    *ngFor="let tab of tabs" 
+    class="tab-btn" 
+    [class.active]="selectedTabId === tab.id" 
+    (click)="selectTab(tab.id)">
+    
+    <ion-icon [src]="getIcon(tab.icon)"></ion-icon>
+    {{ tab.label }}
+    
+    <span class="badge" 
+      *ngIf="tab.badgeCount !== undefined && tab.badgeCount > 0" 
+      [ngClass]="tab.badgeClass || ''">
+      {{ tab.badgeCount }}
+    </span>
+  </button>
+</div>
+

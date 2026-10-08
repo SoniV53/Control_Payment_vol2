@@ -20,6 +20,7 @@ import { EmptyStateComponent } from 'src/app/component/empty-state/empty-state.c
 import { ModalDetalleCuotasComponent } from 'src/app/component/cuotas/modal-detalle-cuotas/modal-detalle-cuotas.component';
 import { SelectorModalComponent } from 'src/app/component/input/selector-modal/selector-modal.component';
 import { ModalEditarCuotaComponent } from 'src/app/component/cuotas/modal-editar-cuota/modal-editar-cuota.component';
+import { CustomTabsComponent } from 'src/app/component/custom-tabs/custom-tabs.component';
 
 @Component({
   selector: 'app-control-cuotas',
@@ -27,7 +28,7 @@ import { ModalEditarCuotaComponent } from 'src/app/component/cuotas/modal-editar
   styleUrls: ['./control-cuotas.page.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent, CategoryBlockComponent, EmptyStateComponent, ModalDetalleCuotasComponent, SelectorModalComponent, ModalEditarCuotaComponent]
+  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent, CategoryBlockComponent, EmptyStateComponent, ModalDetalleCuotasComponent, SelectorModalComponent, ModalEditarCuotaComponent, CustomTabsComponent]
 })
 export class ControlCuotasPage extends BasePage {
   toolBar = { title: "Control de Cuotas", description: "Administra tus cuotas." };
@@ -71,7 +72,16 @@ export class ControlCuotasPage extends BasePage {
     return grupos.reduce((total: number, g: any) => total + g.items.length, 0);
   }
 
-    categoriasMapped: any[] = [];
+  misTabs: any[] = [];
+
+  actualizarTabs() {
+    this.misTabs = [
+      { id: 'progreso', label: 'En Progreso', icon: 'hourglass-outline', badgeCount: this.countItems(this.gruposProgreso) },
+      { id: 'pagados', label: 'Pagados', icon: 'checkmark-done-outline', badgeCount: this.countItems(this.gruposPagados), badgeClass: 'done' }
+    ];
+  }
+
+  categoriasMapped: any[] = [];
 
   async cargarCategorias() {
     await this.baseService(async () => {
@@ -105,6 +115,8 @@ export class ControlCuotasPage extends BasePage {
           ...g,
           items: g.items.filter((i: any) => i.pagadas >= i.cuotas)
         })).filter((g: any) => g.items.length > 0);
+
+        this.actualizarTabs();
       },
       async () => { this.getAlertError('No se pudieron cargar las cuotas.'); },
       async () => { this.dissmissLoader(); }

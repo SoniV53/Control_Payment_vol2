@@ -1,5 +1,133 @@
-// Estilos heredados
-.detail-modal {
-    --border-radius: 24px 24px 0 0;
+/* ═══════════════ BOTTOM SHEET EDITAR ═══════════════ */
+.form-section {
+  padding-top: 16px;
+  padding-bottom: 24px;
+}
+
+.custom-input {
+  --background: #1e2025;
+  --color: #ffffff;
+  --placeholder-color: #8c9ba5;
+  --padding-start: 16px;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  &::part(native) {
+    color: #ffffff;
+  }
+}
+
+ion-select.custom-input {
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+
+  &::part(icon) {
+    color: #00d09c;
+  }
+}
+
+.btn-save {
+  --background: #00d09c;
+  --background-activated: #00b889;
+  --color: #ffffff;
+  font-weight: 700;
+  margin-top: 24px;
+  --border-radius: 16px;
+  height: 50px;
+  box-shadow: 0 8px 16px rgba(0, 208, 156, 0.2);
+}
+
+ion-modal.bottom-sheet {
+  --border-radius: 24px 24px 0 0;
+  align-items: flex-end;
+
+  ::ng-deep .ion-page {
+    position: relative;
+    display: block;
+    contain: content;
+  }
+
+  ion-toolbar {
+    --background: #1e2025;
+    --border-color: transparent;
+    --color: #ffffff;
+  }
+}
+
+ion-modal.detail-modal {
+  ion-toolbar {
+    --background: #1e2025;
+    --border-color: transparent;
+    --color: #ffffff;
+  }
+}
+/* Estilos de categoria selector premium */
+.category-list-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 24px;
+    margin-top: 16px;
+
+    .cat-item {
+        background: #1e2025;
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:active {
+            background: rgba(0, 208, 156, 0.1);
+            border-color: rgba(0, 208, 156, 0.3);
+            transform: scale(0.98);
+        }
+
+        .icon-circle {
+            width: 44px;
+            height: 44px;
+            background: rgba(0, 208, 156, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+
+            ion-icon {
+                font-size: 22px;
+                color: #00d09c;
+            }
+        }
+
+        span {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .forward-icon {
+            color: #8c9ba5;
+            font-size: 20px;
+        }
+    }
+}
+
+.btn-create-cat {
+    --background: rgba(0, 208, 156, 0.1);
+    --color: #00d09c;
+    --box-shadow: none;
+    font-weight: 700;
+    margin-top: 16px;
+    height: 40px;
+    font-size: 13px;
+
+    ion-icon {
+        font-size: 18px;
+    }
 }
 
