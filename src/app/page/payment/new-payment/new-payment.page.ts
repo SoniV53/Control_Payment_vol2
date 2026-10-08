@@ -13,6 +13,7 @@ import { Gasto } from 'src/app/core/models/gasto.model';
 import { Capacitor } from '@capacitor/core';
 import { list } from 'ionicons/icons';
 import { getIconPath, validarCuotasConRango } from 'src/app/utils/Utils';
+import { SelectorModalComponent } from 'src/app/component/input/selector-modal/selector-modal.component';
 import { Categoria } from 'src/app/core/models/categoria.model';
 import { EmptyBaseComponent } from "src/app/component/card/empty-base/empty-base.component";
 import { RouterLink } from '@angular/router';
@@ -35,6 +36,7 @@ export default Swal;
     CommonModule,
     FormsModule,
     BannerTopComponent,
+    SelectorModalComponent,
     IonToolbar,
     IonSegmentButton,
     IonLabel,

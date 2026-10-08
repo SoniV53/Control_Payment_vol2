@@ -79,14 +79,16 @@
           <input-simple label="Monto Total (GTQ)" type="number" name="monto" [(ngModel)]="editData.monto" placeholder="0.00"></input-simple>
           <input-simple label="Total de Cuotas" type="number" name="cuotas" [(ngModel)]="editData.cuotas" placeholder="0"></input-simple>
           
-          <selector-simple label="Categoria" name="categoria" [defaultSelect]="false"
-            [open]="showPopup && tipoModalUse === 'select'"
-            [valueSelect]="getCategoryName(editData.categoria_id)" 
-            [icon]="getCategoryIcon(editData.categoria_id)"
-            (clickItem)="onClickItemAction()" 
+          <app-selector-modal 
+            label="Categoria" 
+            name="categoria"
             [list]="categoriasMapped" 
             [(ngModel)]="editData.categoria_id" 
-            placeholder="Selecciona categoria"></selector-simple>
+            placeholder="Selecciona categoria"
+            modalTitle="Elegir Categoria"
+            actionButtonText="Crear Nueva Categoria"
+            (actionButtonClick)="goToNuevaCategoria()">
+          </app-selector-modal>
 
           <ion-button expand="block" class="button-action-main ion-margin-top" shape="round" (click)="guardarEdicion()">
             GUARDAR CAMBIOS
@@ -96,36 +98,10 @@
     </ng-template>
   </ion-modal>
 
-    <!-- Modal Selector de Categoria Premium -->
-  <!-- <ion-modal [isOpen]="showPopup && tipoModalUse === 'select'" (didDismiss)="closePopupClick()" class="bottom-sheet" mode="ios" initialBreakpoint="0.6" [breakpoints]="[0, 0.6, 0.9]">
-      <ng-template>
-          <ion-content class="ion-padding modal-bg">
-              <h2 style="color: #ffffff; font-size: 18px; font-weight: 700; margin-top: 16px; margin-bottom: 24px; padding-left: 4px;">Elegir Categoria</h2>
-              
-              <div class="category-list-selector" *ngIf="dataListaSelect.length > 0">
-                  <div class="cat-item" *ngFor="let data of dataListaSelect" (click)="onClickItem(data)">
-                      <div class="icon-circle">
-                          <ion-icon [src]="getIcon(data.icon || '')"></ion-icon>
-                      </div>
-                      <span>{{data.value}}</span>
-                      <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
-                  </div>
-              </div>
-
-              <div *ngIf="dataListaSelect.length === 0" class="empty-state small">
-                  <p>No hay categorias registradas.</p>
-              </div>
-
-              <ion-button class="btn-create-cat" expand="block" shape="round" (click)="goToNuevaCategoria()">
-                  <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-                  CREAR NUEVA CATEGORIA
-              </ion-button>
-              
-          </ion-content>
-      </ng-template>
-  </ion-modal></ion-content> -->
 
 
 
 
 
+
+</ion-content>

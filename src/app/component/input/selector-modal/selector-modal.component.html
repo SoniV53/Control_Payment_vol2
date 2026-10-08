@@ -1,0 +1,56 @@
+<!-- Selector Simple (Trigger) -->
+<selector-simple 
+    [defaultSelect]="false"
+    [open]="showPopup"
+    [valueSelect]="valueSelectName" 
+    [icon]="valueSelectIcon"
+    (clickItem)="onClickItemAction()" 
+    [label]="label" 
+    [name]="name"
+    [required]="required" 
+    [placeholder]="placeholder"
+    [list]="list" 
+    [(ngModel)]="value">
+</selector-simple>
+
+<!-- Modal con las opciones -->
+<ion-modal [isOpen]="showPopup" (didDismiss)="closePopupClick()" class="detail-modal bottom-sheet" initialBreakpoint="0.6" [breakpoints]="[0, 0.6, 0.9]" mode="ios" handle="false">
+    <ng-template>
+        <ion-item class="item-header" lines="none">
+            <ion-title style="font-size: 16px; font-weight: 700;">{{ modalTitle }}</ion-title>
+            <ion-buttons slot="end">
+                <ion-button (click)="closePopupClick()" class="close-btn-slim">
+                    <ion-icon [src]="getIcon('close-outline')"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-item>
+        
+        <ion-content class="custom-bg-slim">
+            
+            <div class="category-list-selector-slim" *ngIf="list && list.length > 0">
+                <div class="cat-item-slim" *ngFor="let data of list" (click)="onClickItem(data)" [class.selected]="value === data.code">
+                    <div class="icon-circle-slim">
+                        <ion-icon [src]="getIcon(data.icon || '')"></ion-icon>
+                    </div>
+                    <span class="cat-label">{{data.value}}</span>
+                    <ion-icon *ngIf="value === data.code" [src]="getIcon('checkmark-circle')" class="check-icon" color="success"></ion-icon>
+                    <ion-icon *ngIf="value !== data.code" [src]="getIcon('chevron-forward-outline')" class="forward-icon-slim"></ion-icon>
+                </div>
+            </div>
+
+            <div *ngIf="!list || list.length === 0" class="empty-state-slim">
+                <ion-icon [src]="getIcon('alert-circle-outline')"></ion-icon>
+                <p>No hay elementos para mostrar</p>
+            </div>
+
+            <div class="action-btn-wrapper" *ngIf="actionButtonText">
+                <ion-button class="btn-create-slim" expand="block" shape="round" (click)="goToActionButton()">
+                    <ion-icon [src]="getIcon(actionButtonIcon)" slot="start"></ion-icon>
+                    {{ actionButtonText }}
+                </ion-button>
+            </div>
+            
+        </ion-content>
+    </ng-template>
+</ion-modal>
+

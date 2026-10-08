@@ -155,3 +155,7 @@ ion-modal.detail-modal::part(content) {
   border-top-right-radius: 32px;       
   box-shadow: 0 4px 8px #00d09c;
 }
+
+ion-modal{
+   --background: #121212 !important;
+}

@@ -1,0 +1,113 @@
+.modal-toolbar-slim {
+  --background: #121212; // Mismo color que custom-bg-slim para que se vea continuo
+  padding-top: 8px;
+  ion-title {
+    color: #ffffff;
+  }
+  .close-btn-slim {
+    --color: #ffffff;
+  }
+}
+
+.custom-bg-slim {
+  --background: #121212; // Ajustar según tu paleta
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 8px;
+  --padding-bottom: 24px;
+}
+
+.category-list-selector-slim {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; // Reducido el espaciado
+  margin-bottom: 16px;
+
+  .cat-item-slim {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05); // Un fondo sutil en lugar de un bloque grande
+    padding: 10px 14px; // Menos padding para no verse tan grande
+    border-radius: 12px;
+    transition: background 0.2s;
+
+    &:active {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &.selected {
+      background: rgba(0, 208, 156, 0.1); // Ejemplo verde si está seleccionado
+      border: 1px solid rgba(0, 208, 156, 0.3);
+    }
+
+    .icon-circle-slim {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+
+      ion-icon {
+        font-size: 18px;
+        color: #ffffff;
+      }
+    }
+
+    .cat-label {
+      flex: 1;
+      font-size: 15px;
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .forward-icon-slim {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 18px;
+    }
+    .check-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+.empty-state-slim {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+
+  ion-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+.action-btn-wrapper {
+  margin-top: 16px;
+  padding-bottom: 16px;
+
+  .btn-create-slim {
+    --background: rgba(0, 208, 156, 0.15);
+    --background-activated: rgba(0, 208, 156, 0.25);
+    --color: #00d09c;
+    --box-shadow: none;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin: 0;
+  }
+}
+.item-header{
+  --background:  #121212 !important;
+  padding: 4px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}

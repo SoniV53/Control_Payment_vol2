@@ -25,13 +25,18 @@
                 <div [ngSwitch]="form.tipo">
 
                     <div *ngSwitchCase="'select'">
-                        <selector-simple [defaultSelect]="false"
-                            [open]="this.showPopup && tipoModalUse === 'select'"
-                            [valueSelect]="form.valueSelect" [icon]="form.icon"
-                            (clickItem)="onClickItemAction(form)" [label]="form.titulo" [name]="form.id"
-                            [required]="form.required" [placeholder]="form.placeholder"
-                            [list]="form?.list || []" [(ngModel)]="form.valueSelect"
-                            (ionChange)="ionChangeInput(form)"></selector-simple>
+                        <app-selector-modal 
+                            [label]="form.titulo" 
+                            [name]="form.id"
+                            [required]="form.required" 
+                            [placeholder]="form.placeholder"
+                            [list]="form?.list || []" 
+                            [(ngModel)]="form.valueSelect"
+                            (ionChangeInput)="ionChangeInput(form)"
+                            modalTitle="Elegir Categoría"
+                            actionButtonText="Crear Nueva Categoría"
+                            (actionButtonClick)="goToNuevaCategoria()">
+                        </app-selector-modal>
                     </div>
                     <div *ngSwitchCase="'date'">
                         <input-simple (click)="clickDateModal(form)" [label]="form.titulo" [name]="form.id"
@@ -97,44 +102,7 @@
     </ng-template>
 </ion-modal>
 
-<!-- Modal Selector de Categoría Premium -->
-<ion-modal [isOpen]="showPopup && tipoModalUse === 'select'" (didDismiss)="closePopupClick()" initialBreakpoint="0.6" [breakpoints]="[0, 0.6, 0.9]">
-    <ng-template>
-        <ion-header class="ion-no-border">
-            <ion-toolbar class="modal-toolbar">
-                <ion-title>Elegir Categoría</ion-title>
-                <ion-buttons slot="end">
-                    <ion-button (click)="closePopupClick()">
-                        <ion-icon name="close-outline"></ion-icon>
-                    </ion-button>
-                </ion-buttons>
-            </ion-toolbar>
-        </ion-header>
-        
-        <ion-content class="ion-padding custom-bg">
-            
-            <div class="category-list-selector" *ngIf="dataListaSelect.length > 0">
-                <div class="cat-item" *ngFor="let data of dataListaSelect" (click)="onClickItem(data)">
-                    <div class="icon-circle">
-                        <ion-icon [src]="getIcon(data.icon || '')"></ion-icon>
-                    </div>
-                    <span>{{data.value}}</span>
-                    <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
-                </div>
-            </div>
 
-            <div *ngIf="dataListaSelect.length === 0" class="empty-cat">
-                <empty-base [dataCard]="dataCard"></empty-base>
-            </div>
-
-            <ion-button class="btn-create-cat" expand="block" shape="round" (click)="goToNuevaCategoria()">
-                <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-                Crear Nueva Categoría
-            </ion-button>
-            
-        </ion-content>
-    </ng-template>
-</ion-modal>
 
 
 

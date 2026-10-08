@@ -18,6 +18,7 @@ import { CuotaServiceService } from 'src/app/services/cuota-service.service';
 import { CategoryBlockComponent } from 'src/app/component/cuotas/category-block/category-block.component';
 import { EmptyStateComponent } from 'src/app/component/empty-state/empty-state.component';
 import { ModalDetalleCuotasComponent } from 'src/app/component/cuotas/modal-detalle-cuotas/modal-detalle-cuotas.component';
+import { SelectorModalComponent } from 'src/app/component/input/selector-modal/selector-modal.component';
 
 @Component({
   selector: 'app-control-cuotas',
@@ -25,7 +26,7 @@ import { ModalDetalleCuotasComponent } from 'src/app/component/cuotas/modal-deta
   styleUrls: ['./control-cuotas.page.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent, CategoryBlockComponent, EmptyStateComponent, ModalDetalleCuotasComponent]
+  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent, CategoryBlockComponent, EmptyStateComponent, ModalDetalleCuotasComponent, SelectorModalComponent]
 })
 export class ControlCuotasPage extends BasePage {
   toolBar = { title: "Control de Cuotas", description: "Administra tus cuotas." };
