@@ -246,7 +246,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
         titulo: this.listaFormulario.find(item => item.id === 'titulo')?.valueSelect || '',
         descripcion: this.listaFormulario.find(item => item.id === 'descripcion')?.valueSelect || '',
         monto: Number(this.listaFormulario.find(item => item.id === 'monto')?.valueSelect) || 0,
-        categoria_id: Number(this.listaFormulario.find(item => item.id === 'categoria')?.code) || null,
+        categoria_id: Number(this.listaFormulario.find(item => item.id === 'categoria')?.valueSelect) || null,
         etiquetas: '',
         fecha: this.listaFormulario.find(item => item.id === 'fecha')?.valueSelect || '',
         fechaEnd: this.listaFormulario.find(item => item.id === 'fechaEnd')?.valueSelect || '',
