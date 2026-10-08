@@ -23,13 +23,12 @@
   <!-- ═══════════════════════════════════ EN PROGRESO ═══════════════════════════════════ -->
   <div *ngIf="tabEstado === 'progreso'">
 
-    <div *ngIf="gruposProgreso.length === 0" class="empty-state">
-      <div class="icon-glow">
-        <ion-icon [src]="getIcon('checkmark-done-circle-outline')" ></ion-icon>
-      </div>
-      <p>No tienes cuotas en progreso</p>
-      <span>Cuando registres un gasto en cuotas aparecerá aquí.</span>
-    </div>
+    <app-empty-state 
+      *ngIf="gruposProgreso.length === 0" 
+      icon="checkmark-done-circle-outline" 
+      title="No tienes cuotas en progreso" 
+      subtitle="Cuando registres un gasto en cuotas aparecerá aquí.">
+    </app-empty-state>
 
     <app-category-block 
       *ngFor="let g of gruposProgreso" 
@@ -44,13 +43,12 @@
   <!-- ═══════════════════════════════════ PAGADOS ═══════════════════════════════════ -->
   <div *ngIf="tabEstado === 'pagados'">
 
-    <div *ngIf="gruposPagados.length === 0" class="empty-state">
-      <div class="icon-glow">
-        <ion-icon [src]="getIcon('checkmark-done-circle-outline')" ></ion-icon>
-      </div>
-      <p>No tienes cuotas finalizadas</p>
-      <span>Cuando completes todas las cuotas de un gasto, aparecerá aquí.</span>
-    </div>
+    <app-empty-state 
+      *ngIf="gruposPagados.length === 0" 
+      icon="checkmark-done-circle-outline" 
+      title="No tienes cuotas finalizadas" 
+      subtitle="Cuando completes todas las cuotas de un gasto, aparecerá aquí.">
+    </app-empty-state>
 
     <app-category-block 
       *ngFor="let g of gruposPagados" 
