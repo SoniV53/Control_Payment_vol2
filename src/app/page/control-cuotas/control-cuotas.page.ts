@@ -15,6 +15,7 @@ import { AppComponent } from 'src/app/app.component';
 import { ControlGastosAutomaticosService } from 'src/app/services/control-gastos-automaticos.service';
 import { NavCtrl } from 'src/app/services/nav-ctrl';
 import { CuotaServiceService } from 'src/app/services/cuota-service.service';
+import { CategoryBlockComponent } from 'src/app/component/cuotas/category-block/category-block.component';
 
 @Component({
   selector: 'app-control-cuotas',
@@ -22,7 +23,7 @@ import { CuotaServiceService } from 'src/app/services/cuota-service.service';
   styleUrls: ['./control-cuotas.page.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent]
+  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent, CategoryBlockComponent]
 })
 export class ControlCuotasPage extends BasePage {
   toolBar = { title: "Control de Cuotas", description: "Administra tus cuotas." };

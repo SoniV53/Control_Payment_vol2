@@ -1,0 +1,93 @@
+<div class="category-block">
+  <div class="block-header">
+    <div class="title-wrap">
+      <ion-icon [src]="getIcon(grupo.icono || '')"></ion-icon>
+      <h2>{{ grupo.nombre }}</h2>
+      <span class="count-badge">{{ grupo.items.length }}</span>
+    </div>
+  </div>
+
+  <div class="block-card">
+    <ng-container *ngIf="estado === 'progreso'">
+      <div class="cuota-item" *ngFor="let item of grupo.items; let last = last" [class.no-border]="last">
+
+        <!-- Row principal -->
+        <div class="item-main" (click)="abrirGestionCuotas(item)">
+          <div class="icon-box">
+            <ion-icon [src]="getIcon('card-outline')" ></ion-icon>
+          </div>
+          <div class="text-col">
+            <h4>{{ item.titulo }}</h4>
+            <p *ngIf="item.fecha">{{ item.fecha | date:'MMM yyyy' }}<span *ngIf="item.fechaEnd"> → {{ item.fechaEnd | date:'MMM yyyy' }}</span></p>
+          </div>
+          <div class="amount-col">
+            <h4>GTQ {{ item.monto | number:'1.2-2' }}</h4>
+            <span class="cuota-label">{{ item.pagadas }}/{{ item.cuotas }} cuotas</span>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-section" (click)="abrirGestionCuotas(item)">
+          <div class="progress-track">
+            <div class="progress-fill" [style.width.%]="(item.pagadas / item.cuotas) * 100"></div>
+          </div>
+          <div class="progress-meta">
+            <span>Cuota: <b>GTQ {{ (item.monto / item.cuotas) | number:'1.2-2' }}</b></span>
+            <span>{{ ((item.pagadas / item.cuotas) * 100) | number:'1.0-0' }}%</span>
+          </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="item-actions">
+          <button class="action-btn edit" (click)="abrirEditarGasto(item, $event)">
+            <ion-icon [src]="getIcon('create-outline')" ></ion-icon> Editar
+          </button>
+          <button class="action-btn delete" (click)="eliminarGasto(item, $event)">
+            <ion-icon [src]="getIcon('trash-outline')" ></ion-icon> Eliminar
+          </button>
+        </div>
+
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="estado === 'pagados'">
+      <div class="cuota-item completed" *ngFor="let item of grupo.items; let last = last" [class.no-border]="last">
+
+        <div class="item-main" (click)="abrirGestionCuotas(item)">
+          <div class="icon-box done">
+            <ion-icon [src]="getIcon(grupo.icono || '')"></ion-icon>
+          </div>
+          <div class="text-col">
+            <h4>{{ item.titulo }}</h4>
+            <p *ngIf="item.fecha">{{ item.fecha | date:'MMM yyyy' }}<span *ngIf="item.fechaEnd"> → {{ item.fechaEnd | date:'MMM yyyy' }}</span></p>
+          </div>
+          <div class="amount-col">
+            <h4>GTQ {{ item.monto | number:'1.2-2' }}</h4>
+            <span class="cuota-label done">Completado</span>
+          </div>
+        </div>
+
+        <div class="progress-section" (click)="abrirGestionCuotas(item)">
+          <div class="progress-track full">
+            <div class="progress-fill" style="width: 100%"></div>
+          </div>
+          <div class="progress-meta">
+            <span>{{ item.cuotas }} cuotas pagadas</span>
+            <span>100%</span>
+          </div>
+        </div>
+
+        <div class="item-actions">
+          <button class="action-btn edit" (click)="abrirEditarGasto(item, $event)">
+            <ion-icon [src]="getIcon('create-outline')" ></ion-icon> Editar
+          </button>
+          <button class="action-btn delete" (click)="eliminarGasto(item, $event)">
+            <ion-icon [src]="getIcon('trash-outline')" ></ion-icon> Eliminar
+          </button>
+        </div>
+
+      </div>
+    </ng-container>
+  </div>
+</div>
+
