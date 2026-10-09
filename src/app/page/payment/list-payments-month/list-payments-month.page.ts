@@ -6,7 +6,7 @@ import { CategoryPaymentComponent } from "src/app/component/category-payment/cat
 import { BasePage } from '../../main/base/base.page';
 import { IonicModule } from "@ionic/angular";
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
-import { IonItem, IonContent, IonChip, IonDatetime, IonIcon } from "@ionic/angular/standalone";
+import { IonItem, IonContent, IonChip, IonDatetime, IonIcon, IonSelect, IonSelectOption } from "@ionic/angular/standalone";
 import { Categoria } from 'src/app/core/models/categoria.model';
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
@@ -16,6 +16,7 @@ import { Presupuesto } from 'src/app/core/models/presupuesto.model';
 import { UpdateListado } from 'src/app/utils/update-params';
 import { Subscription } from 'rxjs';
 import { PaymentCategoryBlockComponent } from 'src/app/component/payment-category-block/payment-category-block.component';
+import { ChipsFilterComponent } from 'src/app/component/filter/chips-filter/chips-filter.component';
 
 @Component({
   selector: 'app-list-payments-month',
@@ -32,6 +33,8 @@ import { PaymentCategoryBlockComponent } from 'src/app/component/payment-categor
     IonContent,
     IonDatetime,
     IonIcon,
+    IonSelect,
+    IonSelectOption,
     InputSimpleComponent,
     PaymentCategoryBlockComponent
   ]
@@ -45,7 +48,13 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
   showPopup = false;
   isEditar = false;
 
-  listCategoria: Categoria[] = []
+  listCategoria: Categoria[] = [];
+  listCategoriaFiltro: Categoria[] = [];
+  textoBusqueda: string = '';
+  tabTipo: string = 'todos';
+  chipList = [{ id: 'todos', label: 'Todos' }, { id: 'unico', label: 'Único' }, { id: 'recurrente', label: 'Recurrentes' }, { id: 'cuota', label: 'Cuotas' }]; 
+  categoriaSeleccionada: any = 'todas';
+
   presupuesto: Presupuesto | null = null;
   cantidad: number = 0;
   total: number = 0;
@@ -110,9 +119,61 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
     this.selectDate();
   }
 
+  aplicarFiltros() {
+    if (!this.listCategoria) return;
+    
+    let temp = [...this.listCategoria];
+    const txt = this.textoBusqueda.toLowerCase();
+
+    if (this.categoriaSeleccionada !== 'todas') {
+      temp = temp.filter(c => c.id === this.categoriaSeleccionada);
+    }
+
+    this.listCategoriaFiltro = temp.map(cat => {
+      const catCopy = { ...cat };
+      
+      if (catCopy.dataGasto) {
+        catCopy.dataGasto = catCopy.dataGasto.filter(gasto => {
+          const titulo = (gasto.titulo || '').toLowerCase();
+          const montoStr = gasto.monto ? gasto.monto.toString() : '';
+          const matchesText = !txt || titulo.includes(txt) || montoStr.includes(txt);
+          
+          const tipo = gasto.tipo || 'normal';
+          let matchesType = true;
+          if (this.tabTipo === 'recurrente' && tipo !== 'recurrente') matchesType = false;
+          if (this.tabTipo === 'cuota' && tipo !== 'cuota') matchesType = false;
+          if (this.tabTipo === 'unico' && tipo !== 'normal') matchesType = false;
+          
+          return matchesText && matchesType;
+        });
+      }
+      return catCopy;
+    }).filter(cat => cat.dataGasto && cat.dataGasto.length > 0);
+
+    this.calcularMetricas(this.listCategoriaFiltro);
+  }
+
+  calcularMetricas(lista: Categoria[]) {
+    this.cantidad = 0;
+    this.total = 0;
+    lista.forEach(res => {
+      if (res.dataGasto) {
+        this.cantidad += res.dataGasto.length;
+        res.dataGasto.forEach(gas => {
+          if (gas.tipo != 'cuota') {
+            this.total += gas.monto;
+          } else {
+            this.total += (gas.gastoCuota?.monto_cuota || 0);
+          }
+        });
+      }
+    });
+    this.restante = (this.presupuesto?.monto || 0) - this.total;
+  }
+
   getCategorias() {
     this.baseService(async () => {
-      this.showLoader()
+      this.showLoader();
       this.cantidad = 0;
       this.total = 0;
       this.restante = 0;
@@ -121,7 +182,6 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
 
       this.listCategoria = await this.gastoService.getGastos(this.myApp.dateSelected);
 
-
       await this.gastoService.generarPresupuestoMensualSiNoExiste(this.myApp.dateSelected);
 
       const presupuesto = await this.gastoService.getPresupuestoByMes(this.myApp.dateSelected);
@@ -129,24 +189,9 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
 
       this.form.valueSelect = this.presupuesto?.monto || '';
 
-
       this.loadUpdateParam(UpdateListado.UPDATE_CATEGORIA);
-      this.listCategoria.map(res => {
-        if (res.dataGasto) {
-          this.cantidad += res.dataGasto?.length || 0
-
-          res.dataGasto?.map(gas => {
-            if (gas.tipo != 'cuota') {
-              this.total += gas.monto
-            } else {
-              this.total += (gas?.gastoCuota?.monto_cuota || 0)
-            }
-          })
-        }
-
-      })
-
-      this.restante = (this.presupuesto?.monto || 0) - this.total;
+      
+      this.aplicarFiltros();
 
     }, async () => {
       this.getAlertError('No se pudieron cargar.');
@@ -234,3 +279,7 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
   }
 
 }
+
+
+
+

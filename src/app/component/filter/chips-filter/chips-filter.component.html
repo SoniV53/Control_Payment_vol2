@@ -1,0 +1,8 @@
+﻿<div class="chips-container">
+  <button class="chip" 
+          *ngFor="let chip of chips" 
+          [class.active]="activeChipId === chip.id" 
+          (click)="onChipClick(chip.id)">
+    {{ chip.label }}
+  </button>
+</div>

@@ -1,5 +1,28 @@
-<ion-content [fullscreen]="true" class="content-bg ion-padding">
+﻿<ion-content [fullscreen]="true" class="content-bg ion-padding">
     <app-banner-top [toolBarData]="toolBar" (onActionTitle)="onActionTitle()" [loader]="loaderNav"></app-banner-top>
+
+    <div class="premium-filters-wrapper">
+      <div class="filter-top-row">
+        <div class="search-bar-custom">
+          <ion-icon [src]="getIcon('search-outline')"></ion-icon>
+          <input type="text" placeholder="Buscar pagos..." [(ngModel)]="textoBusqueda" (keyup)="aplicarFiltros()">
+        </div>
+        
+        <div class="category-selector-box">
+          <ion-icon [src]="getIcon('funnel-outline')"></ion-icon>
+          <ion-select [(ngModel)]="categoriaSeleccionada" (ionChange)="aplicarFiltros()" interface="popover" mode="md">
+            <ion-select-option value="todas">Todas</ion-select-option>
+            <ion-select-option *ngFor="let cat of listCategoria" [value]="cat.id">{{cat.nombre}}</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+
+            <app-chips-filter 
+        [chips]="chipList" 
+        [activeChipId]="tabTipo" 
+        (chipChanged)="tabTipo = $event; aplicarFiltros()">
+      </app-chips-filter>
+    </div>
 
     <div class="metrics-grid">
         <!-- Tarjeta de Presupuesto -->
@@ -42,7 +65,7 @@
     </div>
 
     <div class="listado-gastos">
-        <app-payment-category-block *ngFor="let categoria of listCategoria" 
+        <app-payment-category-block *ngFor="let categoria of listCategoriaFiltro" 
             [categoria]="categoria" 
             [categoriasList]="listCategoria"
             (editGasto)="saveEditGasto($event)" 
@@ -69,3 +92,9 @@
     </div>
 
 </app-modal-base>
+
+
+
+
+
+

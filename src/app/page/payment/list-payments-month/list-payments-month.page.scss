@@ -109,3 +109,81 @@
     margin: 24px 16px;
 }
 /* Estilos para el listado de gastos re-diseñado */
+.premium-filters-wrapper {
+  background: transparent;
+  padding: 12px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: -10px;
+}
+
+.filter-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-bar-custom {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  ion-icon {
+    color: #8c9ba5;
+    font-size: 18px;
+    margin-right: 8px;
+  }
+
+  input {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+
+    &::placeholder {
+      color: #8c9ba5;
+    }
+  }
+}
+
+.category-selector-box {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 208, 156, 0.1);
+  border-radius: 12px;
+  padding: 6px 14px;
+  border: 1px solid rgba(0, 208, 156, 0.2);
+
+  ion-icon {
+    color: #00d09c;
+    font-size: 16px;
+    margin-right: 6px;
+  }
+
+  ion-select {
+    color: #00d09c;
+    font-weight: 700;
+    font-size: 14px;
+    --padding-start: 0;
+    --padding-end: 0;
+    margin: 0;
+    max-width: 100px; 
+
+    &::part(icon) {
+      color: #00d09c;
+      margin-left: 6px;
+    }
+  }
+}
+
+
+}
+

@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border">
+﻿<ion-header class="ion-no-border">
   <ion-toolbar>
     <app-banner-top [toolBarData]="toolBar" [loader]="loaderNav"></app-banner-top>
   </ion-toolbar>
@@ -19,11 +19,7 @@
       </div>
     </div>
 
-    <div class="chips-container">
-      <button class="chip" [class.active]="tabTipo === 'todos'" (click)="tabTipo = 'todos'; aplicarFiltros()">Todos</button>
-      <button class="chip" [class.active]="tabTipo === 'recurrente'" (click)="tabTipo = 'recurrente'; aplicarFiltros()">Recurrentes</button>
-      <button class="chip" [class.active]="tabTipo === 'cuota'" (click)="tabTipo = 'cuota'; aplicarFiltros()">Cuotas</button>
-    </div>
+    <app-chips-filter [chips]="chipList" [activeChipId]="tabTipo" (chipChanged)="tabTipo = $event; aplicarFiltros()"></app-chips-filter>
   </div>
 </ion-header>
 
@@ -101,7 +97,7 @@
         </div>
 
         <div class="no-pagos" *ngIf="gasto.pagosDetalle.length === 0">
-          No hay registros de pago aún.
+          No hay registros de pago aÃºn.
         </div>
       </div>
 
@@ -109,3 +105,5 @@
   </div>
 
 </ion-content>
+
+

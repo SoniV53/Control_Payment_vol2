@@ -88,37 +88,7 @@ ion-header {
   }
 }
 
-/* ==================================================
-   CHIPS DE TIPO DE GASTO
-================================================== */
-.chips-container {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 4px;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .chip {
-    flex-shrink: 0;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #8c9ba5;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    transition: all 0.2s ease;
-
-    &.active {
-      background: #00d09c;
-      border-color: #00d09c;
-      color: #121317;
-      box-shadow: 0 4px 12px rgba(0, 208, 156, 0.3);
-    }
-  }
 }
 
 /* ==================================================
@@ -446,3 +416,4 @@ ion-header {
     font-weight: 500;
   }
 }
+

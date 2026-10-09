@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { IonicModule, ToastController, AlertController } from '@ionic/angular';
@@ -26,6 +26,7 @@ export class ResumenGastosPage extends BasePage {
   
   // Filtros
   tabTipo: string = 'todos';
+  chipList = [{ id: 'todos', label: 'Todos' }, { id: 'recurrente', label: 'Recurrentes' }, { id: 'cuota', label: 'Cuotas' }];
   textoBusqueda: string = '';
   categoriaSeleccionada: any = 'todas';
   categoriasActivas: any[] = [];
@@ -77,10 +78,10 @@ export class ResumenGastosPage extends BasePage {
       // Filtro Tipo
       if (this.tabTipo !== 'todos' && item.tipo !== this.tabTipo) return false;
       
-      // Filtro Categoría
+      // Filtro CategorÃ­a
       if (this.categoriaSeleccionada !== 'todas' && item.categoria_id !== this.categoriaSeleccionada) return false;
 
-      // Filtro Búsqueda
+      // Filtro BÃºsqueda
       if (this.textoBusqueda.trim() !== '') {
         const busqueda = this.textoBusqueda.toLowerCase();
         if (!item.titulo.toLowerCase().includes(busqueda) && !item.categoria.toLowerCase().includes(busqueda)) {
