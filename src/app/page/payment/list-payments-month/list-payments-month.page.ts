@@ -6,7 +6,7 @@ import { CategoryPaymentComponent } from "src/app/component/category-payment/cat
 import { BasePage } from '../../main/base/base.page';
 import { IonicModule } from "@ionic/angular";
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
-import { IonItem, IonContent, IonChip, IonDatetime, IonIcon, IonSelect, IonSelectOption, IonHeader } from "@ionic/angular/standalone";
+import { IonItem, IonContent, IonChip, IonDatetime, IonIcon, IonSelect, IonSelectOption, IonHeader, IonButton, IonTitle } from "@ionic/angular/standalone";
 import { Categoria } from 'src/app/core/models/categoria.model';
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
@@ -16,6 +16,7 @@ import { Presupuesto } from 'src/app/core/models/presupuesto.model';
 import { UpdateListado } from 'src/app/utils/update-params';
 import { Subscription } from 'rxjs';
 import { PaymentCategoryBlockComponent } from 'src/app/component/payment-category-block/payment-category-block.component';
+import { ModalTemplateComponent } from 'src/app/component/modal/modal-template/modal-template.component';
 import { ChipsFilterComponent } from 'src/app/component/filter/chips-filter/chips-filter.component';
 
 @Component({
@@ -38,7 +39,10 @@ import { ChipsFilterComponent } from 'src/app/component/filter/chips-filter/chip
     InputSimpleComponent,
     PaymentCategoryBlockComponent,
     ChipsFilterComponent,
-    IonHeader
+    IonHeader,
+    IonButton,
+    IonTitle,
+    ModalTemplateComponent
 ]
 })
 export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy {
@@ -62,6 +66,8 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
   cantidad: number = 0;
   isDashboardCollapsed: boolean = false;
   isBannerCollapsed: boolean = false;
+  isPresupuestoModalOpen = false;
+  presupuestoNuevo: number = 0;
   total: number = 0;
   restante: number = 0;
 
@@ -212,9 +218,22 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
   }
 
   editarPresupuesto() {
-    this.showPopup = true;
-    this.isEditar = true;
-    this.focusInputIdInput(this.form);
+    this.presupuestoNuevo = eNumber(this.form.valueSelect) || 0;
+    this.isPresupuestoModalOpen = true;
+  }
+
+  guardarPresupuesto() {
+    if (!this.presupuesto || !this.presupuestoNuevo || this.presupuestoNuevo <= 0) return;
+    this.baseService(async () => {
+      this.presupuesto!.monto = eNumber(this.presupuestoNuevo);
+      await this.gastoService.updatePresupuesto(this.presupuesto!);
+      this.form.valueSelect = this.presupuestoNuevo;
+      this.restante = this.presupuestoNuevo - this.total;
+      this.isPresupuestoModalOpen = false;
+      this.getAlertSuccess('Presupuesto actualizado');
+    }, async () => {
+      this.getAlertError('No se pudo actualizar el presupuesto.');
+    });
   }
 
   blurInput(form: ItemInputData) {
@@ -291,6 +310,7 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
   }
 
 }
+
 
 
 

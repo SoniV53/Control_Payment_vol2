@@ -35,7 +35,7 @@
     </div>
   </div>
   <button type="button" class="filters-toggle-handle" (click)="isBannerCollapsed = !isBannerCollapsed" [attr.aria-label]="isBannerCollapsed ? 'Mostrar filtros' : 'Ocultar filtros'" [attr.aria-expanded]="!isBannerCollapsed">
-    <ion-icon [name]="isBannerCollapsed ? 'chevron-down-outline' : 'chevron-up-outline'"></ion-icon>
+    <ion-icon [src]="getIcon(isBannerCollapsed ? 'chevron-down-outline' : 'chevron-up-outline')"></ion-icon>
     <span>{{ isBannerCollapsed ? 'Mostrar filtros' : 'Ocultar filtros' }}</span>
   </button>
 </ion-header>
@@ -114,23 +114,38 @@
             [max]="maxYear || ''">
         </ion-datetime>
     </div>
-    <div *ngIf="isEditar" class="input-presupuesto" id="div-presupuesto">
-        <h3>Editar Presupuesto</h3>
-        <p class="modal-subtitle">Establece tu nuevo límite mensual</p>
-        <input-simple (keyEnter)="blurInput(form); showPopup = false" [id]="form.id" [label]="form.titulo"
-            [name]="form.id" [required]="form.required" [type]="form.tipo" [placeholder]="form.placeholder"
-            [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"></input-simple>
-    </div>
 
 </app-modal-base>
 
+<app-modal-template [isOpen]="isPresupuestoModalOpen" (closeModal)="isPresupuestoModalOpen = false"
+    (didPresent)="focusInputIdInput(form)"
+    [initialBreakpoint]="0.55" [breakpoints]="[0, 0.55, 0.9]">
+    <ion-title modal-title style="font-size: 16px; font-weight: 700;">Editar Presupuesto</ion-title>
 
+    <div class="presupuesto-modal">
+        <p class="presupuesto-subtitle">Establece tu límite mensual de gastos</p>
 
+        <div class="presupuesto-summary">
+            <div class="summary-item">
+                <span class="summary-label">Gastado</span>
+                <span class="summary-value">{{formatearMontoPr(total)}}</span>
+            </div>
+            <div class="summary-item text-right">
+                <span class="summary-label">Restante</span>
+                <span class="summary-value" [class.danger-text]="(presupuestoNuevo - total) < 0">
+                    {{formatearMontoPr(presupuestoNuevo - total)}}
+                </span>
+            </div>
+        </div>
 
+        <input-simple [id]="form.id" [label]="'Presupuesto máximo (GTQ)'" [name]="form.id" [required]="true"
+            type="number" [placeholder]="form.placeholder" [(ngModel)]="presupuestoNuevo"
+            (keyEnter)="guardarPresupuesto()"></input-simple>
 
-
-
-
-
-
+        <ion-button expand="block" shape="round" class="button-action-main" (click)="guardarPresupuesto()"
+            [disabled]="!presupuestoNuevo || presupuestoNuevo <= 0">
+            GUARDAR PRESUPUESTO
+        </ion-button>
+    </div>
+</app-modal-template>
 

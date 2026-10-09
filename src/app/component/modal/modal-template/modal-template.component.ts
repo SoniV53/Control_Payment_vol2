@@ -20,6 +20,7 @@ export class ModalTemplateComponent {
   @Input() bgColor: string = '#121212';
   
   @Output() closeModal = new EventEmitter<void>();
+  @Output() didPresent = new EventEmitter<void>();
 
   dismiss() {
     this.isOpen = false;
@@ -30,6 +31,7 @@ export class ModalTemplateComponent {
     return getIconPath(icon, 'assets/ionicons/bar-chart-outline.svg');
   }
 }
+
 
 
 

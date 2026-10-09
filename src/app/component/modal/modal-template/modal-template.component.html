@@ -1,6 +1,6 @@
 ﻿<ion-modal 
   [isOpen]="isOpen" 
-  (didDismiss)="dismiss()" 
+  (didDismiss)="dismiss()" (didPresent)="didPresent.emit()" 
   mode="ios" 
   [class]="customClass"
   [initialBreakpoint]="initialBreakpoint"
@@ -24,6 +24,7 @@
 
   </ng-template>
 </ion-modal>
+
 
 
 
