@@ -55,7 +55,7 @@ export class CsvPreviewStepComponent implements OnInit {
     // Re-run validation on this row to see if it's now a duplicate
     const activeCategoryIds = new Set(this.categorias.map(c => c.id!));
     const db = await this.dbService.getDB();
-    const result = await db.query(`SELECT * FROM gasto WHERE estado != 2`);
+    const result = await db.query(`SELECT * FROM gasto WHERE estado != 2 OR estado IS NULL`);
     
     validateImportRows([row], activeCategoryIds, result.values || []);
   }
@@ -73,7 +73,7 @@ export class CsvPreviewStepComponent implements OnInit {
       
       const activeCategoryIds = new Set(this.categorias.map(c => c.id!));
       const db = await this.dbService.getDB();
-      const result = await db.query('SELECT * FROM gasto WHERE estado != 2');
+      const result = await db.query('SELECT * FROM gasto WHERE estado != 2 OR estado IS NULL');
       
       validateImportRows([row], activeCategoryIds, result.values || []);
     } catch (e: any) {
@@ -95,5 +95,6 @@ export class CsvPreviewStepComponent implements OnInit {
     return tipo;
   }
 }
+
 
 

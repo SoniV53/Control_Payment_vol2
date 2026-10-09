@@ -43,7 +43,7 @@ export class GastoImportExportService {
     const activeCategoryIds = new Set(categories.filter(c => c.activo === 1).map(c => c.id!));
 
     const db = await this.dbService.getDB();
-    const result = await db.query(`SELECT * FROM gasto WHERE estado != 2`);
+    const result = await db.query(`SELECT * FROM gasto WHERE estado != 2 OR estado IS NULL`);
     const existingGastos: Gasto[] = result.values || [];
 
     validateImportRows(importRows, activeCategoryIds, existingGastos);
@@ -89,7 +89,7 @@ export class GastoImportExportService {
 
   async exportGastos(): Promise<string> {
     const db = await this.dbService.getDB();
-    const result = await db.query(`SELECT * FROM gasto WHERE estado != 2`);
+    const result = await db.query(`SELECT * FROM gasto WHERE estado != 2 OR estado IS NULL`);
     const gastos: Gasto[] = result.values || [];
 
     const cuotasInfo = new Map<number, GastoCuota[]>();
@@ -148,4 +148,5 @@ export class GastoImportExportService {
     }
   }
 }
+
 

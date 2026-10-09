@@ -25,6 +25,7 @@ export class GastoServiceService {
 
           if (!ok) {
             reject('Rango de fechas no valida');
+              return;
           }
         }
 
@@ -1001,4 +1002,5 @@ export class GastoServiceService {
 
 
 }
+
 

@@ -1,4 +1,5 @@
-﻿import { Gasto } from '../models/gasto.model';
+﻿import { addMonthsSafe } from 'src/app/utils/Utils';
+import { Gasto } from '../models/gasto.model';
 import { GastoRecurrente } from '../models/gasto_recurrente.model';
 import { GastoCuota } from '../models/gasto-cuota.model';
 import { CsvRecord, ImportRow } from '../models/import-row.model';
@@ -67,22 +68,27 @@ export function validateAndMapRecord(record: CsvRecord): { gasto: Gasto, cuotasP
     throw new Error('El monto debe ser un número mayor a cero.');
   }
 
-  const tipoCsv = record['tipo']?.toUpperCase();
+  const tipoCsv = record['tipo']?.toUpperCase().trim();
   if (!['U', 'C', 'R'].includes(tipoCsv)) {
     throw new Error('El tipo debe ser U, C o R.');
   }
-
-  const fecha = record['fecha'];
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
-    throw new Error('La fecha debe tener formato YYYY-MM-DD.');
-  }
-
   const tipo = tipoCsv === 'U' ? 'normal' : tipoCsv === 'C' ? 'cuota' : 'recurrente';
+
+  let fecha = record['fecha']?.trim();
+  let cuotasPagadas = 0;
   let finalMonto = monto;
   let cuotas = 0;
-  let cuotasPagadas = 0;
 
   if (tipo === 'cuota') {
+    cuotasPagadas = parseInt(record['cuotasPagadas'], 10);
+    if (isNaN(cuotasPagadas) || cuotasPagadas < 0) cuotasPagadas = 0;
+    
+    if (!fecha) {
+      const today = new Date().toISOString().substring(0, 10);
+      const cp = cuotasPagadas > 0 ? cuotasPagadas : 1;
+      fecha = addMonthsSafe(today, -(cp - 1));
+    }
+
     const tipomonto = record['tipomonto']?.toUpperCase();
     if (!['M', 'T'].includes(tipomonto)) {
       throw new Error('Para cuotas, tipomonto debe ser M o T.');
@@ -93,16 +99,17 @@ export function validateAndMapRecord(record: CsvRecord): { gasto: Gasto, cuotasP
       throw new Error('Para cuotas, cuotas debe ser un número entero mayor a 0.');
     }
 
-    cuotasPagadas = parseInt(record['cuotasPagadas'], 10) || 0;
-    if (cuotasPagadas < 0 || cuotasPagadas > cuotas) {
-      throw new Error('cuotasPagadas debe estar entre 0 y el total de cuotas.');
+    if (cuotasPagadas > cuotas) {
+      throw new Error('cuotasPagadas no puede ser mayor que el total de cuotas.');
     }
 
     if (tipomonto === 'T') {
       finalMonto = Math.round((monto / cuotas) * 100) / 100;
     }
-  } else {
-    // Si no es cuota, esos campos deberían estar vacíos, pero por si acaso los ignoramos.
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+    throw new Error('La fecha debe tener formato YYYY-MM-DD (o estar vacía en cuotas).');
   }
 
   const catStr = record['categoriaNum'];
@@ -133,6 +140,7 @@ export function validateAndMapRecord(record: CsvRecord): { gasto: Gasto, cuotasP
 
   if (tipo === 'cuota') {
     gasto.cuotas = cuotas;
+    gasto.fechaEnd = addMonthsSafe(gasto.fecha, cuotas - 1);
   }
 
   return { gasto, cuotasPagadas };
@@ -192,4 +200,6 @@ export function mapGastosToCsvRecords(
 
   return records;
 }
+
+
 

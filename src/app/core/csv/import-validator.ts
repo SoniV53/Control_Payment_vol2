@@ -1,4 +1,5 @@
-﻿import { ImportRow } from '../models/import-row.model';
+import { dateSearch } from 'src/app/utils/Utils';
+import { ImportRow } from '../models/import-row.model';
 import { Gasto } from '../models/gasto.model';
 
 export function validateImportRows(
@@ -21,18 +22,21 @@ export function validateImportRows(
 
     // 2. Validate Duplicates
     const isDuplicate = existingGastos.some(existing => {
+      // 1. Nombre
       if (existing.titulo.trim().toLowerCase() !== gasto.titulo.trim().toLowerCase()) return false;
-      const existingFecha = existing.fecha ? existing.fecha.substring(0, 10) : '';
-      const newFecha = gasto.fecha ? gasto.fecha.substring(0, 10) : '';
-      if (existingFecha !== newFecha) return false;
+      
+      // 2. Fecha (Normalizar al primer día del mes porque así lo guarda la BD)
+      const existingFecha = existing.fecha ? existing.fecha.trim().substring(0, 10) : '';
+      const csvFechaRaw = (gasto.fecha || '').trim().substring(0, 10);
+      const csvFecha = dateSearch(csvFechaRaw)[0] || csvFechaRaw;
+      if (existingFecha !== csvFecha) return false;
+      
+      // 3. Tipo
       const existingTipo = (existing.tipo === 'unico' || !existing.tipo) ? 'normal' : existing.tipo;
       const newTipo = (gasto.tipo === 'unico' || !gasto.tipo) ? 'normal' : gasto.tipo;
       if (existingTipo !== newTipo) return false;
 
-      const existingMontoTotal = existingTipo === 'cuota' ? (Number(existing.monto) * (Number(existing.cuotas) || 1)) : Number(existing.monto);
-      const newMontoTotal = newTipo === 'cuota' ? (Number(gasto.monto) * (Number(gasto.cuotas) || 1)) : Number(gasto.monto);
-
-      if (Math.abs(existingMontoTotal - newMontoTotal) > 0.01) return false;
+      // OMITIR validación de monto según solicitud del usuario
 
       return true;
     });
@@ -41,10 +45,10 @@ export function validateImportRows(
       row.errors.push('Posible gasto duplicado encontrado en el sistema.');
       if (!isInvalidCategory) {
         row.status = 'duplicado';
+        row.duplicateAction = 'ignorar';
       }
+    } else if (!isInvalidCategory) {
+      existingGastos.push(gasto);
     }
   }
 }
-
-
-
