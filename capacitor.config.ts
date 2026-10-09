@@ -1,9 +1,11 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'Control_Payment_vol2',
+  appId: 'com.control.pagos',
+  appName: 'Control de Pagos',
   webDir: 'www'
 };
 
 export default config;
+
+
