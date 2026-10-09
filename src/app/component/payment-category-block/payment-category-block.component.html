@@ -1,0 +1,123 @@
+<div class="category-block" *ngIf="categoria">
+  <ng-container *ngIf="categoria?.dataGasto?.length">
+      
+      <!-- HEADER DE CATEGORÍA -->
+      <div class="category-header" (click)="categoria.mostrar = categoria.mostrar === false ? true : false">
+          <div class="cat-icon-container">
+              <ion-icon [src]="getIcon(categoria.icono || '')"></ion-icon>
+          </div>
+          <div class="cat-title">
+              <h3>{{ categoria.nombre }}</h3>
+              <span>{{ categoria?.dataGasto?.length || 0 }} gastos</span>
+          </div>
+          <div class="cat-total-col">
+              <div class="cat-total">GTQ {{ categoria.totalMonto | number:'1.2-2' }}</div>
+              <ion-icon class="expand-icon" [src]="getIcon(categoria.mostrar !== false ? 'chevron-up-outline' : 'chevron-down-outline')" ></ion-icon>
+          </div>
+      </div>
+
+      <!-- LISTA DE GASTOS -->
+      <div class="category-items" *ngIf="categoria.mostrar !== false">
+        <ion-list lines="none" style="background: transparent; padding: 0; margin: 0;">
+          <ion-item-sliding *ngFor="let gasto of categoria?.dataGasto; let last = last" class="custom-sliding-item" #slidingItem>
+            
+            <ion-item style="--background: #16181c; --padding-start: 0; --inner-padding-end: 0;" (click)="clickItem(gasto)" button="true" detail="false">
+              <div class="transaction-row" style="width: 100%; border-bottom: none;" [class.no-border]="last">
+                  
+                  <div class="tx-info">
+                      <div class="title-with-status" style="display: flex; align-items: center; gap: 6px;">
+                          <!-- Dot de estado -->
+                          <div class="status-dot" [class.paid]="gasto.estado === 1" [class.pending]="gasto.estado === 0"></div>
+                          <h4>{{ gasto.titulo }}</h4>
+                      </div>
+                      <p>{{ gasto.fecha | date:'dd MMM yyyy' }}</p>
+                  </div>
+                  
+                  <div class="tx-amount-col">
+                      <span class="tx-amount">GTQ {{ gasto.monto | number:'1.2-2' }}</span>
+                      <span class="tx-tag cuota" *ngIf="gasto.tipo === 'cuota'">Cuota</span>
+                      <span class="tx-tag recurrente" *ngIf="gasto.tipo === 'recurrente'">Recurrente</span>
+                      <span class="tx-tag unico" *ngIf="gasto.tipo === 'normal' || !gasto.tipo">Único</span>
+                  </div>
+                  
+              </div>
+            </ion-item>
+
+            <ion-item-options side="start" (ionSwipe)="onToggleSwipe(gasto, slidingItem)">
+              <ion-item-option expandable="true" class="swipe-track-option" [class.to-pay]="gasto.estado === 0" [class.to-pending]="gasto.estado === 1" (click)="onToggleSwipe(gasto, slidingItem)">
+                <div class="swipe-icon-wrapper">
+                  <ion-icon [src]="getIcon(gasto.estado === 1 ? 'close-circle-outline' : 'checkmark-circle-outline')"></ion-icon>
+                </div>
+              </ion-item-option>
+            </ion-item-options>
+
+          </ion-item-sliding>
+        </ion-list>
+      </div>
+  </ng-container>
+</div>
+<app-modal-template 
+  [isOpen]="isModalOpen" 
+  (closeModal)="closeModal()" 
+  [initialBreakpoint]="0.75" 
+  [breakpoints]="[0, 0.5, 0.75, 1]">
+  
+  <ion-title modal-title style="font-size: 16px; font-weight: 700;">
+    Editar Gasto
+  </ion-title>
+
+  <div class="edit-modal-content" *ngIf="gastoSeleccionado" style="padding-bottom: 35vh;">
+    <div class="header-info" style="margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 style="margin: 0; font-size: 18px; color: #fff;">{{ gastoSeleccionado.titulo }}</h3>
+        <span class="badge-tipo {{ gastoSeleccionado.tipo }}">{{ gastoSeleccionado.tipo | titlecase }}</span>
+      </div>
+      
+      <div style="background: #1e2025; border-radius: 8px; padding: 12px; margin-bottom: 15px; font-size: 14px; color: #8c9ba5;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+          <span>Monto original:</span>
+          <strong style="color: #fff;">GTQ {{ gastoSeleccionado.monto | number:'1.2-2' }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span>Fecha:</span>
+          <strong>{{ gastoSeleccionado.fecha | date:'dd MMM yyyy' }}</strong>
+        </div>
+      </div>
+
+      <ion-item lines="none" style="--background: transparent; --padding-start: 0; --inner-padding-end: 0; margin-bottom: 5px;">
+        <ion-label style="font-weight: 500; color: #fff;">Estado: {{ gastoSeleccionado.estado === 1 ? 'Pagado' : 'Pendiente' }}</ion-label>
+        <ion-toggle slot="end" [checked]="gastoSeleccionado.estado === 1" (ionChange)="onToggleChange($event)" color="success"></ion-toggle>
+      </ion-item>
+    </div>
+
+    <!-- Formulario Dinámico (Normal y Recurrente) -->
+    <div *ngIf="gastoSeleccionado.tipo === 'normal' || !gastoSeleccionado.tipo || gastoSeleccionado.tipo === 'recurrente'" class="form-inputs">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;" *ngIf="gastoSeleccionado.tipo === 'recurrente'">
+        <ion-button fill="clear" size="small" (click)="restablecerRecurrente()" class="btn-restablecer" style="margin: 0; --padding-end: 0;">
+          <ion-icon slot="start" [src]="getIcon('refresh-outline')"></ion-icon>
+          Restablecer
+        </ion-button>
+      </div>
+      <app-dynamic-form 
+          [fields]="listaFormulario">
+      </app-dynamic-form>
+    </div>
+
+
+    <!-- For Cuota -->
+    <div *ngIf="gastoSeleccionado.tipo === 'cuota'" class="info-message">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <p>Los gastos de tipo Cuota no pueden ser editados desde esta vista. Puedes administrarlas desde el módulo de Control de Cuotas.</p>
+      
+      <div class="action-buttons" style="margin-top: 25px;">
+        <button class="btn-update" (click)="onClickNavigate('ControlCuotasPage')">Ir a Control de Cuotas</button>
+      </div>
+
+    </div>
+
+    <div class="action-buttons" *ngIf="gastoSeleccionado.tipo !== 'cuota'" style="margin-top: 25px;">
+      <button class="btn-update" (click)="saveEdit()">Actualizar</button>
+      <button class="btn-delete" (click)="onDelete()">Eliminar</button>
+    </div>
+  </div>
+</app-modal-template>

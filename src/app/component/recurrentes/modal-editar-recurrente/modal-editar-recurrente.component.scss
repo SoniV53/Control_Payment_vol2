@@ -95,14 +95,3 @@
 
 
 
-ion-toggle {
-  --background: rgba(255, 255, 255, 0.1);
-  --background-checked: #00d09c !important;
-  --handle-background: #ffffff !important;
-  margin: 0;
-  
-  &::part(track) {
-    width: 50px;
-    height: 32px;
-  }
-}

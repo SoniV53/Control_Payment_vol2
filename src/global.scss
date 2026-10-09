@@ -169,3 +169,83 @@ ion-modal{
     font-weight: 700;
     letter-spacing: 0.5px;
 }
+
+ion-toggle {
+  --background: rgba(255, 255, 255, 0.1);
+  --background-checked: #00d09c !important;
+  --handle-background: #ffffff !important;
+  margin: 0;
+  
+  &::part(track) {
+    width: 50px;
+    height: 32px;
+  }
+}
+
+
+/* ═══════════════ CATEGORY BLOCK ═══════════════ */
+.category-block {
+  border-radius: 20px;
+  background: #1e2025;
+  margin: 20px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+  .block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 4px;
+
+    .title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      margin-left: 16px;
+
+      ion-icon {
+        color: #8c9ba5;
+        font-size: 18px;
+      }
+
+      h2 {
+        color: #8c9ba5;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+      }
+
+      .count-badge {
+        background: rgba(255, 255, 255, 0.05);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 8px;
+      }
+    }
+
+    .total-text {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      margin-right: 16px;
+      margin-top: 16px;
+    }
+    
+  }
+
+  .block-card {
+    background: #1e2025;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+}

@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input, Output, EventEmitter, Optional, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToggle, IonToolbar, IonFooter, IonButton, IonDatetime, IonItem, IonIcon, IonLabel, IonModal, IonButtons } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToggle, IonToolbar, IonFooter, IonButton, IonDatetime, IonItem, IonIcon, IonLabel, IonModal, IonButtons, ModalController } from '@ionic/angular/standalone';
 import { BasePage } from '../../main/base/base.page';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
 import { Gasto } from 'src/app/core/models/gasto.model';
@@ -32,7 +32,9 @@ export class UpdatePaymentPage extends BasePage implements OnInit {
     title: "Actualiza Gasto",
     description: "Puedes actualizar tu gasto, tomar en cuenta que no todo los campos se podran editar",
   }
-  gasto?: Gasto
+  @Input() gasto?: Gasto;
+  @Input() isModal: boolean = false;
+  @Output() onSaved = new EventEmitter<void>();
   listCategoria: Categoria[] = []
 
   disabledButton = true;
@@ -58,10 +60,15 @@ export class UpdatePaymentPage extends BasePage implements OnInit {
 
   notaMsg = '';
 
-  async ngOnInit() {
-    const param = await this.getParametros();
-    this.gasto = param.gasto;
+  private modalCtrl = inject(ModalController, { optional: true });
 
+  async ngOnInit() {
+    if (!this.gasto) {
+      const param = await this.getParametros();
+      if (param && param.gasto) {
+        this.gasto = param.gasto;
+      }
+    }
   }
 
   async ionViewWillEnter() {
@@ -308,7 +315,15 @@ export class UpdatePaymentPage extends BasePage implements OnInit {
         await this.gastoService.updateGasto(this.gasto, this.isCheck);
 
         this.getAlertSuccess('El gasto se ha actualizado correctamente.');
-        this.resetNavigation();
+        
+        if (this.isModal) {
+          this.onSaved.emit();
+          if (this.modalCtrl) {
+            this.modalCtrl.dismiss({ saved: true });
+          }
+        } else {
+          this.resetNavigation();
+        }
       }
     }, async () => {
       this.getAlertError('No se pudieron cargar los gastos.');
@@ -473,7 +488,15 @@ export class UpdatePaymentPage extends BasePage implements OnInit {
         if (this.gasto) {
           await this.gastoService.eliminarEstadoGasto(this.gasto);
           this.toastMessage("Se Elimino correctamente");
-          this.resetNavigation();
+          
+          if (this.isModal) {
+            this.onSaved.emit();
+            if (this.modalCtrl) {
+              this.modalCtrl.dismiss({ deleted: true });
+            }
+          } else {
+            this.resetNavigation();
+          }
         }
       }, async () => {
         this.getAlertError('No se pudieron cargar.');

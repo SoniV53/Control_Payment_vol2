@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+﻿import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BannerTopComponent } from "../../../component/card/banner-top/banner-top.component";
@@ -14,8 +14,8 @@ import { InputSimpleComponent } from "src/app/component/input/input-simple/input
 import { CatalogoTipoGasto, dateSearch, eNumber, formatDate, formatearMonto, getMesActual, getMesAnterior, getIconPath } from 'src/app/utils/Utils';
 import { Presupuesto } from 'src/app/core/models/presupuesto.model';
 import { UpdateListado } from 'src/app/utils/update-params';
-import { DetalleGastoComponent } from "src/app/component/card/detalle-gasto/detalle-gasto.component";
 import { Subscription } from 'rxjs';
+import { PaymentCategoryBlockComponent } from 'src/app/component/payment-category-block/payment-category-block.component';
 
 @Component({
   selector: 'app-list-payments-month',
@@ -33,7 +33,7 @@ import { Subscription } from 'rxjs';
     IonDatetime,
     IonIcon,
     InputSimpleComponent,
-    DetalleGastoComponent
+    PaymentCategoryBlockComponent
   ]
 })
 export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy {
@@ -43,7 +43,6 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
     description: "Visualiza los gastos realizados en el mes",
   }
   showPopup = false;
-  showModalInfo = false;
   isEditar = false;
 
   listCategoria: Categoria[] = []
@@ -51,7 +50,6 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
   cantidad: number = 0;
   total: number = 0;
   restante: number = 0;
-  gastoSelect?: Gasto;
 
   form: ItemInputData = {
     id: 'presupuesto', titulo: 'Presupuesto', isError: false, placeholder: 'Q 00.00',
@@ -70,7 +68,6 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
 
   ionViewDidLeave() {
     this.closePopupClick();
-    this.showModalInfo = false;
   }
 
   ionViewWillEnter() {
@@ -180,48 +177,60 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
 
   ionChangeInput(form: ItemInputData) { }
 
-  clickItem(gasto: Gasto) {
-    this.gastoSelect = gasto;
-    this.showModalInfo = true;
-  }
-
-  closePopupModalInfo() {
-    this.showModalInfo = false;
-  }
-
-  clickUpdateCheck(gasto: Gasto) {
+  handleTogglePago(event: {gasto: Gasto, isChecked: boolean}) {
     this.baseService(async () => {
-      await this.gastoService.updateEstadoGasto(gasto);
-
-      this.toastMessage("Se actualizo estado correctamente");
-    }, async () => {
-      this.getAlertError('No se pudieron cargar.');
-    });
-  }
-
-  clickDeleteItem(gasto: Gasto) {
-    this.baseService(async () => {
-      await this.gastoService.eliminarEstadoGasto(gasto);
-
-      const categoria = this.listCategoria.find(ga => ga.id == gasto.categoria_id);
-      if (categoria?.dataGasto) {
-        const index = categoria?.dataGasto?.findIndex(res => res.id == gasto.id);
-        categoria?.dataGasto.splice(index, 1);
+      event.gasto.estado = event.isChecked ? 1 : 0;
+      if (event.gasto.gastoCuota) {
+        event.gasto.gastoCuota.estado_cuota = event.isChecked ? 1 : 0;
       }
-      this.total -= gasto.tipo === CatalogoTipoGasto.CUOTA ? (gasto?.gastoCuota?.monto_cuota || 0) : gasto.monto;
-      this.cantidad -= 1;
-      this.restante = eNumber(this.form.valueSelect) - this.total;
-      
+      await this.gastoService.updateEstadoGasto(event.gasto);
 
-      this.showModalInfo = false;
-      this.toastMessage("Se Elimino correctamente");
+      this.getAlertSuccess("Se actualizo estado correctamente");
     }, async () => {
       this.getAlertError('No se pudieron cargar.');
     });
   }
-  clickEditItem(gasto: Gasto) {
-    this.navCtrl.push("UpdatePaymentPage",{gasto:gasto})
-    this.showModalInfo = false;
+
+  reloadCategories(event?: any) {
+    this.getCategorias();
+  }
+
+  saveEditGasto(gasto: Gasto) {
+    this.baseService(async () => {
+      await this.gastoService.updateGasto(gasto, false);
+      this.getAlertSuccess("Se actualizo el gasto correctamente");
+      this.getCategorias();
+    }, async () => {
+      this.getAlertError('No se pudo actualizar el gasto.');
+    });
+  }
+
+  deleteEditGasto(gasto: Gasto) {
+    this.modalDelete(async () => {
+      this.baseService(async () => {
+        await this.gastoService.eliminarEstadoGasto(gasto);
+        this.toastMessage("Se elimino correctamente");
+        this.getCategorias();
+      }, async () => {
+        this.getAlertError('No se pudo eliminar el gasto.');
+      });
+    });
+  }
+
+  loadRecurrenteData(event: {gasto: Gasto, callback: (data: any) => void}) {
+    this.baseService(async () => {
+      if (event.gasto?.recurrente_id) {
+        this.showLoader();
+        const recurrenteList = await this.gastoService.getGastosRecurrentesById(event.gasto.recurrente_id.toString());
+        if (recurrenteList && recurrenteList.length > 0) {
+          event.callback(recurrenteList[0]);
+        }
+        this.dissmissLoader();
+      }
+    }, async () => {
+      this.getAlertError('No se pudo cargar el recurrente original.');
+      this.dissmissLoader();
+    });
   }
 
 }

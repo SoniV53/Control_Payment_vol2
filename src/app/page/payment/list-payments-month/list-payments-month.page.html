@@ -42,56 +42,19 @@
     </div>
 
     <div class="listado-gastos">
-        <div class="category-block" *ngFor="let categoria of listCategoria">
-            
-            <ng-container *ngIf="categoria?.dataGasto?.length">
-                
-                <!-- HEADER DE CATEGORÍA -->
-                <div class="category-header" (click)="categoria.mostrar = categoria.mostrar === false ? true : false">
-                    <div class="cat-icon-container">
-                        <ion-icon [src]="getIcon(categoria.icono || '')"></ion-icon>
-                    </div>
-                    <div class="cat-title">
-                        <h3>{{ categoria.nombre }}</h3>
-                        <span>{{ categoria?.dataGasto?.length || 0 }} gastos</span>
-                    </div>
-                    <div class="cat-total-col">
-                        <div class="cat-total">GTQ {{ categoria.totalMonto | number:'1.2-2' }}</div>
-                        <ion-icon class="expand-icon" [src]="getIcon(categoria.mostrar !== false ? 'chevron-up-outline' : 'chevron-down-outline')" ></ion-icon>
-                    </div>
-                </div>
-
-                <!-- LISTA DE GASTOS (Se oculta si mostrar es false) -->
-                <div class="category-items" *ngIf="categoria.mostrar !== false">
-                    <div class="transaction-row" *ngFor="let gasto of categoria?.dataGasto; let last = last" [class.no-border]="last" (click)="clickItem(gasto)">
-                        
-                        <div class="tx-info">
-                            <div class="title-with-status" style="display: flex; align-items: center; gap: 6px;">
-                                <!-- Dot de estado -->
-                                <div class="status-dot" [class.paid]="gasto.estado === 1" [class.pending]="gasto.estado === 0"></div>
-                                <h4>{{ gasto.titulo }}</h4>
-                            </div>
-                            <p>{{ gasto.fecha | date:'dd MMM yyyy' }}</p>
-                        </div>
-                        
-                        <div class="tx-amount-col">
-                            <span class="tx-amount">GTQ {{ gasto.monto | number:'1.2-2' }}</span>
-                            <span class="tx-tag cuota" *ngIf="gasto.tipo === 'cuota'">Cuota</span>
-                            <span class="tx-tag recurrente" *ngIf="gasto.tipo === 'recurrente'">Recurrente</span>
-                            <span class="tx-tag unico" *ngIf="gasto.tipo === 'normal' || !gasto.tipo">Único</span>
-                        </div>
-                        
-                    </div>
-                </div>
-
-            </ng-container>
-
-        </div>
+        <app-payment-category-block *ngFor="let categoria of listCategoria" 
+            [categoria]="categoria" 
+            [categoriasList]="listCategoria"
+            (editGasto)="saveEditGasto($event)" 
+            (deleteGasto)="deleteEditGasto($event)" 
+            (togglePago)="handleTogglePago($event)"
+            (reloadRecurrente)="loadRecurrenteData($event)">
+        </app-payment-category-block>
     </div>
 </ion-content>
 
 
-<app-modal-base *ngIf="showPopup && this.myApp.dateSelected && !showModalInfo" [showPopup]="showPopup"
+<app-modal-base *ngIf="showPopup && this.myApp.dateSelected" [showPopup]="showPopup"
     (closePopupClick)="closePopupClick()" [isButtonClsHidden]="false" [sheetBottom]="false">
     <div *ngIf="!isEditar">
         <ion-datetime presentation="month-year" doneText="OK" cancelText="Cancelar"
@@ -105,12 +68,4 @@
             [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"></input-simple>
     </div>
 
-</app-modal-base>
-
-<app-modal-base *ngIf="showModalInfo && !showPopup" [showPopup]="showModalInfo"
-    (closePopupClick)="closePopupModalInfo()" [sheetBottom]="false" [isButtonClsHidden]="false">
-    <div style="margin: 24px;">
-        <app-detalle-gasto [gastoSelect]="gastoSelect" (clickCheck)="clickUpdateCheck($event)"
-            (clickDelete)="clickDeleteItem($event)" (clickEdit)="clickEditItem($event)"></app-detalle-gasto>
-    </div>
 </app-modal-base>

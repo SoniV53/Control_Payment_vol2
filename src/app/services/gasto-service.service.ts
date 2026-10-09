@@ -665,15 +665,23 @@ export class GastoServiceService {
           const categoria = categorias.find(c => c.id === gastoBase.categoria_id);
           if (categoria && categoria.dataGasto) {
             categoria.dataGasto.push({
-              ...gastoBase,
-              gastoCuota: cuota
-            });
+                ...gastoBase,
+                estado: cuota.estado_cuota,
+                monto: cuota.monto_cuota,
+                fecha: cuota.fecha_pago,
+                gastoCuota: cuota
+              });
           }
 
 
         });
 
-        resolve(categorias);
+        categorias.forEach(c => {
+            if(c.dataGasto) {
+              c.totalMonto = c.dataGasto.reduce((sum, g) => sum + (g.monto || 0), 0);
+            }
+          });
+          resolve(categorias);
       } catch (error) {
         console.error('Error obteniendo gastos:', error);
         reject(error);
