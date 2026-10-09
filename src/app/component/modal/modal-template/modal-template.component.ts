@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+﻿import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { getIconPath } from 'src/app/utils/Utils';
@@ -17,6 +17,7 @@ export class ModalTemplateComponent {
   @Input() customClass: string = 'detail-modal bottom-sheet';
   @Input() initialBreakpoint?: number = 0.75;
   @Input() breakpoints?: number[] = [0, 0.75, 1];
+  @Input() bgColor: string = '#121212';
   
   @Output() closeModal = new EventEmitter<void>();
 
@@ -29,4 +30,6 @@ export class ModalTemplateComponent {
     return getIconPath(icon, 'assets/ionicons/bar-chart-outline.svg');
   }
 }
+
+
 

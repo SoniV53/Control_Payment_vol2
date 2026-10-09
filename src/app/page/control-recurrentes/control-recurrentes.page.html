@@ -1,37 +1,123 @@
-<ion-header class="ion-no-border">
+﻿<ion-header class="ion-no-border">
   <ion-toolbar>
     <app-banner-top [toolBarData]="toolBar" [loader]="loaderNav"></app-banner-top>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  
-  <!-- Empty State -->
+<ion-content class="ion-padding">
+
+  <app-custom-tabs 
+    [tabs]="tabs" 
+    [selectedTabId]="selectedTabId" 
+    (tabSelected)="selectedTabId = $event; aplicarFiltros()">
+  </app-custom-tabs>
+
+  <div class="premium-filters-wrapper content-filters">
+    <div class="filter-top-row">
+      <div class="search-bar-custom">
+        <ion-icon [src]="getIcon('search-outline')"></ion-icon>
+        <input type="text" placeholder="Buscar gastos..." [(ngModel)]="textoBusqueda" (keyup)="aplicarFiltros()">
+      </div>
+    </div>
+    <app-chips-filter 
+      [chips]="chipList" 
+      [activeChipId]="categoriaSeleccionada" 
+      (chipChanged)="categoriaSeleccionada = $event; aplicarFiltros()">
+    </app-chips-filter>
+  </div>
+
   <app-empty-state 
-    *ngIf="grupos.length === 0"
+    *ngIf="gruposFiltrados.length === 0"
     icon="folder-open-outline"
     title="No tienes gastos recurrentes"
-    subtitle="Tus suscripciones y pagos fijos aparecerán aquí.">
+    subtitle="Tus suscripciones y pagos fijos aparecerán aquí..">
   </app-empty-state>
 
-  <!-- Category Blocks -->
-  <app-recurrentes-block 
-    *ngFor="let grupo of grupos"
-    [grupo]="grupo"
-    (toggleActivo)="toggleDeshabilitar($event.item, $event.event)"
-    (editarRecurrente)="editarRecurrente($event)">
-  </app-recurrentes-block>
+  <ng-container>
+    <app-recurrentes-block 
+      *ngFor="let grupo of gruposFiltrados"
+      [grupo]="grupo"
+      (toggleActivo)="toggleDeshabilitar($event.item, $event.event)"
+      (editarRecurrente)="editarRecurrente($event)">
+    </app-recurrentes-block>
+  </ng-container>
 
   <app-modal-editar-recurrente 
     [isOpen]="isModalOpen" 
     [editData]="editData" 
     [gastosHistoricos]="gastosHistoricos"
+    [categorias]="categoriasList"
     (closeModal)="isModalOpen = false"
     (save)="guardarEdicion()"
     (toggleAll)="toggleAllHistorial($event)"
     (editarGasto)="editarGastoHistorico($event)"
     (eliminarGasto)="eliminarGastoHistorico($event)"
-    (restablecerGasto)="restablecerGastoHistorico($event)">
+    (restablecerGasto)="restablecerGastoHistorico($event)"
+    (eliminarRecurrente)="confirmarEliminarRecurrente()">
   </app-modal-editar-recurrente>
 
+  <app-modal-template [bgColor]="'#16181c'" [isOpen]="isEditHistoryModalOpen" (closeModal)="isEditHistoryModalOpen = false" [initialBreakpoint]="0.5" [breakpoints]="[0, 0.5, 0.75, 1]">
+    <ion-title modal-title style="font-size: 16px; font-weight: 700;">Editar Gasto del Mes</ion-title>
+    
+    <div class="edit-modal-content" *ngIf="gastoHistoricoEditando" style="padding-bottom: 25vh; padding: 16px;">
+      
+      <!-- HEADER INFO (Como en list-payment) -->
+      <div class="header-info" style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h3 style="margin: 0; font-size: 18px; color: #fff;">{{ gastoHistoricoEditando.titulo }}</h3>
+          <span class="badge-tipo recurrente" style="background: rgba(0, 208, 156, 0.1); color: #00d09c; padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: bold; letter-spacing: 0.5px;">RECURRENTE</span>
+        </div>
+        
+        <div style="background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 12px; margin-bottom: 15px; font-size: 14px; color: #8c9ba5;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <span>Monto original:</span>
+            <strong style="color: #fff;">GTQ {{ gastoHistoricoEditando.monto | number:'1.2-2' }}</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Fecha:</span>
+            <strong>{{ gastoHistoricoEditando.fecha | date:'dd MMM yyyy' }}</strong>
+          </div>
+        </div>
+
+        <ion-item lines="none" style="--background: transparent; --padding-start: 0; --inner-padding-end: 0; margin-bottom: 5px;">
+          <ion-label style="font-weight: 500; color: #fff;">Estado: {{ gastoHistoricoEditando.estado === 1 ? 'Pagado' : 'Pendiente' }}</ion-label>
+          <ion-toggle slot="end" [checked]="gastoHistoricoEditando.estado === 1" (ionChange)="gastoHistoricoEditando.estado = $event.detail.checked ? 1 : 0" color="success"></ion-toggle>
+        </ion-item>
+      </div>
+
+      <div class="form-inputs">
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+          <ion-button fill="clear" size="small" (click)="restablecerFormularioOriginal()" class="btn-restablecer" style="margin: 0; --padding-end: 0; --color: #3085d6; font-size: 12px; text-transform: none; font-weight: 500;">
+            <ion-icon slot="start" [src]="getIcon('refresh-outline')"></ion-icon>
+            Restablecer
+          </ion-button>
+        </div>
+        <app-dynamic-form [fields]="editHistoryFields"></app-dynamic-form>
+        
+                <div style="display: flex; gap: 12px; margin-top: 25px;">
+          <ion-button expand="block" style="flex: 1; --background: #00d09c; --color: #121317; font-weight: 600;" shape="round" (click)="guardarGastoHistorico()">
+            Actualizar
+          </ion-button>
+          
+          <ion-button *ngIf="gastoHistoricoEditando.estado !== 2" expand="block" style="flex: 1; --border-color: #ff4961; color: #ff4961;" fill="outline" shape="round" (click)="eliminarGastoHistoricoActivo()">
+            Eliminar
+          </ion-button>
+          
+          <ion-button *ngIf="gastoHistoricoEditando.estado === 2" expand="block" style="flex: 1; --border-color: #3085d6; color: #3085d6;" fill="outline" shape="round" (click)="restablecerGastoHistoricoActivo()">
+            Restaurar
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </app-modal-template>
+
 </ion-content>
+
+
+
+
+
+
+
+
+

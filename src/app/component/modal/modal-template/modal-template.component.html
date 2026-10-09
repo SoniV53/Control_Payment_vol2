@@ -1,4 +1,4 @@
-<ion-modal 
+﻿<ion-modal 
   [isOpen]="isOpen" 
   (didDismiss)="dismiss()" 
   mode="ios" 
@@ -8,7 +8,7 @@
   handle="false">
   <ng-template>
     
-    <ion-item class="item-header" lines="none">
+    <ion-item class="item-header" lines="none" style="--background: transparent;">
         <ng-content select="[modal-title]"></ng-content>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()" class="close-btn-slim">
@@ -17,11 +17,15 @@
         </ion-buttons>
     </ion-item>
 
-    <ion-content class="custom-bg-slim">
+    <ion-content class="custom-bg-slim" style="--background: transparent;">
       <!-- Contenido principal -->
       <ng-content></ng-content>
     </ion-content>
 
   </ng-template>
 </ion-modal>
+
+
+
+
 

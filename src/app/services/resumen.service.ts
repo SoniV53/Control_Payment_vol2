@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { DatabaseServiceService } from '../core/database/database-service.service';
 
 @Injectable({
@@ -65,8 +65,9 @@ export class ResumenService {
     for (let i = 0; i < (resRecurrentes.values?.length || 0); i++) {
       if (!resRecurrentes.values) continue;
       const recurrente = resRecurrentes.values[i];
-      const resDetalle = await db.query(`SELECT * FROM gasto WHERE recurrente_id = ? ORDER BY fecha DESC`, [recurrente.id]);
+      const resDetalle = await db.query(`SELECT * FROM gasto WHERE recurrente_id = ? AND estado != 2 ORDER BY fecha DESC`, [recurrente.id]);
       const detalles = resDetalle.values || [];
+      if (recurrente.activo === 2 && detalles.length === 0) continue;
       
       const pagados = detalles.filter((d: any) => d.estado === 1).length;
       const totalItems = detalles.length;
@@ -97,3 +98,10 @@ export class ResumenService {
     return resultados;
   }
 }
+
+
+
+
+
+
+

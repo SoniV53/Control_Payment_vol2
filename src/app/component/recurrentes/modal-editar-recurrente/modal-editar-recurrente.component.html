@@ -1,4 +1,4 @@
-<app-modal-template [isOpen]="isOpen" (closeModal)="closeModal.emit()">
+﻿<app-modal-template [isOpen]="isOpen" (closeModal)="closeModal.emit()" [bgColor]="'#121212'">
   <ion-title modal-title style="font-size: 16px; font-weight: 700;">
     Editar Servicio
   </ion-title>
@@ -20,6 +20,10 @@
     <ion-button expand="block" class="button-action-main ion-margin-top" shape="round" (click)="guardar()">
      Guardar Cambios
     </ion-button>
+
+    <ion-button expand="block" color="danger" fill="outline" class="ion-margin-top" shape="round" (click)="eliminarRecurrente.emit()">
+     Eliminar Servicio
+    </ion-button>
   </div>
 
   <div class="history-section ion-margin-top">
@@ -29,34 +33,22 @@
       <p>No hay gastos registrados para este servicio todavía.</p>
     </div>
 
-    <ion-list lines="none" class="history-list" *ngIf="gastosHistoricos.length > 0">
-      <ion-item *ngFor="let gasto of gastosHistoricos" class="history-item">
-
-        <ion-checkbox slot="start" mode="ios" [checked]="gasto.estado === 1"
-          (ionChange)="gasto.estado = $event.detail.checked ? 1 : 0"
-          class="history-checkbox"></ion-checkbox>
-
+        <ion-list lines="none" class="history-list" *ngIf="gastosHistoricos.length > 0">
+      <ion-item *ngFor="let gasto of gastosHistoricos" class="history-item" button="true" detail="true" (click)="editarGasto.emit(gasto)">
         <ion-label>
           <h2>{{ gasto.titulo }}</h2>
           <p class="gasto-date">{{ gasto.fecha | date:'MMMM yyyy' | titlecase }}</p>
-          <p class="gasto-date" [style.color]="gasto.estado === 1 ? '#00d09c' : '#8c9ba5'">
+          <p class="gasto-date" [style.color]="gasto.estado === 1 ? '#00d09c' : (gasto.estado === 2 ? '#ff4961' : '#8c9ba5')">
             {{ printStado(gasto.estado) }}
           </p>
         </ion-label>
         <div slot="end" class="history-end">
           <span class="gasto-amount">GTQ {{ gasto.monto | number:'1.2-2' }}</span>
-          
-          <ion-icon [src]="getIcon('create-outline')"  class="edit-history-btn"
-            (click)="editarGasto.emit(gasto)"></ion-icon>
-          <ion-icon [src]="getIcon('trash-outline')"  class="delete-history-btn"
-            (click)="eliminarGasto.emit(gasto.id)"></ion-icon>
-          <div *ngIf="gasto.estado == 2" (click)="restablecerGasto.emit(gasto)"> <ion-icon
-              [src]="getIcon('refresh-outline')"></ion-icon>
-          </div>
-
         </div>
       </ion-item>
     </ion-list>
   </div>
 </app-modal-template>
+
+
 

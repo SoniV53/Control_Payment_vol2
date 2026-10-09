@@ -1,7 +1,7 @@
-// Utiliza clases globales como .detail-modal y .modal-bg
+﻿// Utiliza clases globales como .detail-modal y .modal-bg
 
 .custom-bg-slim {
-  --background: #121212; // Ajustar según tu paleta
+   // Ajustar según tu paleta
   --padding-start: 16px;
   --padding-end: 16px;
   --padding-top: 8px;
@@ -9,7 +9,8 @@
 }
 
 .item-header{
-  --background:  #121212 !important;
+  
   padding: 4px !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
+
