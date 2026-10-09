@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { DatabaseServiceService } from '../core/database/database-service.service';
+import { addMonthsSafe } from '../utils/Utils';
 
 @Injectable({
   providedIn: 'root'
@@ -46,9 +47,9 @@ export class CuotaServiceService {
         );
         if (existeCheck.values && existeCheck.values.length > 0) continue;
 
-        fechaBase.setMonth(fechaBase.getMonth() + 1);
-        const fechaStr = fechaBase.toISOString().split('T')[0];
-        
+        // Usa la fecha original del gasto y suma i - 1 meses
+        const fechaOriginalStr = gasto.fecha ? gasto.fecha.split('T')[0] : new Date().toISOString().split('T')[0];
+        const fechaStr = addMonthsSafe(fechaOriginalStr, i - 1);
         await db.run(
           "INSERT INTO gasto_cuota (gasto_id, numero_cuota, monto_cuota, fecha_pago, estado_cuota) VALUES (?,?,?,?,?)", 
           [gasto.id, i, nuevoMontoCuota, fechaStr, 0]
@@ -101,3 +102,4 @@ export class CuotaServiceService {
                   [editData.titulo, editData.monto, editData.cuotas, editData.categoria_id, gasto.id]);
   }
 }
+

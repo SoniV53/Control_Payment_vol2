@@ -1,4 +1,4 @@
-import { getMoths } from "./IconosList";
+﻿import { getMoths } from "./IconosList";
 
 export const getIconPath = (iconName: string, pordefecto: string = ''): string => {
     if (pordefecto)
@@ -137,3 +137,32 @@ export enum CatalogoTipoGasto {
     CUOTA = 'cuota',
     RECURRENTE = 'recurrente',
 }
+export const addMonthsSafe = (dateStr: string, monthsToAdd: number): string => {
+  if (!dateStr) return '';
+  const parts = dateStr.split('T')[0].split('-');
+  if (parts.length < 3) return '';
+  
+  const y = parseInt(parts[0], 10);
+  const m = parseInt(parts[1], 10) - 1; // 0-11
+  const d = parseInt(parts[2], 10);
+  
+  const totalMonths = y * 12 + m + monthsToAdd;
+  const newYear = Math.floor(totalMonths / 12);
+  const newMonth = totalMonths % 12; // 0-11
+  
+  let date = new Date(newYear, newMonth, d);
+  if (date.getMonth() !== newMonth) {
+    // Clamped to last day of the desired month
+    date = new Date(newYear, newMonth + 1, 0); 
+  }
+  
+  const finalYear = date.getFullYear();
+  const finalMonth = String(date.getMonth() + 1).padStart(2, '0');
+  const finalDay = String(date.getDate()).padStart(2, '0');
+  
+  return `${finalYear}-${finalMonth}-${finalDay}`;
+};
+
+
+
+

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+﻿import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
@@ -12,7 +12,7 @@ import { SelectorSimpleComponent } from "src/app/component/input/selector-simple
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { Capacitor } from '@capacitor/core';
 import { list } from 'ionicons/icons';
-import { getIconPath, validarCuotasConRango } from 'src/app/utils/Utils';
+import { getIconPath, validarCuotasConRango, addMonthsSafe } from 'src/app/utils/Utils';
 import { SelectorModalComponent } from 'src/app/component/input/selector-modal/selector-modal.component';
 import { Categoria } from 'src/app/core/models/categoria.model';
 import { EmptyBaseComponent } from "src/app/component/card/empty-base/empty-base.component";
@@ -337,22 +337,17 @@ export class NewPaymentPage extends BasePage implements OnInit {
       case 'cuota':
         this.calculadoraFechaFinal(form);
         break;
-      case 'cuotaNum':
-        const cuotasPagadas = Number(form.valueSelect);
+        case 'cuotaNum':
+          const cuotasPagadas = Number(form.valueSelect);
 
-        if (!cuotasPagadas || cuotasPagadas <= 0) return;
+          if (!cuotasPagadas || cuotasPagadas <= 0) return;
 
-        const fechaInicial = this.listaFormulario.find(item => item.id === 'fecha');
-        const cuota = this.listaFormulario.find(item => item.id === 'cuota');
+          const fechaInicial = this.listaFormulario.find(item => item.id === 'fecha');
+          const cuota = this.listaFormulario.find(item => item.id === 'cuota');
 
-        if (fechaInicial) {
-          // Calcular fecha restando meses directamente con strings para evitar bug UTC
-          const [y, m, d] = this.myApp.dateToday.split('-').map(Number);
-          const totalMonths = y * 12 + (m - 1) - (cuotasPagadas - 1);
-          const newYear = Math.floor(totalMonths / 12);
-          const newMonth = (totalMonths % 12) + 1;
-          fechaInicial.valueSelect = `${newYear}-${String(newMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        }
+          if (fechaInicial) {
+            fechaInicial.valueSelect = addMonthsSafe(this.myApp.dateToday, -(cuotasPagadas - 1));
+          }
 
         if (cuota?.valueSelect) {
           this.calculadoraFechaFinal({ valueSelect: cuota.valueSelect } as ItemInputData);
@@ -383,14 +378,8 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
 
   sumarMeses(fechaInicial: string | null, cantidadMeses: number): string {
-    if (!fechaInicial) {
-      return '';
-    }
-    const fecha = new Date(fechaInicial);
-
-    fecha.setMonth(fecha.getMonth() + cantidadMeses);
-
-    return this.formatearFecha(fecha);
+    if (!fechaInicial) return '';
+    return addMonthsSafe(fechaInicial, cantidadMeses);
   }
 
   formatearFecha(fecha: Date): string {
@@ -436,3 +425,6 @@ export class NewPaymentPage extends BasePage implements OnInit {
     this.dataSelect = form;
   }
 }
+
+
+

@@ -4,7 +4,7 @@ import { Gasto } from '../core/models/gasto.model';
 import { Capacitor } from '@capacitor/core';
 import { GastoCuota } from '../core/models/gasto-cuota.model';
 import { Presupuesto } from '../core/models/presupuesto.model';
-import { CatalogoTipoGasto, dateSearch, formatDate, getMesActual, getMesAnterior, validarCuotasConRango } from '../utils/Utils';
+import { CatalogoTipoGasto, dateSearch, formatDate, getMesActual, getMesAnterior, validarCuotasConRango, addMonthsSafe } from '../utils/Utils';
 import { Categoria } from '../core/models/categoria.model';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { GastoRecurrente } from '../core/models/gasto_recurrente.model';
@@ -89,10 +89,10 @@ export class GastoServiceService {
           const cuotasPagadas = numCuota || 0;
           const fechaBase = new Date(dateSearch(g.fecha)[0]);
 
-          for (let i = 1; i <= totalCuotas; i++) {
-            const fechaCuota = new Date(fechaBase);
-            fechaCuota.setMonth(fechaBase.getMonth() + (i - 1));
-
+            for (let i = 1; i <= totalCuotas; i++) {
+              // Utilizar funcion segura de suma de meses
+              const fechaBaseStr = dateSearch(g.fecha)[0];
+              const fechaCuotaStr = addMonthsSafe(fechaBaseStr, i - 1);
             const estadoCuota = (i <= cuotasPagadas) ? 1 : 0;
 
             await db.run(
@@ -107,7 +107,7 @@ export class GastoServiceService {
                 id,
                 i,
                 g.monto,
-                formatDate(fechaCuota),
+                fechaCuotaStr,
                 estadoCuota
               ]
             );
@@ -1001,3 +1001,4 @@ export class GastoServiceService {
 
 
 }
+
