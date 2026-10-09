@@ -1,0 +1,69 @@
+﻿<ion-header class="ion-no-border" style="--background: #121317; background: #121317;">
+  <app-banner-top [toolBarData]="toolBar"></app-banner-top>
+  
+  <div style="padding: 0 16px 16px; margin-top: 16px;">
+    <app-custom-tabs 
+      [tabs]="tabList" 
+      [selectedTabId]="currentTab" 
+      (tabSelected)="currentTab = $event; importStep = 1; parsedRows = []; exportSuccess = false; exportError = ''">
+    </app-custom-tabs>
+  </div>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding content-bg ">
+
+  <ng-container *ngIf="currentTab === 'importar'">
+    <!-- Step 1: Input -->
+    <app-csv-input-step 
+      *ngIf="importStep === 1" 
+      [initialText]="currentCsvText"
+      (csvLoaded)="handleCsvLoaded($event)">
+    </app-csv-input-step>
+
+    <!-- Step 2: Preview -->
+    <app-csv-preview-step 
+      *ngIf="importStep === 2"
+      [rows]="parsedRows"
+      (onBack)="handleBackToInput()"
+      (onImport)="handleStartImport()">
+    </app-csv-preview-step>
+
+    <!-- Step 3: Progress & Result -->
+    <app-csv-progress-step 
+      *ngIf="importStep === 3"
+      [rows]="parsedRows"
+      (onDone)="handleImportFinished()"
+      (onReset)="handleImportReset()">
+    </app-csv-progress-step>
+  </ng-container>
+
+  <ng-container *ngIf="currentTab === 'exportar'">
+    <div class="export-container">
+      <div class="export-card">
+        <div class="icon-circle">
+          <ion-icon [src]="getIcon('cloud-download-outline')" ></ion-icon>
+        </div>
+        <h2>Exportar a CSV</h2>
+        <p>Descarga todos tus gastos (normales, cuotas y recurrentes activos) para usarlos en Excel u otras herramientas.</p>
+        
+        <button class="action-btn" (click)="handleExport()" [disabled]="isExporting">
+          {{ isExporting ? 'Generando archivo...' : 'Generar Exportación' }}
+        </button>
+        
+        <div *ngIf="exportSuccess" class="export-msg success">
+          <ion-icon [src]="getIcon('checkmark-circle')" ></ion-icon>
+          ¡Exportación generada correctamente!
+        </div>
+        <div *ngIf="exportError" class="export-msg error">
+          <ion-icon [src]="getIcon('alert-circle')" ></ion-icon>
+          {{ exportError }}
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+</ion-content>
+
+
+
+

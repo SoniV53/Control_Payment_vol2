@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+﻿import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonFooter, IonCol, IonIcon, IonItem, IonLabel } from '@ionic/angular/standalone';
@@ -47,6 +47,7 @@ export class MenuGestionesPage extends BasePage implements OnInit {
         { title: 'Categorías', routerLink: '/categoria', icon: 'pricetags-outline', desc: 'Administrar rubros' },
         { title: 'Historial General', routerLink: '/historial-gastos', icon: 'time-outline', desc: 'Ver todos los meses' },
         { title: 'Resumen Financiero', routerLink: '/resumen-gastos', icon: 'bar-chart-outline', desc: 'Análisis detallado' },
+        { title: 'Importar / Exportar Datos', routerLink: '/importar-exportar', icon: 'sync-outline', desc: 'CSV' },
       ]
     },
   ]
@@ -55,3 +56,4 @@ export class MenuGestionesPage extends BasePage implements OnInit {
   }
 
 }
+

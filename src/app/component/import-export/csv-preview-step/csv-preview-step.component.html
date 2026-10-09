@@ -1,0 +1,87 @@
+﻿<div class="step-container">
+  <div class="step-header">
+    <div class="step-badge">Paso 2</div>
+    <h2>Revisar Datos</h2>
+    <p>Se encontraron {{ rows.length }} registros.</p>
+  </div>
+
+  <div class="cards-list">
+    <div *ngFor="let row of rows" class="preview-card" [ngClass]="row.status">
+      
+      <!-- Card Header -->
+      <div class="card-header">
+        <div class="title-row">
+          <h3>{{ row.gasto?.titulo || row.raw['titulo'] || '(Sin título)' }}</h3>
+          <span class="monto">Q {{ (row.gasto?.monto || row.raw['monto'] || 0) | number:'1.2-2' }}</span>
+        </div>
+        <div class="meta-row">
+          <span class="badge">{{ getTipoLabel(row.gasto?.tipo || row.raw['tipo']) }}</span>
+          <span class="date">{{ row.gasto?.fecha || row.raw['fecha'] }}</span>
+        </div>
+      </div>
+
+      <!-- Errors Section -->
+      <div *ngIf="row.errors.length > 0" class="errors-box">
+        <div class="error-msg" *ngFor="let err of row.errors">
+          <ion-icon [src]="row.status === 'error-formato' || row.status === 'categoria-invalida' ? getIcon('alert-circle') : getIcon('warning')" ></ion-icon>
+          <span>{{ err }}</span>
+        </div>
+      </div>
+
+            <!-- Editable Form for format errors -->
+      <div class="edit-form" *ngIf="row.status === 'error-formato'">
+        <div class="form-title">Corregir Datos</div>
+        <div class="form-grid">
+          <input class="csv-input" type="text" [(ngModel)]="row.raw['titulo']" placeholder="Título">
+          <input class="csv-input" type="number" [(ngModel)]="row.raw['monto']" placeholder="Monto">
+          <input class="csv-input" type="text" [(ngModel)]="row.raw['fecha']" placeholder="YYYY-MM-DD">
+          <select class="csv-select" [(ngModel)]="row.raw['tipo']">
+            <option value="U">Único (U)</option>
+            <option value="C">Cuota (C)</option>
+            <option value="R">Recurrente (R)</option>
+          </select>
+          <input *ngIf="row.raw['tipo'] === 'C' || row.raw['tipo'] === 'c'" class="csv-input" type="number" [(ngModel)]="row.raw['cuotas']" placeholder="Cuotas">
+          <select *ngIf="row.raw['tipo'] === 'C' || row.raw['tipo'] === 'c'" class="csv-select" [(ngModel)]="row.raw['tipomonto']">
+            <option value="M">Mensual (M)</option>
+            <option value="T">Total (T)</option>
+          </select>
+          <input class="csv-input" type="text" [(ngModel)]="row.raw['categoriaNum']" placeholder="ID Categoría">
+          <input class="csv-input" type="text" [(ngModel)]="row.raw['estado']" placeholder="Estado (P/N)">
+        </div>
+        <button class="retry-btn" (click)="reprocesarFila(row)">Guardar y Re-validar</button>
+      </div>
+
+      <!-- Action Section -->
+      <div class="action-section" *ngIf="row.status === 'categoria-invalida'">
+        <label>Selecciona una categoría válida:</label>
+        <app-selector-modal [list]="categoriasMapeadas" [ngModel]="row.categoriaId" (ngModelChange)="resolveCategory(row, $event)" placeholder="Elegir categoría..." modalTitle="Categorías"></app-selector-modal>
+      </div>
+
+      <div class="action-section" *ngIf="row.status === 'duplicado'">
+        <label>Acción para duplicado:</label>
+        <select class="custom-select" [(ngModel)]="row.duplicateAction">
+          <option value="ignorar">Ignorar fila (No importar)</option>
+          <option value="forzar">Importar igual (Forzar)</option>
+        </select>
+      </div>
+
+      <!-- Readonly Category info if ok or duplicado -->
+      <div class="readonly-cat" *ngIf="row.status === 'ok' || row.status === 'duplicado'">
+        <ion-icon [src]="getIcon('pricetag-outline')" ></ion-icon>
+        Categoría: {{ getCategoryName(row.categoriaId) }}
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="actions-row">
+    <button class="btn-secondary" (click)="onBack.emit()">Volver</button>
+    <button class="action-btn" (click)="onImport.emit()" [disabled]="!canImport">
+      Procesar Importación
+    </button>
+  </div>
+</div>
+
+
+
+

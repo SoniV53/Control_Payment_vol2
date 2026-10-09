@@ -1,10 +1,10 @@
-<ion-content [fullscreen]="true" class="content-bg">
-    <ion-header class="ion-no-border">
-        <ion-toolbar>
-            <app-banner-top [toolBarData]="toolBar"></app-banner-top>
-        </ion-toolbar>
-    </ion-header>
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <app-banner-top [toolBarData]="toolBar"></app-banner-top>
+    </ion-toolbar>
+</ion-header>
 
+<ion-content [fullscreen]="true" class="content-bg">
     <div class="menu-container">
         <div *ngFor="let cat of categoriaRow" class="menu-section">
             <h2 class="section-title">{{ cat.title }}</h2>

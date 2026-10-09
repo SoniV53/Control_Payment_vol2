@@ -1,0 +1,50 @@
+﻿<div class="step-container">
+  
+  <div *ngIf="isProcessing" class="processing-view">
+    <div class="icon-circle spin">
+      <ion-icon [src]="getIcon('sync-outline')" ></ion-icon>
+    </div>
+    <h2>Importando Datos</h2>
+    <p>Por favor, no cierres esta pantalla.</p>
+
+    <div class="progress-bar-container" role="progressbar" [attr.aria-valuenow]="progressPercentage" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+    </div>
+    <div class="progress-text">
+      {{ currentProgress }} de {{ total }} registros procesados
+    </div>
+  </div>
+
+  <div *ngIf="!isProcessing && result" class="result-view">
+    <div class="icon-circle" [ngClass]="result.failed === 0 ? 'success' : 'warning'">
+      <ion-icon [src]="result.failed === 0 ? getIcon('checkmark-circle-outline') : getIcon('alert-circle-outline')" ></ion-icon>
+    </div>
+    <h2>Importación Finalizada</h2>
+    
+    <div class="stats-grid">
+      <div class="stat-box success">
+        <span class="value">{{ result.imported }}</span>
+        <span class="label">Importados</span>
+      </div>
+      <div class="stat-box ignored">
+        <span class="value">{{ result.ignored }}</span>
+        <span class="label">Ignorados</span>
+      </div>
+      <div class="stat-box error">
+        <span class="value">{{ result.failed }}</span>
+        <span class="label">Fallidos</span>
+      </div>
+    </div>
+
+    <div class="error-list" *ngIf="result.errors.length > 0">
+      <h3>Detalle de Errores</h3>
+      <div class="error-item" *ngFor="let err of result.errors">
+        Fila {{ err.line }}: {{ err.error }}
+      </div>
+    </div>
+
+    <button class="action-btn" (click)="onReset.emit()">Nueva Importación</button>
+  </div>
+
+</div>
+

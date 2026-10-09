@@ -1,0 +1,105 @@
+﻿<div class="step-container">
+    <div class="tutorial-box">
+    <div class="tutorial-header" (click)="showTutorial = !showTutorial">
+      <div class="title-group">
+        <ion-icon [src]="getIcon('information-circle-outline')"></ion-icon>
+        <span>Estructura esperada del CSV</span>
+      </div>
+      <ion-icon [src]="showTutorial ? getIcon('chevron-up-outline') : getIcon('chevron-down-outline')"></ion-icon>
+    </div>
+    
+    <div class="tutorial-content" *ngIf="showTutorial">
+      <p>Copia el siguiente formato para dárselo a una IA o usarlo como plantilla en Excel. El orden de las columnas es estricto.</p>
+      
+      <div class="code-block">
+        <code>titulo,monto,categoriaNum,tipo,tipomonto,cuotas,cuotasPagadas,fecha,estado
+Desayuno,50,1,U,,,,2024-01-01,P
+Internet,300,2,R,,,,2024-01-01,P
+Celular,1200,3,C,T,12,2,2024-01-01,</code>
+        <button class="copy-btn" (click)="copyTemplate()">
+          <ion-icon [src]="getIcon('copy-outline')"></ion-icon> Copiar
+        </button>
+      </div>
+
+      <ul class="format-list">
+        <li><b>tipo:</b> U (Único), C (Cuota), R (Recurrente).</li>
+        <li><b>tipomonto:</b> Solo para Cuotas (M = Mensual, T = Total).</li>
+        <li><b>fecha:</b> Formato YYYY-MM-DD.</li>
+        <li><b>estado:</b> P (Pagado), N (Pendiente). Vacío en cuotas.</li>
+      </ul>
+
+      <button class="cat-btn" (click)="showCatModal = true">
+        <ion-icon [src]="getIcon('list-outline')"></ion-icon> Ver IDs de Categorías
+      </button>
+    </div>
+  </div>
+
+  <div class="step-header">
+    <div class="step-badge">Paso 1</div>
+    <h2>Origen de datos</h2>
+    <p>Sube un archivo .csv o pega el texto directamente.</p>
+  </div>
+
+  <div class="file-upload-box" (click)="fileInput.click()">
+    <ion-icon [src]="getIcon('document-text-outline')" ></ion-icon>
+    <span>Seleccionar archivo CSV</span>
+    <input #fileInput type="file" accept=".csv,text/csv,application/csv,text/comma-separated-values,application/vnd.ms-excel,text/plain" (change)="onFileSelected($event)" hidden>
+  </div>
+
+  <div class="divider">
+    <span>o pega el texto</span>
+  </div>
+
+  <div class="textarea-wrapper">
+    <button *ngIf="csvText" class="clear-btn" (click)="clearText()" title="Limpiar texto">
+      <ion-icon [src]="getIcon('trash-outline')"></ion-icon>
+    </button>
+  <textarea 
+    class="csv-textarea" 
+    placeholder="titulo,monto,categoriaNum,tipo,tipomonto,cuotas,cuotasPagadas,fecha,estado&#10;Internet,300,1,R,,,,2024-01-01,P"
+    [(ngModel)]="csvText">
+  </textarea>
+  </div>
+
+  <button class="action-btn" (click)="processText()" [disabled]="!csvText.trim()">
+    Revisar Datos
+  </button>
+</div>
+
+
+
+
+<ion-modal [isOpen]="showCatModal" (didDismiss)="showCatModal = false" class="detail-modal bottom-sheet" initialBreakpoint="0.6" [breakpoints]="[0, 0.6, 0.9]" mode="ios">
+  <ng-template>
+    <ion-header class="ion-no-border">
+      <ion-toolbar style="--background: #121317; color: white;">
+        <ion-title>Categorías Disponibles</ion-title>
+        <ion-buttons slot="end">
+          <button style="background: transparent; border: none; color: white; padding: 16px; font-size: 16px;" (click)="showCatModal = false">Cerrar</button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content style="--background: #121317;">
+      <div style="padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+        <button style="background: #00d09c; color: #121317; font-weight: 700; border: none; padding: 12px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; cursor: pointer;" (click)="copyAllCategories()">
+          <ion-icon [src]="getIcon('copy-outline')"></ion-icon> Copiar Toda la Lista
+        </button>
+        <div *ngFor="let cat of categorias" style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <ion-icon [src]="getIcon(cat.icono || 'pricetags-outline')" style="font-size: 24px; color: #00d09c;"></ion-icon>
+            <div>
+              <div style="color: white; font-weight: 600; font-size: 14px;">{{ cat.nombre }}</div>
+              <div style="color: #8c9ba5; font-size: 12px;">ID: {{ cat.id }}</div>
+            </div>
+          </div>
+          <button style="background: rgba(0,208,156,0.1); color: #00d09c; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; cursor: pointer;" (click)="copyCatId(cat)">
+            Copiar ID
+          </button>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+
+

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+﻿import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
@@ -21,6 +21,10 @@ export const routes: Routes = [
   {
     path: 'gestiones',
     loadComponent: () => import('./page/menu/menu-gestiones/menu-gestiones.page').then(m => m.MenuGestionesPage)
+  },
+  {
+    path: 'importar-exportar',
+    loadComponent: () => import('./page/gestiones/importar-exportar/importar-exportar.page').then(m => m.ImportarExportarPage)
   },
   {
     path: 'categoria',
@@ -55,5 +59,6 @@ export const routes: Routes = [
 
 
 ];
+
 
 
