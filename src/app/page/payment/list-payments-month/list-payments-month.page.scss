@@ -2,100 +2,209 @@
     --background: #121317;
 }
 
-.metrics-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin: 16px 0 32px 0;
-}
-
-.metric-card {
-    background: #1e2025;
-    border-radius: 20px;
-    padding: 20px;
+.premium-budget-dashboard {
+    background: linear-gradient(145deg, #1e2025 0%, #16181d 100%);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    border-radius: 24px;
+    padding: 24px;
+    margin: 16px 0 32px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
-    .metric-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #9fa2ac;
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-
-        ion-icon {
-            font-size: 18px;
-            color: #00d09c;
-        }
+    &.collapsed {
+        padding-bottom: 24px;
+        margin-bottom: 16px;
     }
 
-    .metric-value {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: #ffffff;
-        
-        &.edit-value {
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+    }
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0;
+
+        .title-group {
             display: flex;
             align-items: center;
             gap: 8px;
 
-            .edit-icon {
+            ion-icon {
+                color: #8c9ba5;
                 font-size: 1.2rem;
-                color: #00d09c;
-                opacity: 0.7;
+            }
+
+            .toggle-icon {
+                font-size: 1rem;
+                color: #5d6773;
+                transition: transform 0.3s;
+            }
+
+            h2 {
+                margin: 0;
+                color: #8c9ba5;
+                font-size: 0.9rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
             }
         }
 
-        &.warning-value {
-            color: #ff4961;
+        .edit-budget-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-radius: 12px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            ion-icon {
+                font-size: 1rem;
+                color: #00d09c;
+            }
+
+            &:active {
+                background: rgba(255, 255, 255, 0.1);
+                transform: scale(0.95);
+            }
+        }
+    }
+
+    .dashboard-body {
+        margin-top: 24px;
+        transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
+        max-height: 500px; /* arbitrary large enough height */
+        opacity: 1;
+        transform: translateY(0);
+        overflow: hidden;
+
+        &.hide-body {
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-10px);
+            margin-top: 0;
+            pointer-events: none;
+        }
+    }
+
+    .hero-balance {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 32px;
+
+        .label {
+            color: #8c9ba5;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
         }
 
-        &.success-value {
+        .amount {
+            font-size: 2.2rem; /* REDUCIDO DE 2.8rem */
+            font-weight: 800;
             color: #00d09c;
+            line-height: 1;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 15px rgba(0, 208, 156, 0.3);
+            
+            &.danger {
+                color: #ff4961;
+                text-shadow: 0 4px 15px rgba(255, 73, 97, 0.3);
+            }
+        }
+    }
+
+    .progress-section {
+        margin-bottom: 24px;
+
+        .progress-track {
+            background: rgba(255, 255, 255, 0.05);
+            height: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+
+            .progress-fill {
+                height: 100%;
+                border-radius: 8px;
+                transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease, box-shadow 0.4s ease;
+                position: relative;
+                min-width: 2%;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+                    animation: shimmer 2.5s infinite linear;
+                }
+
+                &.safe { background: #00d09c; box-shadow: 0 0 10px rgba(0, 208, 156, 0.5); }
+                &.warning { background: #ffb400; box-shadow: 0 0 10px rgba(255, 180, 0, 0.5); }
+                &.danger { background: #ff4961; box-shadow: 0 0 10px rgba(255, 73, 97, 0.5); }
+            }
+        }
+    }
+
+    .dashboard-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            &.text-right {
+                text-align: right;
+            }
+
+            .label {
+                color: #8c9ba5;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .value {
+                color: #ffffff;
+                font-size: 1.1rem;
+                font-weight: 700;
+
+                &.danger-text {
+                    color: #ff4961;
+                }
+            }
         }
     }
 }
 
-.budget-card {
-    background: linear-gradient(135deg, rgba(0, 208, 156, 0.1) 0%, rgba(30, 32, 37, 1) 100%);
-    border: 1px solid rgba(0, 208, 156, 0.2);
-    position: relative;
-    overflow: hidden;
-
-    &:active {
-        background: rgba(0, 208, 156, 0.15);
-    }
-}
-
-.metrics-row {
-    display: flex;
-    gap: 12px;
-
-    .small-card {
-        flex: 1;
-        padding: 16px;
-
-        .metric-value {
-            font-size: 1.3rem;
-        }
-    }
-}
-
-.metric-footer {
-    text-align: center;
-    color: #8c9ba5;
-    font-size: 0.9rem;
-    margin-top: 8px;
-
-    strong {
-        color: #ffffff;
-    }
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 .listado-gastos {
@@ -106,9 +215,30 @@
 }
 
 .input-presupuesto {
-    margin: 24px 16px;
+    margin: 10px 16px 24px 16px;
+    padding: 0;
+    background: transparent;
+    position: relative;
+
+    h3 {
+        color: #ffffff;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 6px;
+        text-align: center;
+        letter-spacing: 0.5px;
+    }
+
+    .modal-subtitle {
+        color: #8c9ba5;
+        font-size: 0.9rem;
+        text-align: center;
+        margin-bottom: 24px;
+        margin-top: 0;
+    }
 }
-/* Estilos para el listado de gastos re-diseñado */
+/* Estilos para el listado de gastos re-diseï¿½ado */
 .premium-filters-wrapper {
   background: transparent;
   padding: 12px 16px 0;
@@ -184,6 +314,4 @@
   }
 }
 
-
-}
 

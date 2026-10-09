@@ -19,6 +19,18 @@
       </div>
     </div>
 
+    <div class="date-range-row">
+      <div class="date-picker-custom">
+        <ion-icon [src]="getIcon('calendar-outline')"></ion-icon>
+        <input type="month" [(ngModel)]="fechaInicio" (ngModelChange)="aplicarFiltros()">
+      </div>
+      <span class="date-separator">-</span>
+      <div class="date-picker-custom">
+        <ion-icon [src]="getIcon('calendar-outline')"></ion-icon>
+        <input type="month" [(ngModel)]="fechaFin" (ngModelChange)="aplicarFiltros()">
+      </div>
+    </div>
+
     <app-chips-filter [chips]="chipList" [activeChipId]="tabTipo" (chipChanged)="tabTipo = $event; aplicarFiltros()"></app-chips-filter>
   </div>
 </ion-header>
@@ -26,22 +38,64 @@
 <ion-content class="ion-padding custom-bg">
   
   <div class="dashboard-overview">
-    <div class="stat-box">
-      <span>Compromisos</span>
-      <h3>{{ datosFiltrados.length }}</h3>
+    <div class="stat-box standard-box">
+      <div class="icon-wrapper">
+        <ion-icon [src]="getIcon('receipt-outline')"></ion-icon>
+      </div>
+      <div class="stat-content">
+        <span class="label">Compromisos</span>
+        <h3>{{ datosFiltrados.length }}</h3>
+      </div>
     </div>
-    <div class="stat-box accent">
-      <span>Saldo Global</span>
-      <h3>GTQ {{ calcularTotal(datosFiltrados) | number:'1.2-2' }}</h3>
+    <div class="stat-box accent-box">
+      <div class="icon-wrapper">
+        <ion-icon [src]="getIcon('wallet-outline')"></ion-icon>
+      </div>
+      <div class="stat-content">
+        <span class="label">Saldo Global</span>
+        <h3 class="amount-large"><span class="currency">GTQ</span> {{ calcularTotal(datosFiltrados) | number:'1.2-2' }}</h3>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="datosFiltrados.length === 0" class="empty-state">
-    <div class="icon-glow">
-      <ion-icon [src]="getIcon('folder-open-outline')" ></ion-icon>
+    <!-- GRAFICA DE DISTRIBUCION -->
+  <div class="chart-section" *ngIf="graficaDatos.length > 0">
+        <div class="chart-header" (click)="toggleChart()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <ion-icon [src]="getIcon('pie-chart-outline')"></ion-icon>
+        <h3>Distribución por Categoría</h3>
+      </div>
+      <ion-icon [src]="getIcon(isChartCollapsed ? 'chevron-down-outline' : 'chevron-up-outline')" style="color: #8c9ba5;"></ion-icon>
     </div>
-    <p>No hay resultados para mostrar.</p>
+    
+    <div class="chart-content" *ngIf="!isChartCollapsed">
+      <div class="stacked-bar">
+      <div class="bar-segment" *ngFor="let item of graficaDatos" 
+           [style.width.%]="item.porcentaje" 
+           [style.background-color]="item.color">
+      </div>
+    </div>
+
+    <div class="chart-legend">
+      <div class="legend-item" *ngFor="let item of graficaDatos">
+        <div class="legend-left">
+          <div class="legend-color" [style.background-color]="item.color"></div>
+          <div class="legend-info">
+            <span class="legend-name">{{ item.nombre }}</span>
+            <span class="legend-percent">{{ item.porcentaje | number:'1.0-1' }}%</span>
+          </div>
+        </div>
+        <div class="legend-amount"><span class="currency">GTQ</span> {{ item.monto | number:'1.2-2' }}</div>
+      </div>
+    </div>
   </div>
+</div>
+
+  <app-empty-state *ngIf="datosFiltrados.length === 0"
+    icon="folder-open-outline"
+    title="No hay resultados"
+    subtitle="No hay gastos registrados que coincidan con los filtros actuales.">
+  </app-empty-state>
 
   <div class="resumen-container" *ngIf="datosFiltrados.length > 0">
     <div class="resumen-card" *ngFor="let gasto of datosFiltrados" [class.expanded]="gasto.expanded">
@@ -50,15 +104,15 @@
       <div class="card-header" (click)="toggleExpand(gasto)">
         <div class="header-main">
           <div class="icon-box" [ngClass]="gasto.tipo">
-            <ion-icon [name]="gasto.cat_icono || 'pricetag'"></ion-icon>
+            <ion-icon [src]="getIcon(gasto.cat_icono || 'pricetag-outline')"></ion-icon>
           </div>
           <div class="title-col">
             <h3>{{ gasto.titulo }}</h3>
             <span class="category">{{ gasto.categoria }} &bull; {{ gasto.tipo === 'cuota' ? 'Cuota' : 'Recurrente' }}</span>
           </div>
           <div class="amount-col">
-            <span class="monto">GTQ {{ gasto.montoTotal | number:'1.2-2' }}</span>
-            <ion-icon class="expand-icon" [name]="gasto.expanded ? 'chevron-up' : 'chevron-down'"></ion-icon>
+            <span class="monto"><span class="currency">GTQ</span> {{ gasto.montoTotal | number:'1.2-2' }}</span>
+            <ion-icon class="expand-icon" [src]="getIcon(gasto.expanded ? 'chevron-up-outline' : 'chevron-down-outline')"></ion-icon>
           </div>
         </div>
         
@@ -97,7 +151,7 @@
         </div>
 
         <div class="no-pagos" *ngIf="gasto.pagosDetalle.length === 0">
-          No hay registros de pago aÃºn.
+          No hay registros de pago aÃƒÂºn.
         </div>
       </div>
 
@@ -105,5 +159,12 @@
   </div>
 
 </ion-content>
+
+
+
+
+
+
+
 
 

@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BannerTopComponent } from "../../../component/card/banner-top/banner-top.component";
@@ -36,8 +36,9 @@ import { ChipsFilterComponent } from 'src/app/component/filter/chips-filter/chip
     IonSelect,
     IonSelectOption,
     InputSimpleComponent,
-    PaymentCategoryBlockComponent
-  ]
+    PaymentCategoryBlockComponent,
+    ChipsFilterComponent
+]
 })
 export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy {
 
@@ -57,6 +58,7 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
 
   presupuesto: Presupuesto | null = null;
   cantidad: number = 0;
+  isDashboardCollapsed: boolean = false;
   total: number = 0;
   restante: number = 0;
 

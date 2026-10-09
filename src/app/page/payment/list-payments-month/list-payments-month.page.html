@@ -1,4 +1,4 @@
-﻿<ion-content [fullscreen]="true" class="content-bg ion-padding">
+<ion-content [fullscreen]="true" class="content-bg ion-padding">
     <app-banner-top [toolBarData]="toolBar" (onActionTitle)="onActionTitle()" [loader]="loaderNav"></app-banner-top>
 
     <div class="premium-filters-wrapper">
@@ -17,50 +17,61 @@
         </div>
       </div>
 
-            <app-chips-filter 
+        <app-chips-filter 
         [chips]="chipList" 
         [activeChipId]="tabTipo" 
         (chipChanged)="tabTipo = $event; aplicarFiltros()">
       </app-chips-filter>
     </div>
 
-    <div class="metrics-grid">
-        <!-- Tarjeta de Presupuesto -->
-        <div class="metric-card budget-card" (click)="editarPresupuesto()">
-            <div class="metric-header">
-                <ion-icon [src]="getIcon('wallet-outline')" ></ion-icon>
-                <span>Presupuesto</span>
+    <div class="premium-budget-dashboard" [class.collapsed]="isDashboardCollapsed">
+        <!-- Cabecera -->
+        <div class="dashboard-header">
+            <div class="title-group" (click)="isDashboardCollapsed = !isDashboardCollapsed" style="cursor: pointer;">
+                <ion-icon [src]="getIcon('wallet-outline')"></ion-icon>
+                <h2>Balance Mensual</h2>
+                <ion-icon [name]="isDashboardCollapsed ? 'chevron-down-outline' : 'chevron-up-outline'" class="toggle-icon"></ion-icon>
             </div>
-            <div class="metric-value edit-value">
-                {{formatearMontoPr(form.valueSelect)}}
-                <ion-icon [src]="getIcon('create-outline')"  class="edit-icon"></ion-icon>
-            </div>
+            <button class="edit-budget-btn" (click)="editarPresupuesto()">
+                <ion-icon [src]="getIcon('create-outline')"></ion-icon>
+                <span *ngIf="!isDashboardCollapsed">Editar</span>
+            </button>
         </div>
 
-        <div class="metrics-row">
-            <!-- Tarjeta Total Gastos -->
-            <div class="metric-card small-card">
-                <div class="metric-header">
-                    <span>Total Gastos</span>
-                </div>
-                <div class="metric-value warning-value">
-                    {{formatearMontoPr(total)}}
-                </div>
-            </div>
-
-            <!-- Tarjeta Restante -->
-            <div class="metric-card small-card">
-                <div class="metric-header">
-                    <span>Restante</span>
-                </div>
-                <div class="metric-value success-value">
+        <div class="dashboard-body" [class.hide-body]="isDashboardCollapsed">
+            <!-- Héroe: Restante -->
+            <div class="hero-balance">
+                <span class="label">Restante Disponible</span>
+                <div class="amount" [ngClass]="{'danger': restante < 0}">
                     {{formatearMontoPr(restante)}}
                 </div>
             </div>
-        </div>
-        
-        <div class="metric-footer">
-            <span>Cantidad de Gastos: <strong>{{cantidad}}</strong></span>
+
+            <!-- Barra de Progreso -->
+            <div class="progress-section">
+                <div class="progress-track">
+                    <div class="progress-fill" 
+                         [style.width.%]="form.valueSelect > 0 ? (total / form.valueSelect * 100 > 100 ? 100 : total / form.valueSelect * 100) : 0"
+                         [ngClass]="{
+                            'safe': form.valueSelect > 0 && (total / form.valueSelect) <= 0.7,
+                            'warning': form.valueSelect > 0 && (total / form.valueSelect) > 0.7 && (total / form.valueSelect) <= 0.9,
+                            'danger': form.valueSelect > 0 && (total / form.valueSelect) > 0.9
+                         }">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer: Gastos y Presupuesto -->
+            <div class="dashboard-footer">
+                <div class="stat">
+                    <span class="label">Gastos ({{cantidad}})</span>
+                    <span class="value" [ngClass]="{'danger-text': total > form.valueSelect}">{{formatearMontoPr(total)}}</span>
+                </div>
+                <div class="stat text-right">
+                    <span class="label">Presupuesto Máximo</span>
+                    <span class="value">{{formatearMontoPr(form.valueSelect)}}</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -86,6 +97,8 @@
         </ion-datetime>
     </div>
     <div *ngIf="isEditar" class="input-presupuesto" id="div-presupuesto">
+        <h3>Editar Presupuesto</h3>
+        <p class="modal-subtitle">Establece tu nuevo límite mensual</p>
         <input-simple (keyEnter)="blurInput(form); showPopup = false" [id]="form.id" [label]="form.titulo"
             [name]="form.id" [required]="form.required" [type]="form.tipo" [placeholder]="form.placeholder"
             [(ngModel)]="form.valueSelect" (ionBlur)="blurInput(form)" (ionInput)="ionChangeInput(form)"></input-simple>
