@@ -1,19 +1,29 @@
-<ion-content [fullscreen]="true" class="content-bg ion-padding">
-    <app-banner-top [toolBarData]="toolBar" (onActionTitle)="onActionTitle()" [loader]="loaderNav"></app-banner-top>
-
+﻿<ion-header class="ion-no-border header-fixed">
+  <app-banner-top [toolBarData]="toolBar" (onActionTitle)="onActionTitle()" [loader]="loaderNav"></app-banner-top>
+  <div class="filters-fixed" *ngIf="!isBannerCollapsed">
     <div class="premium-filters-wrapper">
-      <div class="filter-top-row">
-        <div class="search-bar-custom">
+      <div class="filter-top-row" style="flex-direction: column; align-items: stretch;">
+        <div class="search-bar-custom" style="width: 100%;">
           <ion-icon [src]="getIcon('search-outline')"></ion-icon>
-          <input type="text" placeholder="Buscar pagos..." [(ngModel)]="textoBusqueda" (keyup)="aplicarFiltros()">
+          <input type="text" placeholder="Buscar pagos..." [(ngModel)]="textoBusqueda" (keyup)="aplicarFiltros()" style="width: 100%;">
         </div>
         
-        <div class="category-selector-box">
-          <ion-icon [src]="getIcon('funnel-outline')"></ion-icon>
-          <ion-select [(ngModel)]="categoriaSeleccionada" (ionChange)="aplicarFiltros()" interface="popover" mode="md">
-            <ion-select-option value="todas">Todas</ion-select-option>
-            <ion-select-option *ngFor="let cat of listCategoria" [value]="cat.id">{{cat.nombre}}</ion-select-option>
-          </ion-select>
+        <div class="filter-selectors-row">
+            <div class="category-selector-box compact">
+              <ion-icon [src]="getIcon('funnel-outline')"></ion-icon>
+              <ion-select [(ngModel)]="categoriaSeleccionada" (ionChange)="aplicarFiltros()" interface="popover" mode="md">
+                <ion-select-option value="todas">Categorías</ion-select-option>
+                <ion-select-option *ngFor="let cat of listCategoria" [value]="cat.id">{{cat.nombre}}</ion-select-option>
+              </ion-select>
+            </div>
+            <div class="category-selector-box compact">
+              <ion-icon [src]="getIcon('checkmark-circle-outline')"></ion-icon>
+              <ion-select [(ngModel)]="estadoSeleccionado" (ionChange)="aplicarFiltros()" interface="popover" mode="md">
+                <ion-select-option value="todos">Estado</ion-select-option>
+                <ion-select-option value="pagados">Pagados</ion-select-option>
+                <ion-select-option value="pendientes">Pendientes</ion-select-option>
+              </ion-select>
+            </div>
         </div>
       </div>
 
@@ -23,6 +33,14 @@
         (chipChanged)="tabTipo = $event; aplicarFiltros()">
       </app-chips-filter>
     </div>
+  </div>
+  <button type="button" class="filters-toggle-handle" (click)="isBannerCollapsed = !isBannerCollapsed" [attr.aria-label]="isBannerCollapsed ? 'Mostrar filtros' : 'Ocultar filtros'" [attr.aria-expanded]="!isBannerCollapsed">
+    <ion-icon [name]="isBannerCollapsed ? 'chevron-down-outline' : 'chevron-up-outline'"></ion-icon>
+    <span>{{ isBannerCollapsed ? 'Mostrar filtros' : 'Ocultar filtros' }}</span>
+  </button>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="content-bg ion-padding">
 
     <div class="premium-budget-dashboard" [class.collapsed]="isDashboardCollapsed">
         <!-- Cabecera -->
@@ -105,6 +123,11 @@
     </div>
 
 </app-modal-base>
+
+
+
+
+
 
 
 

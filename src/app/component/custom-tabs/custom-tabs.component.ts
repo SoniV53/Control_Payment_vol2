@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+﻿import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { getIconPath } from 'src/app/utils/Utils';
@@ -22,6 +22,7 @@ export interface CustomTab {
 export class CustomTabsComponent {
   @Input() tabs: CustomTab[] = [];
   @Input() selectedTabId: string = '';
+  @Input() size: 'default' | 'small' = 'default';
   @Output() tabSelected = new EventEmitter<string>();
 
   getIcon(icon: string) {
@@ -33,4 +34,5 @@ export class CustomTabsComponent {
     this.tabSelected.emit(id);
   }
 }
+
 

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+﻿import { Component, ViewEncapsulation } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule } from '@angular/forms';
@@ -165,19 +165,66 @@ export class ControlCuotasPage extends BasePage {
 
   listaFormularioEditar: any[] = [];
 
-  abrirEditarGasto(gasto: any) {
-    this.gastoSeleccionado = gasto;
-    
-    // Configuramos el JSON del formulario dinámico usando los datos del gasto
-    this.listaFormularioEditar = [
-      { id: 'titulo', titulo: 'Título', placeholder: 'Ingrese el título', tipo: 'text', required: true, valueSelect: gasto.titulo },
-      { id: 'monto', titulo: 'Monto Total (GTQ)', placeholder: '0.00', tipo: 'number', required: true, valueSelect: gasto.monto },
-      { id: 'cuotas', titulo: 'Total de Cuotas', placeholder: '0', tipo: 'number', required: true, valueSelect: gasto.cuotas },
-      { id: 'categoria', titulo: 'Categoría', placeholder: 'Selecciona categoría', tipo: 'select', required: true, valueSelect: gasto.categoria_id, list: this.categoriasMapped }
-    ];
+    modoMonto: string = 'mensual';
 
-    this.isEditModalOpen = true;
-  }
+    abrirEditarGasto(gasto: any) {
+      this.gastoSeleccionado = gasto;
+      this.modoMonto = 'mensual';
+      
+      const montoMensual = gasto.cuotas && gasto.cuotas > 0 ? (gasto.monto / gasto.cuotas) : gasto.monto;
+      
+      this.listaFormularioEditar = [
+        { id: 'titulo', titulo: 'Título', placeholder: 'Ingrese el título', tipo: 'text', required: true, valueSelect: gasto.titulo },
+        { id: 'monto', titulo: 'Monto Mensual (GTQ)', placeholder: '0.00', tipo: 'number', required: true, valueSelect: montoMensual },
+        { id: 'cuotas', titulo: 'Total de Cuotas', placeholder: '0', tipo: 'number', required: true, valueSelect: gasto.cuotas },
+        { id: 'categoria', titulo: 'Categoría', placeholder: 'Selecciona categoría', tipo: 'select', required: true, valueSelect: gasto.categoria_id, list: this.categoriasMapped },
+        { id: 'montoCalculado', titulo: 'Monto Total Calculado (GTQ)', placeholder: '', tipo: 'read', required: false, valueSelect: gasto.monto }
+      ];
+
+      this.isEditModalOpen = true;
+    }
+
+    recalcularMonto() {
+      const montoField = this.listaFormularioEditar.find(f => f.id === 'monto');
+      const calculadoField = this.listaFormularioEditar.find(f => f.id === 'montoCalculado');
+      const cuotasField = this.listaFormularioEditar.find(f => f.id === 'cuotas');
+      
+      if(montoField && calculadoField && cuotasField) {
+         const currentInput = Number(montoField.valueSelect) || 0;
+         const cuotas = Number(cuotasField.valueSelect) || 1;
+         
+         if (this.modoMonto === 'total') {
+            montoField.titulo = 'Monto Total (GTQ)';
+            calculadoField.titulo = 'Monto Mensual Calculado (GTQ)';
+            montoField.valueSelect = currentInput * cuotas;
+            calculadoField.valueSelect = currentInput;
+         } else {
+            montoField.titulo = 'Monto Mensual (GTQ)';
+            calculadoField.titulo = 'Monto Total Calculado (GTQ)';
+            montoField.valueSelect = currentInput / cuotas;
+            calculadoField.valueSelect = currentInput;
+         }
+      }
+    }
+
+    onFormChange(event: any) {
+      if (event && (event.id === 'monto' || event.id === 'cuotas')) {
+        const montoField = this.listaFormularioEditar.find(f => f.id === 'monto');
+        const calculadoField = this.listaFormularioEditar.find(f => f.id === 'montoCalculado');
+        const cuotasField = this.listaFormularioEditar.find(f => f.id === 'cuotas');
+        
+        if(montoField && calculadoField && cuotasField) {
+           const currentInput = Number(montoField.valueSelect) || 0;
+           const cuotas = Number(cuotasField.valueSelect) || 1;
+           
+           if (this.modoMonto === 'total') {
+              calculadoField.valueSelect = currentInput / cuotas;
+           } else {
+              calculadoField.valueSelect = currentInput * cuotas;
+           }
+        }
+      }
+    }
 
   manejarAccionFormularioEditar(event: any) {
     if (event.action === 'select-action') {
@@ -186,14 +233,23 @@ export class ControlCuotasPage extends BasePage {
     }
   }
 
-  guardarEdicion() {
-    // Reconstruimos editData desde los valores actualizados en el formulario dinámico
-    this.editData = {
-      titulo: this.listaFormularioEditar.find(f => f.id === 'titulo')?.valueSelect || '',
-      monto: this.listaFormularioEditar.find(f => f.id === 'monto')?.valueSelect || 0,
-      cuotas: this.listaFormularioEditar.find(f => f.id === 'cuotas')?.valueSelect || 1,
-      categoria_id: this.listaFormularioEditar.find(f => f.id === 'categoria')?.valueSelect || 0
-    };
+    guardarEdicion() {
+      let montoTotalFinal = 0;
+      const montoField = this.listaFormularioEditar.find(f => f.id === 'monto')?.valueSelect || 0;
+      const cuotas = this.listaFormularioEditar.find(f => f.id === 'cuotas')?.valueSelect || 1;
+      
+      if (this.modoMonto === 'total') {
+         montoTotalFinal = Number(montoField);
+      } else {
+         montoTotalFinal = Number(montoField) * Number(cuotas);
+      }
+
+      this.editData = {
+        titulo: this.listaFormularioEditar.find(f => f.id === 'titulo')?.valueSelect || '',
+        monto: montoTotalFinal,
+        cuotas: cuotas,
+        categoria_id: this.listaFormularioEditar.find(f => f.id === 'categoria')?.valueSelect || 0
+      };
 
     this.baseService(
       async () => {
@@ -243,5 +299,7 @@ export class ControlCuotasPage extends BasePage {
     }, 150);
   }
 }
+
+
 
 

@@ -1,4 +1,4 @@
-.tab-bar {
+﻿.tab-bar {
   display: flex;
   gap: 8px;
   padding: 0 16px;
@@ -47,4 +47,28 @@
     }
   }
 }
+
+
+  .tab-bar.small {
+    margin-bottom: 0px;
+    gap: 8px;
+    padding: 0 16px;
+    
+    .tab-btn {
+      padding: 6px 0;
+      font-size: 13px;
+      border-radius: 8px;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.02);
+      
+      ion-icon {
+        font-size: 14px;
+      }
+      
+      &.active {
+        background: rgba(0, 208, 156, 0.06);
+        border-color: rgba(0, 208, 156, 0.2);
+      }
+    }
+  }
 

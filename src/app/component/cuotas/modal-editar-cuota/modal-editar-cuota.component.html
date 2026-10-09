@@ -1,8 +1,16 @@
-<ion-modal [isOpen]="isOpen" (didDismiss)="cerrarModal()" [initialBreakpoint]="0.75" [breakpoints]="[0, 0.75, 1]" class="detail-modal bottom-sheet" mode="ios" style="--border-radius: 24px 24px 0 0;">
+﻿<ion-modal [isOpen]="isOpen" (didDismiss)="cerrarModal()" [initialBreakpoint]="0.75" [breakpoints]="[0, 0.75, 1]" class="detail-modal bottom-sheet" mode="ios" style="--border-radius: 24px 24px 0 0;">
   <ng-template>
     <ion-content class="ion-padding modal-bg" style="--border-radius: 24px 24px 0 0;">
       <div class="inputs-form form-section">
-        <h2 style="color: #ffffff; font-size: 18px; font-weight: 700; margin-top: 0px; margin-bottom: 24px; padding-left: 4px;">Editar Cuota</h2>
+                        <h2 style="color: #ffffff; font-size: 18px; font-weight: 700; margin-top: 0px; margin-bottom: 24px; padding-left: 4px;">Editar Cuota</h2>
+        
+        <div style="margin-bottom: 20px;">
+          <app-custom-tabs size="small"
+            [tabs]="[{id: 'mensual', label: 'Monto Mensual', icon: 'time-outline'}, {id: 'total', label: 'Monto Total', icon: 'wallet-outline'}]"
+            [selectedTabId]="modoMonto"
+            (tabSelected)="onModoChange($event)">
+          </app-custom-tabs>
+        </div>
         
         <app-dynamic-form 
             [fields]="fields"
@@ -16,4 +24,7 @@
     </ion-content>
   </ng-template>
 </ion-modal>
+
+
+
 

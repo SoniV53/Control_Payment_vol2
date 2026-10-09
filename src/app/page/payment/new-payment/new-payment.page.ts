@@ -21,6 +21,7 @@ import { UpdateListado } from 'src/app/utils/update-params';
 import { addIcons } from 'ionicons';
 import { syncOutline } from 'ionicons/icons';
 import { DynamicFormComponent } from 'src/app/component/form/dynamic-form/dynamic-form.component';
+import { CustomTabsComponent } from 'src/app/component/custom-tabs/custom-tabs.component';
 
 addIcons({
   'sync-outline': syncOutline
@@ -32,7 +33,6 @@ export default Swal;
   templateUrl: './new-payment.page.html',
   styleUrls: ['./new-payment.page.scss'],
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [IonIcon, IonItem,
     CommonModule,
     FormsModule,
@@ -50,7 +50,7 @@ export default Swal;
     ModalBaseComponent,
     InputSimpleComponent,
     SelectorSimpleComponent,
-    IonFooter, EmptyBaseComponent, RouterLink, DynamicFormComponent],
+    IonFooter, EmptyBaseComponent, RouterLink, DynamicFormComponent, CustomTabsComponent]
 })
 export class NewPaymentPage extends BasePage implements OnInit {
   toolBar = {
@@ -58,7 +58,32 @@ export class NewPaymentPage extends BasePage implements OnInit {
     description: "Puedes crear un nuevo gasto llenando el siguiente formulario",
   }
   //myForm: FormGroup;
-  valueSegment = 'normal';
+    valueSegment = 'normal';
+    modoMonto = 'mensual';
+
+    cambiarModoMonto(modo: string) {
+      this.modoMonto = modo;
+      const montoField = this.listaFormulario.find(f => f.id === 'monto');
+      const calculadoField = this.listaFormulario.find(f => f.id === 'montoCalculado');
+      const cuotasField = this.listaFormulario.find(f => f.id === 'cuotas' || f.id === 'cuota');
+      
+      if(montoField && calculadoField && cuotasField) {
+         const currentInput = Number(montoField.valueSelect) || 0;
+         const cuotas = Number(cuotasField.valueSelect) || 1;
+         
+         if (this.modoMonto === 'total') {
+            montoField.titulo = 'Monto Total (GTQ)';
+            calculadoField.titulo = 'Monto Mensual Calculado (GTQ)';
+            montoField.valueSelect = String(currentInput * cuotas);
+            calculadoField.valueSelect = String(currentInput);
+         } else {
+            montoField.titulo = 'Monto Mensual (GTQ)';
+            calculadoField.titulo = 'Monto Total Calculado (GTQ)';
+            montoField.valueSelect = String(currentInput / cuotas);
+            calculadoField.valueSelect = String(currentInput);
+         }
+      }
+    }
   myForm!: FormGroup;
   @ViewChild('f') f: NgForm | undefined;
 
@@ -153,37 +178,36 @@ export class NewPaymentPage extends BasePage implements OnInit {
     });
   }
 
-  clickSegment(value: string) {
-    this.valueSegment = value;
-    console.log("Segmento seleccionado: ", this.listaFormulario);
-    if (value === 'cuota') {
-      this.listaFormulario = [...this.listaFormularioMain];
-      this.listaFormulario.push({
-        id: 'cuota', titulo: 'Cuotas', isError: false, placeholder: 'Ingrese el numero de cuotas', tipo: 'number', required: true,
-        valueSelect: ''
-      })
-      this.listaFormulario.push({
-        id: 'cuotaNum', titulo: 'Cuotas Pagadas', isError: false, placeholder: 'Ingrese el numero de cuotas pagadas', tipo: 'number', required: true,
-        valueSelect: '1'
-      })
+    clickSegment(value: string) {
+      this.valueSegment = value;
+      console.log("Segmento seleccionado: ", this.listaFormulario);
+      if (value === 'cuota') {
+        this.listaFormulario = this.listaFormularioMain.map(obj => ({...obj}));
+        const montoField = this.listaFormulario.find(item => item.id === 'monto');
+        if (montoField) montoField.titulo = this.modoMonto === 'mensual' ? 'Monto Mensual (GTQ)' : 'Monto Total (GTQ)';
 
-      this.listaFormulario.push(
-        {
-          id: 'fecha',
-          titulo: `Fecha Inicio: `, isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'read', required: false,
-          valueSelect: this.myApp.dateToday
-        }
-      )
-      this.listaFormulario.push({
-        id: 'fechaEnd', titulo: 'Fecha Final:', isError: false, placeholder: 'Fecha Final (Solo lectura)', tipo: 'read', required: false, valueSelect: ''
-      })
-    } else {
-      this.listaFormulario = [...this.listaFormularioMain];
-      this.listaFormulario.push(
-        { id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.formatearFecha(new Date(this.myApp.dateToday)) }
-      )
-    }
-    this.validButton();
+        this.listaFormulario.push({
+          id: 'cuota', titulo: 'Cuotas', isError: false, placeholder: 'Ingrese el numero de cuotas', tipo: 'number', required: true, valueSelect: ''
+        });
+        this.listaFormulario.push({
+          id: 'cuotaNum', titulo: 'Cuotas Pagadas', isError: false, placeholder: 'Ingrese el numero de cuotas pagadas', tipo: 'number', required: true, valueSelect: '1'
+        });
+        this.listaFormulario.push({
+          id: 'montoCalculado', titulo: this.modoMonto === 'mensual' ? 'Monto Total Calculado (GTQ)' : 'Monto Mensual Calculado (GTQ)', isError: false, placeholder: '', tipo: 'read', required: false, valueSelect: ''
+        });
+        this.listaFormulario.push({
+          id: 'fecha', titulo: 'Fecha Inicio: ', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'read', required: false, valueSelect: this.myApp.dateToday
+        });
+        this.listaFormulario.push({
+          id: 'fechaEnd', titulo: 'Fecha Final:', isError: false, placeholder: 'Fecha Final (Solo lectura)', tipo: 'read', required: false, valueSelect: ''
+        });
+      } else {
+        this.listaFormulario = this.listaFormularioMain.map(obj => ({...obj}));
+        this.listaFormulario.push({
+          id: 'fecha', titulo: 'Fecha Inicio', isError: false, placeholder: 'Seleccione la fecha del gasto', tipo: 'date', required: true, valueSelect: this.formatearFecha(new Date(this.myApp.dateToday))
+        });
+      }
+      this.validButton();
 
     console.log(this.isCheck)
   }
@@ -245,7 +269,9 @@ export class NewPaymentPage extends BasePage implements OnInit {
       const g: Gasto = {
         titulo: this.listaFormulario.find(item => item.id === 'titulo')?.valueSelect || '',
         descripcion: this.listaFormulario.find(item => item.id === 'descripcion')?.valueSelect || '',
-        monto: Number(this.listaFormulario.find(item => item.id === 'monto')?.valueSelect) || 0,
+          monto: this.valueSegment === 'cuota' && this.modoMonto === 'total' ? 
+                 (Number(this.listaFormulario.find(item => item.id === 'monto')?.valueSelect) || 0) / (Number(this.listaFormulario.find(item => item.id === 'cuota')?.valueSelect) || 1) :
+                 Number(this.listaFormulario.find(item => item.id === 'monto')?.valueSelect) || 0,
         categoria_id: Number(this.listaFormulario.find(item => item.id === 'categoria')?.valueSelect) || null,
         etiquetas: '',
         fecha: this.listaFormulario.find(item => item.id === 'fecha')?.valueSelect || '',
@@ -282,7 +308,23 @@ export class NewPaymentPage extends BasePage implements OnInit {
 
   }
 
-  ionChangeInput(form: ItemInputData) {
+    ionChangeInput(form: ItemInputData) {
+      if (this.valueSegment === 'cuota' && (form.id === 'monto' || form.id === 'cuota')) {
+        const montoField = this.listaFormulario.find(f => f.id === 'monto');
+        const calculadoField = this.listaFormulario.find(f => f.id === 'montoCalculado');
+        const cuotasField = this.listaFormulario.find(f => f.id === 'cuota');
+        
+        if(montoField && calculadoField && cuotasField) {
+           const currentInput = Number(montoField.valueSelect) || 0;
+           const cuotas = Number(cuotasField.valueSelect) || 1;
+           
+           if (this.modoMonto === 'total') {
+              calculadoField.valueSelect = String(currentInput / cuotas);
+           } else {
+              calculadoField.valueSelect = String(currentInput * cuotas);
+           }
+        }
+      }
     // form.isError = false;
     // if (form.required && !form.valueSelect) {
     //   form.isError = true;
@@ -425,6 +467,7 @@ export class NewPaymentPage extends BasePage implements OnInit {
     this.dataSelect = form;
   }
 }
+
 
 
 

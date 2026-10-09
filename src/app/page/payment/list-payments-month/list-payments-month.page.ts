@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+﻿import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BannerTopComponent } from "../../../component/card/banner-top/banner-top.component";
@@ -6,7 +6,7 @@ import { CategoryPaymentComponent } from "src/app/component/category-payment/cat
 import { BasePage } from '../../main/base/base.page';
 import { IonicModule } from "@ionic/angular";
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
-import { IonItem, IonContent, IonChip, IonDatetime, IonIcon, IonSelect, IonSelectOption } from "@ionic/angular/standalone";
+import { IonItem, IonContent, IonChip, IonDatetime, IonIcon, IonSelect, IonSelectOption, IonHeader } from "@ionic/angular/standalone";
 import { Categoria } from 'src/app/core/models/categoria.model';
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
@@ -37,7 +37,8 @@ import { ChipsFilterComponent } from 'src/app/component/filter/chips-filter/chip
     IonSelectOption,
     InputSimpleComponent,
     PaymentCategoryBlockComponent,
-    ChipsFilterComponent
+    ChipsFilterComponent,
+    IonHeader
 ]
 })
 export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy {
@@ -54,11 +55,13 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
   textoBusqueda: string = '';
   tabTipo: string = 'todos';
   chipList = [{ id: 'todos', label: 'Todos' }, { id: 'unico', label: 'Único' }, { id: 'recurrente', label: 'Recurrentes' }, { id: 'cuota', label: 'Cuotas' }]; 
-  categoriaSeleccionada: any = 'todas';
+    categoriaSeleccionada: any = 'todas';
+    estadoSeleccionado: string = 'todos';
 
   presupuesto: Presupuesto | null = null;
   cantidad: number = 0;
   isDashboardCollapsed: boolean = false;
+  isBannerCollapsed: boolean = false;
   total: number = 0;
   restante: number = 0;
 
@@ -145,8 +148,14 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
           if (this.tabTipo === 'recurrente' && tipo !== 'recurrente') matchesType = false;
           if (this.tabTipo === 'cuota' && tipo !== 'cuota') matchesType = false;
           if (this.tabTipo === 'unico' && tipo !== 'normal') matchesType = false;
+
+            let matchesEstado = true;
+            const estadoReal = gasto.gastoCuota ? gasto.gastoCuota.estado_cuota : gasto.estado;
+            const estaPagado = estadoReal === 1;
+            if (this.estadoSeleccionado === 'pagados' && !estaPagado) matchesEstado = false;
+            if (this.estadoSeleccionado === 'pendientes' && estaPagado) matchesEstado = false;
           
-          return matchesText && matchesType;
+            return matchesText && matchesType && matchesEstado;
         });
       }
       return catCopy;
@@ -233,6 +242,7 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
       await this.gastoService.updateEstadoGasto(event.gasto);
 
       this.getAlertSuccess("Se actualizo estado correctamente");
+        this.aplicarFiltros();
     }, async () => {
       this.getAlertError('No se pudieron cargar.');
     });
@@ -281,6 +291,8 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
   }
 
 }
+
+
 
 
 

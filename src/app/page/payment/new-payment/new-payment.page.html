@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border">
+﻿<ion-header class="ion-no-border">
     <ion-toolbar>
         <app-banner-top [toolBarData]="toolBar", [loader]="loaderNav"></app-banner-top>
     </ion-toolbar>
@@ -7,15 +7,21 @@
 <ion-content [fullscreen]="true" class="ion-padding content-bg">
     
     <!-- Selector de Tipo de Gasto (Top) -->
-    <div class="segment-container">
-        <ion-segment [(ngModel)]="valueSegment" (ionChange)="clickSegment(valueSegment)" mode="ios" class="custom-segment">
-            <ion-segment-button value="normal">
-                <ion-label>Mensual</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="cuota">
-                <ion-label>En Cuotas</ion-label>
-            </ion-segment-button>
-        </ion-segment>
+    <div class="segment-container" style="margin-bottom: 20px;">
+        <app-custom-tabs 
+            [tabs]="[{id: 'normal', label: 'Mensual', icon: 'calendar-outline'}, {id: 'cuota', label: 'En Cuotas', icon: 'pie-chart-outline'}]"
+            [selectedTabId]="valueSegment"
+            (tabSelected)="clickSegment($event)">
+        </app-custom-tabs>
+    </div>
+
+    <!-- Toggle Monto Mensual / Total (Solo para cuotas) -->
+    <div class="segment-container" *ngIf="valueSegment === 'cuota'" style="margin-bottom: 20px;">
+        <app-custom-tabs size="small"
+            [tabs]="[{id: 'mensual', label: 'Monto Mensual', icon: 'time-outline'}, {id: 'total', label: 'Monto Total', icon: 'wallet-outline'}]"
+            [selectedTabId]="modoMonto"
+            (tabSelected)="cambiarModoMonto($event)">
+        </app-custom-tabs>
     </div>
 
     <!-- Contenedor del Formulario -->
@@ -73,6 +79,10 @@
         </ion-content>
     </ng-template>
 </ion-modal>
+
+
+
+
 
 
 
