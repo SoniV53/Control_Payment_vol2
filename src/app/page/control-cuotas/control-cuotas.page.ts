@@ -6,6 +6,7 @@ import { IonicModule, ToastController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { BasePage } from '../main/base/base.page';
+import Swal from 'sweetalert2';
 import { GastoServiceService } from 'src/app/services/gasto-service.service';
 import { CategoriaServiceService } from 'src/app/services/categoria-service.service';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
@@ -161,67 +162,70 @@ export class ControlCuotasPage extends BasePage {
   }
 
   listaFormularioEditar: any[] = [];
+  modoMonto: string = 'total';
 
-    modoMonto: string = 'mensual';
+  abrirEditarGasto(gasto: any) {
+    this.gastoSeleccionado = gasto;
+    this.modoMonto = 'total';
+    
+    const cuotas = Math.max(1, Number(gasto.cuotas) || 1);
+    const montoTotal = Number(gasto.monto) || 0;
+    const montoMensual = Number((montoTotal / cuotas).toFixed(2));
+    
+    this.listaFormularioEditar = [
+      { id: 'titulo', titulo: 'Título', placeholder: 'Ingrese el título', tipo: 'text', required: true, valueSelect: gasto.titulo },
+      { id: 'monto', titulo: 'Monto Total (GTQ)', placeholder: '0.00', tipo: 'number', required: true, valueSelect: montoTotal },
+      { id: 'cuotas', titulo: 'Total de Cuotas', placeholder: '0', tipo: 'number', required: true, valueSelect: cuotas },
+      { id: 'categoria', titulo: 'Categoría', placeholder: 'Selecciona categoría', tipo: 'select', required: true, valueSelect: gasto.categoria_id, list: this.categoriasMapped },
+      { id: 'montoCalculado', titulo: 'Monto Mensual Calculado (GTQ)', placeholder: '', tipo: 'read', required: false, valueSelect: montoMensual }
+    ];
 
-    abrirEditarGasto(gasto: any) {
-      this.gastoSeleccionado = gasto;
-      this.modoMonto = 'mensual';
+    this.isEditModalOpen = true;
+  }
+
+  recalcularMonto() {
+    const montoField = this.listaFormularioEditar.find(f => f.id === 'monto');
+    const calculadoField = this.listaFormularioEditar.find(f => f.id === 'montoCalculado');
+    const cuotasField = this.listaFormularioEditar.find(f => f.id === 'cuotas');
+    
+    if (montoField && calculadoField && cuotasField) {
+      const currentInput = Number(montoField.valueSelect) || 0;
+      const cuotas = Math.max(1, Number(cuotasField.valueSelect) || 1);
       
-      const montoMensual = gasto.cuotas && gasto.cuotas > 0 ? (gasto.monto / gasto.cuotas) : gasto.monto;
-      
-      this.listaFormularioEditar = [
-        { id: 'titulo', titulo: 'Título', placeholder: 'Ingrese el título', tipo: 'text', required: true, valueSelect: gasto.titulo },
-        { id: 'monto', titulo: 'Monto Mensual (GTQ)', placeholder: '0.00', tipo: 'number', required: true, valueSelect: montoMensual },
-        { id: 'cuotas', titulo: 'Total de Cuotas', placeholder: '0', tipo: 'number', required: true, valueSelect: gasto.cuotas },
-        { id: 'categoria', titulo: 'Categoría', placeholder: 'Selecciona categoría', tipo: 'select', required: true, valueSelect: gasto.categoria_id, list: this.categoriasMapped },
-        { id: 'montoCalculado', titulo: 'Monto Total Calculado (GTQ)', placeholder: '', tipo: 'read', required: false, valueSelect: gasto.monto }
-      ];
-
-      this.isEditModalOpen = true;
+      if (this.modoMonto === 'total') {
+        montoField.titulo = 'Monto Total (GTQ)';
+        calculadoField.titulo = 'Monto Mensual Calculado (GTQ)';
+        const nuevoTotal = Number((currentInput * cuotas).toFixed(2));
+        montoField.valueSelect = nuevoTotal;
+        calculadoField.valueSelect = Number(currentInput.toFixed(2));
+      } else {
+        montoField.titulo = 'Monto Mensual (GTQ)';
+        calculadoField.titulo = 'Monto Total Calculado (GTQ)';
+        const nuevoMensual = Number((currentInput / cuotas).toFixed(2));
+        montoField.valueSelect = nuevoMensual;
+        calculadoField.valueSelect = Number(currentInput.toFixed(2));
+      }
     }
+  }
 
-    recalcularMonto() {
+  onFormChange(event: any) {
+    if (event && (event.id === 'monto' || event.id === 'cuotas')) {
       const montoField = this.listaFormularioEditar.find(f => f.id === 'monto');
       const calculadoField = this.listaFormularioEditar.find(f => f.id === 'montoCalculado');
       const cuotasField = this.listaFormularioEditar.find(f => f.id === 'cuotas');
       
-      if(montoField && calculadoField && cuotasField) {
-         const currentInput = Number(montoField.valueSelect) || 0;
-         const cuotas = Number(cuotasField.valueSelect) || 1;
-         
-         if (this.modoMonto === 'total') {
-            montoField.titulo = 'Monto Total (GTQ)';
-            calculadoField.titulo = 'Monto Mensual Calculado (GTQ)';
-            montoField.valueSelect = currentInput * cuotas;
-            calculadoField.valueSelect = currentInput;
-         } else {
-            montoField.titulo = 'Monto Mensual (GTQ)';
-            calculadoField.titulo = 'Monto Total Calculado (GTQ)';
-            montoField.valueSelect = currentInput / cuotas;
-            calculadoField.valueSelect = currentInput;
-         }
-      }
-    }
-
-    onFormChange(event: any) {
-      if (event && (event.id === 'monto' || event.id === 'cuotas')) {
-        const montoField = this.listaFormularioEditar.find(f => f.id === 'monto');
-        const calculadoField = this.listaFormularioEditar.find(f => f.id === 'montoCalculado');
-        const cuotasField = this.listaFormularioEditar.find(f => f.id === 'cuotas');
+      if (montoField && calculadoField && cuotasField) {
+        const currentInput = Number(montoField.valueSelect) || 0;
+        const cuotas = Math.max(1, Number(cuotasField.valueSelect) || 1);
         
-        if(montoField && calculadoField && cuotasField) {
-           const currentInput = Number(montoField.valueSelect) || 0;
-           const cuotas = Number(cuotasField.valueSelect) || 1;
-           
-           if (this.modoMonto === 'total') {
-              calculadoField.valueSelect = currentInput / cuotas;
-           } else {
-              calculadoField.valueSelect = currentInput * cuotas;
-           }
+        if (this.modoMonto === 'total') {
+          calculadoField.valueSelect = Number((currentInput / cuotas).toFixed(2));
+        } else {
+          calculadoField.valueSelect = Number((currentInput * cuotas).toFixed(2));
         }
       }
     }
+  }
 
   manejarAccionFormularioEditar(event: any) {
     if (event.action === 'select-action') {
@@ -230,33 +234,55 @@ export class ControlCuotasPage extends BasePage {
     }
   }
 
-    guardarEdicion() {
-      let montoTotalFinal = 0;
-      const montoField = this.listaFormularioEditar.find(f => f.id === 'monto')?.valueSelect || 0;
-      const cuotas = this.listaFormularioEditar.find(f => f.id === 'cuotas')?.valueSelect || 1;
-      
-      if (this.modoMonto === 'total') {
-         montoTotalFinal = Number(montoField);
-      } else {
-         montoTotalFinal = Number(montoField) * Number(cuotas);
-      }
+  guardarEdicion() {
+    const montoField = Number(this.listaFormularioEditar.find(f => f.id === 'monto')?.valueSelect) || 0;
+    const cuotas = Math.max(1, Number(this.listaFormularioEditar.find(f => f.id === 'cuotas')?.valueSelect) || 1);
+    
+    let montoTotalFinal = 0;
+    if (this.modoMonto === 'total') {
+      montoTotalFinal = montoField;
+    } else {
+      montoTotalFinal = Number((montoField * cuotas).toFixed(2));
+    }
 
-      this.editData = {
-        titulo: this.listaFormularioEditar.find(f => f.id === 'titulo')?.valueSelect || '',
-        monto: montoTotalFinal,
-        cuotas: cuotas,
-        categoria_id: this.listaFormularioEditar.find(f => f.id === 'categoria')?.valueSelect || 0
-      };
+    const pagadas = this.gastoSeleccionado?.pagadas || 0;
+    if (cuotas < pagadas) {
+      this.getAlertError(`No puedes reducir a ${cuotas} cuotas porque ya tienes ${pagadas} cuota(s) pagadas.`);
+      return;
+    }
+
+    this.editData = {
+      titulo: this.listaFormularioEditar.find(f => f.id === 'titulo')?.valueSelect || '',
+      monto: montoTotalFinal,
+      cuotas: cuotas,
+      categoria_id: Number(this.listaFormularioEditar.find(f => f.id === 'categoria')?.valueSelect) || 0
+    };
 
     this.baseService(
       async () => {
         this.showLoader();
+        Swal.fire({
+          title: 'Actualizando cuotas...',
+          text: 'Recalculando y guardando las cuotas, por favor espera...',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+          heightAuto: false,
+          color: '#ffffff',
+          background: '#1e2025'
+        });
         await this.cuotaService.actualizarGastoYCuotas(this.gastoSeleccionado, this.editData);
+        Swal.close();
         this.getAlertSuccess("Cuota actualizada");
         this.isEditModalOpen = false;
-        this.cargarCuotas();
+        await this.cargarCuotas();
       },
-      async () => { this.getAlertError('Error al actualizar las cuotas.'); },
+      async (err?: any) => { 
+        Swal.close();
+        this.getAlertError(err?.message || 'Error al actualizar las cuotas.'); 
+      },
       async () => { this.dissmissLoader(); }
     );
   }

@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { DatabaseServiceService } from '../core/database/database-service.service';
 import { addMonthsSafe } from '../utils/Utils';
 
@@ -76,30 +76,53 @@ export class CuotaServiceService {
 
   async actualizarGastoYCuotas(gasto: any, editData: any): Promise<void> {
     const db = await this.dbService.getDB();
-    const nuevoMontoCuota = editData.monto / editData.cuotas;
+    const cuotasNuevas = Number(editData.cuotas) || 1;
+    const montoTotalNuevo = Number(editData.monto) || 0;
+    const nuevoMontoCuota = montoTotalNuevo / cuotasNuevas;
 
-    // Recalcular hijos (eliminar los que sobran o agregar los que faltan)
-    if (editData.cuotas < gasto.cuotas) {
-        await db.run("DELETE FROM gasto_cuota WHERE gasto_id = ? AND numero_cuota > ?", [gasto.id, editData.cuotas]);
-    } else if (editData.cuotas > gasto.cuotas) {
-        const resUltima = await db.query("SELECT fecha_pago FROM gasto_cuota WHERE gasto_id = ? ORDER BY numero_cuota DESC LIMIT 1", [gasto.id]);
-        let fechaBase = new Date();
-        if(resUltima.values && resUltima.values.length > 0) {
-          fechaBase = new Date(resUltima.values[0].fecha_pago);
-        }
+    // Obtener cuotas existentes actuales ordenadas
+    const resExistentes = await db.query(
+      "SELECT id, numero_cuota, estado_cuota, fecha_pago FROM gasto_cuota WHERE gasto_id = ? ORDER BY numero_cuota ASC", 
+      [gasto.id]
+    );
+    const cuotasActuales = resExistentes.values || [];
+    const cuotasPagadas = cuotasActuales.filter((c: any) => c.estado_cuota === 1).length;
 
-        for(let i = gasto.cuotas + 1; i <= editData.cuotas; i++) {
-          fechaBase.setMonth(fechaBase.getMonth() + 1);
-          const fechaStr = fechaBase.toISOString().split('T')[0];
-          await db.run("INSERT INTO gasto_cuota (gasto_id, numero_cuota, monto_cuota, fecha_pago) VALUES (?,?,?,?)", 
-          [gasto.id, i, nuevoMontoCuota, fechaStr]);
-        }
+    if (cuotasNuevas < cuotasPagadas) {
+      throw new Error(`No puedes reducir a ${cuotasNuevas} cuotas porque ya existen ${cuotasPagadas} cuotas pagadas.`);
     }
-    
-    // Actualizar datos del gasto principal y ajustar monto de todas las cuotas hijas
+
+    // 1. Si se reducen las cuotas: eliminar las que excedan la nueva cantidad
+    if (cuotasNuevas < cuotasActuales.length) {
+      await db.run("DELETE FROM gasto_cuota WHERE gasto_id = ? AND numero_cuota > ?", [gasto.id, cuotasNuevas]);
+    }
+
+    // 2. Si se aumentan las cuotas: generar las cuotas faltantes hasta cuotasNuevas
+    const fechaOriginalGasto = gasto.fecha ? gasto.fecha.split('T')[0] : new Date().toISOString().split('T')[0];
+
+    for (let i = 1; i <= cuotasNuevas; i++) {
+      const existe = cuotasActuales.find((c: any) => c.numero_cuota === i);
+      if (!existe) {
+        // Calcular fecha segura sumando (i - 1) meses a la fecha original del gasto
+        const fechaCuotaStr = addMonthsSafe(fechaOriginalGasto, i - 1);
+        await db.run(
+          "INSERT INTO gasto_cuota (gasto_id, numero_cuota, monto_cuota, fecha_pago, estado_cuota) VALUES (?,?,?,?,?)",
+          [gasto.id, i, nuevoMontoCuota, fechaCuotaStr, 0]
+        );
+      }
+    }
+
+    // 3. Actualizar el monto de todas las cuotas
     await db.run("UPDATE gasto_cuota SET monto_cuota = ? WHERE gasto_id = ?", [nuevoMontoCuota, gasto.id]);
-    await db.run("UPDATE gasto SET titulo = ?, monto = ?, cuotas = ?, categoria_id = ? WHERE id = ?", 
-                  [editData.titulo, editData.monto, editData.cuotas, editData.categoria_id, gasto.id]);
+
+    // 4. Calcular la nueva fecha final (fechaEnd)
+    const nuevaFechaEnd = addMonthsSafe(fechaOriginalGasto, cuotasNuevas - 1);
+
+    // 5. Actualizar la tabla principal 'gasto'
+    await db.run(
+      "UPDATE gasto SET titulo = ?, monto = ?, cuotas = ?, categoria_id = ?, fechaEnd = ? WHERE id = ?",
+      [editData.titulo, montoTotalNuevo, cuotasNuevas, editData.categoria_id, nuevaFechaEnd, gasto.id]
+    );
   }
 }
 

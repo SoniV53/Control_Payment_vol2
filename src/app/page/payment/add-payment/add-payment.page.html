@@ -64,8 +64,11 @@
   <app-modal-editar-cuota 
     [(isOpen)]="isEditModalOpen"
     [fields]="listaFormularioEditar"
+    [(modoMonto)]="modoMontoCuota"
+    (modoMontoChange)="recalcularMontoCuota()"
     (guardar)="guardarEdicionCuota()"
-    (formAction)="manejarAccionFormularioEditar($event)">
+    (formAction)="manejarAccionFormularioEditar($event)"
+    (formChange)="onFormChangeCuota($event)">
   </app-modal-editar-cuota>
 
   <!-- ═══════════════ Modal Editar Recurrente ═══════════════ -->
