@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { DatabaseServiceService } from '../core/database/database-service.service';
 import { Gasto } from '../core/models/gasto.model';
 import { Capacitor } from '@capacitor/core';
@@ -667,6 +667,7 @@ export class GastoServiceService {
           if (categoria && categoria.dataGasto) {
             categoria.dataGasto.push({
                 ...gastoBase,
+                monto_total: gastoBase.monto,
                 estado: cuota.estado_cuota,
                 monto: cuota.monto_cuota,
                 fecha: cuota.fecha_pago,

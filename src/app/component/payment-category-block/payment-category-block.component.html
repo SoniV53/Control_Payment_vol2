@@ -30,12 +30,15 @@
                           <div class="status-dot" [class.paid]="gasto.estado === 1" [class.pending]="gasto.estado === 0"></div>
                           <h4>{{ gasto.titulo }}</h4>
                       </div>
-                      <p>{{ gasto.fecha | date:'dd MMM yyyy' }}</p>
+                      <p>
+                        {{ gasto.fecha | date:'dd MMM yyyy' }}
+                        <span *ngIf="gasto.tipo === 'cuota' && gasto.gastoCuota"> &bull; Cuota {{ gasto.gastoCuota.numero_cuota }} de {{ gasto.cuotas }}</span>
+                      </p>
                   </div>
                   
                   <div class="tx-amount-col">
                       <span class="tx-amount">GTQ {{ gasto.monto | number:'1.2-2' }}</span>
-                      <span class="tx-tag cuota" *ngIf="gasto.tipo === 'cuota'">Cuota</span>
+                      <span class="tx-tag cuota" *ngIf="gasto.tipo === 'cuota'">Cuota{{ gasto.gastoCuota ? ' ' + gasto.gastoCuota.numero_cuota + '/' + (gasto.cuotas || '') : '' }}</span>
                       <span class="tx-tag recurrente" *ngIf="gasto.tipo === 'recurrente'">Recurrente</span>
                       <span class="tx-tag unico" *ngIf="gasto.tipo === 'normal' || !gasto.tipo">Único</span>
                   </div>
@@ -75,8 +78,16 @@
       
       <div style="background: #1e2025; border-radius: 8px; padding: 12px; margin-bottom: 15px; font-size: 14px; color: #8c9ba5;">
         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-          <span>Monto original:</span>
+          <span>{{ gastoSeleccionado.tipo === 'cuota' ? 'Monto de la cuota:' : 'Monto original:' }}</span>
           <strong style="color: #fff;">GTQ {{ gastoSeleccionado.monto | number:'1.2-2' }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;" *ngIf="gastoSeleccionado.tipo === 'cuota' && gastoSeleccionado.gastoCuota">
+          <span>Cuota del mes:</span>
+          <strong style="color: #00d09c;">Cuota {{ gastoSeleccionado.gastoCuota.numero_cuota }} de {{ gastoSeleccionado.cuotas }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;" *ngIf="gastoSeleccionado.tipo === 'cuota' && gastoSeleccionado.monto_total">
+          <span>Monto total compra:</span>
+          <strong style="color: #fff;">GTQ {{ gastoSeleccionado.monto_total | number:'1.2-2' }}</strong>
         </div>
         <div style="display: flex; justify-content: space-between;">
           <span>Fecha:</span>

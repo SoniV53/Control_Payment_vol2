@@ -15,4 +15,5 @@ export interface Gasto {
   estado?: number; // 0 pendiente, 1 pagado, 2 eliminado
   gastoCuota?:GastoCuota
   cantidad?:number
+  monto_total?:number
 }
