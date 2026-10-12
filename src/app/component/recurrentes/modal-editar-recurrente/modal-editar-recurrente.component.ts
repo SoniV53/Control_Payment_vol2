@@ -122,19 +122,36 @@ export class ModalEditarRecurrenteComponent implements OnChanges, OnDestroy {
     }, 600);
   }
 
+  fechaTemporalSeleccionada: string = '';
+
   manejarFormAction(event: any) {
     if (event.action === 'date-modal') {
       this.selectedDateField = event.field;
+      this.fechaTemporalSeleccionada = event.field.valueSelect || new Date().toISOString().split('T')[0];
       this.showDateModal = true;
     }
   }
 
   onMonthYearChange(event: any) {
     const val = event.detail.value;
-    if (val && this.selectedDateField) {
+    if (val) {
       const yearMonth = val.substring(0, 7);
-      this.selectedDateField.valueSelect = `${yearMonth}-01`;
+      this.fechaTemporalSeleccionada = `${yearMonth}-01`;
     }
+  }
+
+  confirmarFechaModal() {
+    if (this.selectedDateField && this.fechaTemporalSeleccionada) {
+      this.selectedDateField.valueSelect = this.fechaTemporalSeleccionada;
+    }
+    this.showDateModal = false;
+  }
+
+  cancelarFechaModal() {
+    this.showDateModal = false;
+  }
+
+  cerrarFechaModal() {
     this.showDateModal = false;
   }
 

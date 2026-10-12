@@ -1,4 +1,4 @@
-﻿/*
+/*
  * App Global CSS
  * ----------------------------------------------------------------------------
  * Put style rules here that you want to apply globally. These styles are for
@@ -252,3 +252,86 @@ ion-toggle {
 }
 
 ion-modal.dark-modal { --background: #16181c !important; }
+
+/* ═══════════════ DATE PICKER MODAL GLOBAL ═══════════════ */
+ion-modal.date-modal {
+  --width: 330px;
+  --height: 350px;
+  --border-radius: 24px;
+  --box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+
+  &::part(content) {
+    border-radius: 24px;
+    background: #1e2025;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .ion-page {
+    position: relative;
+    contain: content;
+    border-radius: 24px;
+    background: #1e2025;
+    overflow: hidden;
+  }
+
+  .modal-toolbar {
+    --background: #1e2025;
+    --border-color: rgba(255, 255, 255, 0.05);
+    padding: 4px 10px;
+
+    ion-title {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .btn-cancel-modal {
+      --color: #8c9ba5;
+      color: #8c9ba5;
+      font-weight: 500;
+      text-transform: none;
+      font-size: 0.9rem;
+    }
+
+    .btn-save-modal {
+      --color: #00d09c;
+      color: #00d09c;
+      font-weight: 700;
+      text-transform: none;
+      font-size: 0.9rem;
+    }
+  }
+
+  .custom-bg {
+    --background: #1e2025;
+  }
+
+  .datetime-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+
+    ion-datetime.custom-date-premium {
+      --background: #1e2025;
+      background: #1e2025;
+      border-radius: 16px;
+      --wheel-highlight-background: rgba(0, 208, 156, 0.12);
+      --wheel-highlight-border-radius: 12px;
+      --wheel-fade-background-rgb: 30, 32, 37;
+
+      &::part(wheel-item) {
+        color: #8c9ba5;
+        font-size: 1.1rem;
+      }
+      &::part(wheel-item active) {
+        color: #00d09c;
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+

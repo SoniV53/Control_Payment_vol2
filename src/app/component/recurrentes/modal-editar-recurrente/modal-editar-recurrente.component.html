@@ -26,17 +26,23 @@
     </ion-button>
   </div>
 
-  <ion-modal [isOpen]="showDateModal" (didDismiss)="showDateModal = false" class="date-modal">
+  <ion-modal [isOpen]="showDateModal" (didDismiss)="cerrarFechaModal()" class="date-modal">
     <ng-template>
       <ion-header class="ion-no-border">
         <ion-toolbar class="modal-toolbar" mode="ios">
-          <ion-title>Elegir Fecha de Inicio</ion-title>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancelarFechaModal()" class="btn-cancel-modal">Cancelar</ion-button>
+          </ion-buttons>
+          <ion-title>Elegir Fecha</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirmarFechaModal()" class="btn-save-modal">Listo</ion-button>
+          </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="custom-bg ion-padding">
+      <ion-content class="custom-bg ion-padding" [scrollY]="false">
         <div class="datetime-wrapper" style="display: flex; justify-content: center;">
           <ion-datetime presentation="month-year" mode="ios"
-            (ionChange)="onMonthYearChange($event)" class="custom-date-premium" [value]="selectedDateField?.valueSelect || ''"
+            (ionChange)="onMonthYearChange($event)" class="custom-date-premium" [value]="fechaTemporalSeleccionada || selectedDateField?.valueSelect || ''"
             [min]="minYear"
             [max]="maxYear">
           </ion-datetime>
