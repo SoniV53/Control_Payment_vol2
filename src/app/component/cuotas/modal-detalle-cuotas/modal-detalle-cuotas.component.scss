@@ -121,3 +121,32 @@
     }
   }
 }
+
+.infinite-scroll-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0 32px 0;
+  width: 100%;
+
+  .infinite-loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    .infinite-loading-text {
+      color: #8c9ba5;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+  }
+}
+
+ion-spinner {
+  --color: #00d09c;
+  width: 34px;
+  height: 34px;
+}

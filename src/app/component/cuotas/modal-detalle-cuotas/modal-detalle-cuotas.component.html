@@ -32,7 +32,14 @@
 
       <!-- Lista de cuotas -->
       <div class="cuotas-list" *ngIf="detalleCuotas.length > 0">
-        <div *ngFor="let c of detalleCuotas" class="cuota-row" [class.paid]="c.estado_cuota === 1">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 0 4px;" *ngIf="detalleCuotas.length > 10">
+          <span style="color: #8c9ba5; font-size: 13px; font-weight: 600;">Cuotas</span>
+          <span style="color: #8c9ba5; font-size: 12px; font-weight: 600;">
+            Mostrando {{ cuotasPaginadas.length }} de {{ detalleCuotas.length }}
+          </span>
+        </div>
+
+        <div *ngFor="let c of cuotasPaginadas" class="cuota-row" [class.paid]="c.estado_cuota === 1">
           <div class="cuota-number">
             <span>#{{ c.numero_cuota }}</span>
           </div>
@@ -44,6 +51,14 @@
             <span class="cuota-monto">GTQ {{ c.monto_cuota | number:'1.2-2' }}</span>
             <ion-checkbox mode="ios" [checked]="c.estado_cuota === 1" (ionChange)="togglePagoCuota(c, $event)"></ion-checkbox>
           </div>
+        </div>
+      </div>
+
+      <!-- Trigger y Loader automático de Scroll Infinito -->
+      <div #infiniteSentinel class="infinite-scroll-container" *ngIf="cuotasPaginadas.length < detalleCuotas.length">
+        <div class="infinite-loading-content">
+          <ion-spinner name="lines"></ion-spinner>
+          <span class="infinite-loading-text">Por favor espera...</span>
         </div>
       </div>
 

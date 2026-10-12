@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewEncapsulation, OnChanges, OnDestroy, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { IonSpinner } from '@ionic/angular/standalone';
 import Swal from 'sweetalert2';
 import { EmptyStateComponent } from 'src/app/component/empty-state/empty-state.component';
 
@@ -9,16 +10,75 @@ import { EmptyStateComponent } from 'src/app/component/empty-state/empty-state.c
   templateUrl: './modal-detalle-cuotas.component.html',
   styleUrls: ['./modal-detalle-cuotas.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, EmptyStateComponent],
+  imports: [CommonModule, IonicModule, EmptyStateComponent, IonSpinner],
   encapsulation: ViewEncapsulation.None,
 })
-export class ModalDetalleCuotasComponent {
+export class ModalDetalleCuotasComponent implements OnChanges, OnDestroy {
   @Input() isOpen = false;
   @Input() gastoSeleccionado: any = null;
   @Input() detalleCuotas: any[] = [];
 
   @Output() isOpenChange = new EventEmitter<boolean>();
   @Output() confirmarToggle = new EventEmitter<{cuota: any, nuevoEstado: number}>();
+
+  // Scroll inteligente / Paginación progresiva
+  limiteActual: number = 10;
+  cuotasPaginadas: any[] = [];
+  cargandoMas: boolean = false;
+  private observer?: IntersectionObserver;
+
+  @ViewChild('infiniteSentinel') set sentinelElement(el: ElementRef | undefined) {
+    if (el && el.nativeElement) {
+      this.initObserver(el.nativeElement);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['detalleCuotas'] || changes['isOpen']) {
+      this.limiteActual = 10;
+      this.actualizarCuotasPaginadas();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
+  actualizarCuotasPaginadas() {
+    this.cuotasPaginadas = (this.detalleCuotas || []).slice(0, this.limiteActual);
+  }
+
+  initObserver(el: HTMLElement) {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+
+    this.observer = new IntersectionObserver((entries) => {
+      const first = entries[0];
+      if (first && first.isIntersecting && !this.cargandoMas) {
+        if (this.cuotasPaginadas.length < this.detalleCuotas.length) {
+          this.ejecutarCarga();
+        }
+      }
+    }, {
+      root: null,
+      rootMargin: '120px',
+      threshold: 0.1
+    });
+
+    this.observer.observe(el);
+  }
+
+  ejecutarCarga() {
+    this.cargandoMas = true;
+    setTimeout(() => {
+      this.limiteActual += 10;
+      this.actualizarCuotasPaginadas();
+      this.cargandoMas = false;
+    }, 600);
+  }
 
   cerrarModal() {
     this.isOpen = false;
