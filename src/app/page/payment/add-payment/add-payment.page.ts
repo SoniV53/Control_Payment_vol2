@@ -7,6 +7,7 @@ import { GastoRecurrente } from 'src/app/core/models/gasto_recurrente.model';
 import { Categoria } from 'src/app/core/models/categoria.model';
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { CatalogoTipoGasto } from 'src/app/utils/Utils';
+import Swal from 'sweetalert2';
 import { IonicModule, ToastController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
@@ -64,7 +65,7 @@ export class AddPaymentPage extends BasePage {
   // Lógica para el modal de Recurrentes
   isModalRecurrenteOpen = false;
   recurrenteSeleccionado: any = null;
-  editDataRec = { titulo: '', monto: 0, aplicarAtodos: false };
+  editDataRec: any = { titulo: '', monto: 0, categoria_id: null, fechaInicio: '', aplicarAtodos: false };
   gastosHistoricos: any[] = [];
 
   constructor(
@@ -173,6 +174,8 @@ export class AddPaymentPage extends BasePage {
     this.recurrenteSeleccionado = item;
     this.editDataRec.titulo = item.titulo || '';
     this.editDataRec.monto = item.monto || 0;
+    this.editDataRec.categoria_id = item.categoria_id || null;
+    this.editDataRec.fechaInicio = item.fechaInicio || '';
     this.editDataRec.aplicarAtodos = false;
     this.isModalRecurrenteOpen = true;
 
@@ -200,13 +203,30 @@ export class AddPaymentPage extends BasePage {
     if (!this.recurrenteSeleccionado) return;
 
     this.showLoader();
+    Swal.fire({
+      title: 'Actualizando servicio...',
+      text: 'Sincronizando información y meses históricos...',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      heightAuto: false,
+      color: '#ffffff',
+      background: '#1e2025'
+    });
+
     try {
       const db = await this.dbService.getDB();
 
+      // 1. Actualizamos la plantilla principal incluyendo fechaInicio y categoria_id
       await db.run(
-        'UPDATE gasto_recurrente SET titulo = ?, monto = ? WHERE id = ?',
-        [this.editDataRec.titulo, this.editDataRec.monto, this.recurrenteSeleccionado.id]
+        'UPDATE gasto_recurrente SET titulo = ?, monto = ?, categoria_id = ?, fechaInicio = ? WHERE id = ?',
+        [this.editDataRec.titulo, this.editDataRec.monto, this.editDataRec.categoria_id, this.editDataRec.fechaInicio, this.recurrenteSeleccionado.id]
       );
+
+      // 2. Sincronizamos / generamos meses anteriores o faltantes hasta la fecha actual de la app
+      await this.controlService.sincronizarRecurrenteHastaFecha(this.recurrenteSeleccionado.id!, this.myApp.dateSelected);
 
       if (this.editDataRec.aplicarAtodos) {
         for (const gasto of this.gastosHistoricos) {

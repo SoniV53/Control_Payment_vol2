@@ -1,4 +1,4 @@
-﻿<ion-header class="ion-no-border">
+<ion-header class="ion-no-border">
     <ion-toolbar>
         <app-banner-top [toolBarData]="toolBar", [loader]="loaderNav"></app-banner-top>
     </ion-toolbar>
@@ -73,6 +73,7 @@
             <div class="datetime-wrapper">
                 <ion-datetime presentation="month-year" mode="ios"
                     (ionChange)="onMonthYearChange($event)" class="custom-date-premium" [value]="dataSelect?.valueSelect || ''"
+                    [min]="minYear"
                     [max]="maxYear">
                 </ion-datetime>
             </div>

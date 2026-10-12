@@ -48,6 +48,7 @@ export class BasePage {
   ];
 
   maxYear = '';
+  minYear = '';
 
   constructor(public router: Router, public myApp: AppComponent,
     public gastoService: GastoServiceService,
@@ -60,7 +61,8 @@ export class BasePage {
     const date = new Date();
     const year = date.getFullYear();
 
-    this.maxYear = Number(year.toString()) + 10 + '';
+    this.maxYear = (year + 10).toString();
+    this.minYear = (year - 15).toString();
 
     addIcons({ barbellOutline,createOutline,trashOutline,searchOutline,refreshOutline,carOutline });
   }

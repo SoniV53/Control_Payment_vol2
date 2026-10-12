@@ -8,13 +8,17 @@ import { CatalogoTipoGasto, dateSearch, formatDate, getMesActual, getMesAnterior
 import { Categoria } from '../core/models/categoria.model';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { GastoRecurrente } from '../core/models/gasto_recurrente.model';
+import { ControlGastosAutomaticosService } from './control-gastos-automaticos.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GastoServiceService {
 
-  constructor(private dbService: DatabaseServiceService) { }
+  constructor(
+    private dbService: DatabaseServiceService,
+    private controlService: ControlGastosAutomaticosService
+  ) { }
 
 
   async addGasto(g: Gasto, fecha: string, recurrente: boolean, numCuota?: number): Promise<number> {
@@ -84,6 +88,10 @@ export class GastoServiceService {
 
         const result = await db.query(`SELECT last_insert_rowid() as id`);
         const id = result.values?.[0]?.id;
+
+        if (recurrente && idRecurrente) {
+          await this.controlService.sincronizarRecurrenteHastaFecha(idRecurrente, fecha);
+        }
 
         if (!recurrente && g.tipo === 'cuota' && g.cuotas) {
           const totalCuotas = g.cuotas;

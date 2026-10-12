@@ -1,4 +1,4 @@
-﻿import Swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule } from '@angular/forms';
@@ -180,6 +180,7 @@ export class ControlRecurrentesPage extends BasePage {
       titulo: recurrente.titulo || '',
       monto: recurrente.monto || 0,
       categoria_id: recurrente.categoria_id || null,
+      fechaInicio: recurrente.fechaInicio || '',
       aplicarAtodos: false
     };
     this.isModalOpen = true;
@@ -257,16 +258,32 @@ export class ControlRecurrentesPage extends BasePage {
     if (!this.recurrenteSeleccionado) return;
 
     this.showLoader();
+    Swal.fire({
+      title: 'Actualizando servicio...',
+      text: 'Sincronizando información y meses históricos...',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      heightAuto: false,
+      color: '#ffffff',
+      background: '#1e2025'
+    });
+
     try {
       const db = await this.dbService.getDB();
 
-      // 1. Actualizamos la plantilla principal
+      // 1. Actualizamos la plantilla principal incluyendo fechaInicio
       await db.run(
-        'UPDATE gasto_recurrente SET titulo = ?, monto = ?, categoria_id = ? WHERE id = ?',
-        [this.editData.titulo, this.editData.monto, this.editData.categoria_id, this.recurrenteSeleccionado.id]
+        'UPDATE gasto_recurrente SET titulo = ?, monto = ?, categoria_id = ?, fechaInicio = ? WHERE id = ?',
+        [this.editData.titulo, this.editData.monto, this.editData.categoria_id, this.editData.fechaInicio, this.recurrenteSeleccionado.id]
       );
 
-      // 2. Si el toggle está activado, aplicamos nombre y monto a todos los meses
+      // 2. Sincronizamos / generamos meses anteriores o faltantes hasta la fecha actual de la app
+      await this.controlService.sincronizarRecurrenteHastaFecha(this.recurrenteSeleccionado.id!, this.myApp.dateSelected);
+
+      // 3. Si el toggle está activado, aplicamos nombre y monto a todos los meses
       if (this.editData.aplicarAtodos) {
         for (const gasto of this.gastosHistoricos) {
           await db.run(
@@ -276,7 +293,7 @@ export class ControlRecurrentesPage extends BasePage {
         }
       }
 
-      // 3. Guardamos el estado de los checkboxes (si lo marcó como pagado o pendiente)
+      // 4. Guardamos el estado de los checkboxes (si lo marcó como pagado o pendiente)
       for (const gasto of this.gastosHistoricos) {
         await db.run(
           'UPDATE gasto SET estado = ? WHERE id = ?',

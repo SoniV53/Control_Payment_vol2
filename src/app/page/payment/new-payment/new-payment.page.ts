@@ -252,6 +252,20 @@ export class NewPaymentPage extends BasePage implements OnInit {
     if (this.isStartLoad) return;
     this.isStartLoad = true;
     this.disabledButton = true;
+    this.showLoader();
+
+    Swal.fire({
+      title: this.isCheck && this.valueSegment === 'normal' ? 'Generando servicio recurrente...' : 'Guardando gasto...',
+      text: this.isCheck && this.valueSegment === 'normal' ? 'Sincronizando meses históricos, por favor espera...' : 'Por favor espera un momento.',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      heightAuto: false,
+      color: '#ffffff',
+      background: '#1e2025'
+    });
 
    return this.baseService(async () => {
       const g: Gasto = {
@@ -272,9 +286,11 @@ export class NewPaymentPage extends BasePage implements OnInit {
         const ok = validarCuotasConRango(g.fecha, g.fechaEnd || '', g.cuotas || 0);
 
         if (!ok) {
+          Swal.close();
           this.getAlertError('Rango de fechas no valida');
           this.isStartLoad = false;
           this.disabledButton = false;
+          this.dissmissLoader();
           return;
         }
       }
@@ -283,11 +299,13 @@ export class NewPaymentPage extends BasePage implements OnInit {
         this.valueSegment === 'cuota' ?
           Number(this.listaFormulario.find(item => item.id === 'cuotaNum')?.valueSelect) || 1 : 1);
 
+      this.dissmissLoader();
       this.getAlertSuccess('El gasto se ha guardado correctamente.');
       this.resetInputs();
       this.isStartLoad = false;
       this.resetNavigation();
     }, async () => {
+      this.dissmissLoader();
       this.getAlertError('No se pudieron cargar los gastos.');
       this.isStartLoad = false;
       this.disabledButton = false;

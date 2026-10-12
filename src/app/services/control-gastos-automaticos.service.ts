@@ -127,5 +127,92 @@ export class ControlGastosAutomaticosService {
     );
   }
 
+  async sincronizarRecurrenteHastaFecha(recurrenteId: number, fechaHasta?: string): Promise<number> {
+    try {
+      const db = await this.dbService.getDB();
+      const recRes = await db.query(
+        `SELECT * FROM gasto_recurrente WHERE id = ?`,
+        [recurrenteId]
+      );
+      if (!recRes.values?.length) return 0;
+      const recurrente: GastoRecurrente = recRes.values[0];
 
+      if (!recurrente.fechaInicio) return 0;
+
+      const hoy = new Date();
+      const hoyStr = hoy.toISOString().split('T')[0];
+      const targetStr = fechaHasta ? (fechaHasta > hoyStr ? fechaHasta : hoyStr) : hoyStr;
+
+      // Límite de seguridad: Fecha actual menos 15 años
+      const minAnoPermitido = hoy.getFullYear() - 15;
+      const minDateStr = `${minAnoPermitido}-01-01`;
+
+      // Si fechaInicio es más antigua que 15 años atrás, acotar a minDateStr
+      const fechaEfectivaInicio = recurrente.fechaInicio < minDateStr ? minDateStr : recurrente.fechaInicio;
+
+      const [inicioYear, inicioMonth] = fechaEfectivaInicio.split('-').map(n => parseInt(n, 10));
+      const [targetYear, targetMonth] = targetStr.split('-').map(n => parseInt(n, 10));
+
+      let curYear = inicioYear;
+      let curMonth = inicioMonth;
+
+      // Límite máximo de meses (15 años = 180 meses)
+      const MAX_MESES = 180;
+      let mesesGenerados = 0;
+      let iteraciones = 0;
+
+      while (
+        (curYear < targetYear || (curYear === targetYear && curMonth <= targetMonth)) &&
+        iteraciones < MAX_MESES
+      ) {
+        iteraciones++;
+        const curDateStr = `${curYear}-${String(curMonth).padStart(2, '0')}-01`;
+        const [fechaInicioMes, fechaFinMes] = dateSearch(curDateStr);
+
+        const gRes = await db.query(
+          `SELECT id FROM gasto WHERE fecha >= ? AND fecha < ? AND recurrente_id = ?`,
+          [fechaInicioMes, fechaFinMes, recurrente.id]
+        );
+
+        if (!gRes.values?.length) {
+          await db.run(
+            `INSERT INTO gasto (
+                titulo,
+                monto,
+                descripcion,
+                fecha,
+                tipo,
+                etiquetas,
+                categoria_id,
+                recurrente_id,
+                estado
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+              recurrente.titulo,
+              recurrente.monto,
+              recurrente.descripcion ?? null,
+              fechaInicioMes,
+              'recurrente',
+              recurrente.etiquetas ?? null,
+              recurrente.categoria_id,
+              recurrente.id ?? null,
+              0
+            ]
+          );
+          mesesGenerados++;
+        }
+
+        curMonth++;
+        if (curMonth > 12) {
+          curMonth = 1;
+          curYear++;
+        }
+      }
+
+      return mesesGenerados;
+    } catch (error) {
+      console.error('Error sincronizando recurrente histórico:', error);
+      throw error;
+    }
+  }
 }

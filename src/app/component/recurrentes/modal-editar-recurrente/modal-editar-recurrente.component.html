@@ -1,10 +1,10 @@
-﻿<app-modal-template [isOpen]="isOpen" (closeModal)="closeModal.emit()" [bgColor]="'#121212'">
+<app-modal-template [isOpen]="isOpen" (closeModal)="closeModal.emit()" [bgColor]="'#121212'">
   <ion-title modal-title style="font-size: 16px; font-weight: 700;">
     Editar Servicio
   </ion-title>
-  
+
   <div class="form-section">
-    <app-dynamic-form [fields]="fields"></app-dynamic-form>
+    <app-dynamic-form [fields]="fields" (formAction)="manejarFormAction($event)"></app-dynamic-form>
 
     <div class="sub-item-actions ion-margin-top" style="display: flex; align-items: center; background: rgba(0, 0, 0, 0.15); padding: 12px; border-radius: 12px; margin-bottom: 24px;">
       <div class="action-left" style="display: flex; align-items: center; gap: 12px; width: 100%;">
@@ -26,15 +26,39 @@
     </ion-button>
   </div>
 
+  <ion-modal [isOpen]="showDateModal" (didDismiss)="showDateModal = false" class="date-modal">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="modal-toolbar" mode="ios">
+          <ion-title>Elegir Fecha de Inicio</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="custom-bg ion-padding">
+        <div class="datetime-wrapper" style="display: flex; justify-content: center;">
+          <ion-datetime presentation="month-year" mode="ios"
+            (ionChange)="onMonthYearChange($event)" class="custom-date-premium" [value]="selectedDateField?.valueSelect || ''"
+            [min]="minYear"
+            [max]="maxYear">
+          </ion-datetime>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
   <div class="history-section ion-margin-top">
-    <h3 class="history-title">Historial Generado</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 class="history-title" style="margin-bottom: 0;">Historial Generado</h3>
+      <span *ngIf="gastosHistoricos.length > 0" style="color: #8c9ba5; font-size: 12px; font-weight: 600;">
+        Mostrando {{ gastosPaginados.length }} de {{ gastosHistoricos.length }}
+      </span>
+    </div>
 
     <div *ngIf="gastosHistoricos.length === 0" class="no-history">
       <p>No hay gastos registrados para este servicio todavía.</p>
     </div>
 
-        <ion-list lines="none" class="history-list" *ngIf="gastosHistoricos.length > 0">
-      <ion-item *ngFor="let gasto of gastosHistoricos" class="history-item" button="true" detail="true" (click)="editarGasto.emit(gasto)">
+    <ion-list lines="none" class="history-list" *ngIf="gastosHistoricos.length > 0">
+      <ion-item *ngFor="let gasto of gastosPaginados" class="history-item" button="true" detail="true" (click)="editarGasto.emit(gasto)">
         <ion-label>
           <h2>{{ gasto.titulo }}</h2>
           <p class="gasto-date">{{ gasto.fecha | date:'MMMM yyyy' | titlecase }}</p>
@@ -47,6 +71,14 @@
         </div>
       </ion-item>
     </ion-list>
+
+    <!-- Trigger y Loader automático de Scroll Infinito (Idéntico a la imagen) -->
+    <div #infiniteSentinel class="infinite-scroll-container" *ngIf="gastosPaginados.length < gastosHistoricos.length">
+      <div class="infinite-loading-content">
+        <ion-spinner name="lines"></ion-spinner>
+        <span class="infinite-loading-text">Por favor espera...</span>
+      </div>
+    </div>
   </div>
 </app-modal-template>
 
