@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol, IonItem, IonIcon } from '@ionic/angular/standalone';
 import { getIconPath } from 'src/app/utils/Utils';
 
@@ -9,7 +9,7 @@ import { getIconPath } from 'src/app/utils/Utils';
   styleUrls: ['./card-option.component.scss'],
   imports: [IonIcon, IonItem, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonGrid, IonRow, IonCol,CommonModule],
 })
-export class CardOptionComponent implements OnInit {
+export class CardOptionComponent {
 
   @Input() dataCard = {
     title: "",
@@ -18,11 +18,7 @@ export class CardOptionComponent implements OnInit {
   }
   @Input() tipo: 'card'|'list' = 'card';
 
-  constructor() { 
-   // addIcons({arrowForwardOutline});
-  }
-
-  ngOnInit() { }
+  constructor() { }
 
   getIcon() {
     return getIconPath(this.dataCard.icon,'assets/ionicons/bar-chart-outline.svg');

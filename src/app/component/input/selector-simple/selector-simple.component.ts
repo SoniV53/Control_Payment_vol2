@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ValueAccessorBase } from '../../form/value-accessor';
-import { IonSelect, IonSelectOption, IonIcon, IonGrid, IonRow, IonCol, IonInput, IonItem, IonLabel } from "@ionic/angular/standalone";
+import { IonSelect, IonSelectOption, IonIcon, IonItem, IonLabel } from "@ionic/angular/standalone";
 import { CommonModule } from '@angular/common';
 import { getIconPath } from 'src/app/utils/Utils';
-import { ModalBaseComponent } from "../../modal-base/modal-base.component";
 
 @Component({
   selector: 'selector-simple',
@@ -17,7 +16,7 @@ import { ModalBaseComponent } from "../../modal-base/modal-base.component";
       multi: true
     }
   ],
-  imports: [IonLabel, IonItem, IonInput, IonCol, IonRow, IonGrid, IonIcon, IonSelect, IonSelectOption, CommonModule, ModalBaseComponent],
+  imports: [IonLabel, IonItem, IonIcon, IonSelect, IonSelectOption, CommonModule],
 
 })
 export class SelectorSimpleComponent extends ValueAccessorBase<string> implements OnInit {

@@ -1,4 +1,4 @@
-﻿import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule } from '@angular/forms';
@@ -9,8 +9,6 @@ import { BasePage } from '../main/base/base.page';
 import { GastoServiceService } from 'src/app/services/gasto-service.service';
 import { CategoriaServiceService } from 'src/app/services/categoria-service.service';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
-import { InputSimpleComponent } from "src/app/component/input/input-simple/input-simple.component";
-import { SelectorSimpleComponent } from "src/app/component/input/selector-simple/selector-simple.component";
 import { AppComponent } from 'src/app/app.component';
 import { ControlGastosAutomaticosService } from 'src/app/services/control-gastos-automaticos.service';
 import { NavCtrl } from 'src/app/services/nav-ctrl';
@@ -18,7 +16,6 @@ import { CuotaServiceService } from 'src/app/services/cuota-service.service';
 import { CategoryBlockComponent } from 'src/app/component/cuotas/category-block/category-block.component';
 import { EmptyStateComponent } from 'src/app/component/empty-state/empty-state.component';
 import { ModalDetalleCuotasComponent } from 'src/app/component/cuotas/modal-detalle-cuotas/modal-detalle-cuotas.component';
-import { SelectorModalComponent } from 'src/app/component/input/selector-modal/selector-modal.component';
 import { ModalEditarCuotaComponent } from 'src/app/component/cuotas/modal-editar-cuota/modal-editar-cuota.component';
 import { CustomTabsComponent } from 'src/app/component/custom-tabs/custom-tabs.component';
 
@@ -28,7 +25,7 @@ import { CustomTabsComponent } from 'src/app/component/custom-tabs/custom-tabs.c
   styleUrls: ['./control-cuotas.page.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, InputSimpleComponent, SelectorSimpleComponent, CategoryBlockComponent, EmptyStateComponent, ModalDetalleCuotasComponent, SelectorModalComponent, ModalEditarCuotaComponent, CustomTabsComponent]
+  imports: [IonicModule, CommonModule, FormsModule, BannerTopComponent, CategoryBlockComponent, EmptyStateComponent, ModalDetalleCuotasComponent, ModalEditarCuotaComponent, CustomTabsComponent]
 })
 export class ControlCuotasPage extends BasePage {
   toolBar = { title: "Control de Cuotas", description: "Administra tus cuotas." };

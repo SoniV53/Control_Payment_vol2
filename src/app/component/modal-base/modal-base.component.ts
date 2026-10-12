@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
 import { IonContent, IonIcon } from "@ionic/angular/standalone";
@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [IonIcon, IonContent, CommonModule]
 })
-export class ModalBaseComponent implements OnInit, OnChanges {
+export class ModalBaseComponent implements OnChanges {
   @Input() showPopup: boolean = false;
   @Input() isButtonClsHidden: boolean = true;
   @Input() sheetBottom: boolean = true;
@@ -31,10 +31,4 @@ export class ModalBaseComponent implements OnInit, OnChanges {
     this.showPopup = false;
     this.closePopupClick.emit();
   }
-
-
-
-
-  ngOnInit() { }
-
 }

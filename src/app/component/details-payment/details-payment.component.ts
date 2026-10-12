@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { IonGrid, IonRow, IonCol, IonChip } from "@ionic/angular/standalone";
+import { IonGrid, IonRow, IonCol } from "@ionic/angular/standalone";
 import { GastoCuota } from 'src/app/core/models/gasto-cuota.model';
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { eNumber, formatearMonto } from 'src/app/utils/Utils';
@@ -9,7 +9,7 @@ import { eNumber, formatearMonto } from 'src/app/utils/Utils';
   selector: 'app-details-payment',
   templateUrl: './details-payment.component.html',
   styleUrls: ['./details-payment.component.scss'],
-  imports: [IonChip, IonCol, IonRow, IonGrid, CommonModule],
+  imports: [IonCol, IonRow, IonGrid, CommonModule],
 })
 export class DetailsPaymentComponent implements OnInit {
   @Input() dataGasto?: Gasto

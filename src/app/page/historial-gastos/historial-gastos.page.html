@@ -29,8 +29,8 @@
       
     </div>
 
-    <!-- Bottom Row: Type Chips (Only in List View) -->
-    <div class="chips-container" *ngIf="vistaActual === 'lista'">
+    <!-- Bottom Row: Type Chips -->
+    <div class="chips-container">
       <button class="chip" [class.active]="tabFiltro === 'todos'" (click)="tabFiltro = 'todos'; cambiarFiltroOAno()">Todos</button>
       <button class="chip" [class.active]="tabFiltro === 'normal'" (click)="tabFiltro = 'normal'; cambiarFiltroOAno()">Únicos</button>
       <button class="chip" [class.active]="tabFiltro === 'recurrentes'" (click)="tabFiltro = 'recurrentes'; cambiarFiltroOAno()">Recurrentes</button>

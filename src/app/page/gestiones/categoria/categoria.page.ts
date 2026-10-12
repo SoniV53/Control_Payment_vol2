@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonFooter, IonItem, IonIcon, IonButton, IonLabel, IonCol, IonGrid, IonRow, IonDatetime, IonModal, IonButtons } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButton, IonModal, IonButtons } from '@ionic/angular/standalone';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
 import { BasePage } from '../../main/base/base.page';
 import { EmptyBaseComponent } from "src/app/component/card/empty-base/empty-base.component";
@@ -9,7 +9,6 @@ import { InputSimpleComponent } from "src/app/component/input/input-simple/input
 import { getIconPath } from 'src/app/utils/Utils';
 import { Categoria } from 'src/app/core/models/categoria.model';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
-import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
 import { getListIconCategoria } from 'src/app/utils/IconosList';
 import { UpdateListado, updateParams } from 'src/app/utils/update-params';
 
@@ -19,9 +18,9 @@ import { UpdateListado, updateParams } from 'src/app/utils/update-params';
   styleUrls: ['./categoria.page.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonDatetime, IonRow, IonGrid, IonLabel, IonButton, IonIcon, IonItem, IonFooter, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButtons, CommonModule, FormsModule, BannerTopComponent, EmptyBaseComponent, InputSimpleComponent, IonCol, ModalBaseComponent]
+  imports: [IonButton, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButtons, CommonModule, FormsModule, BannerTopComponent, EmptyBaseComponent, InputSimpleComponent]
 })
-export class CategoriaPage extends BasePage implements OnInit {
+export class CategoriaPage extends BasePage {
   toolBar = {
     title: "Categorías",
     description: "Aquí puedes administrar las categorías de tus gastos.",
@@ -45,9 +44,6 @@ export class CategoriaPage extends BasePage implements OnInit {
   listCategoria: Categoria[] = []
 
   listSim: any[] = getListIconCategoria()
-
-  ngOnInit() {
-  }
 
   ionViewWillEnter() {
     this.disableButton();

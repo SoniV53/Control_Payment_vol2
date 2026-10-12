@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Input, Output, EventEmitter, Optional, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToggle, IonToolbar, IonFooter, IonButton, IonDatetime, IonItem, IonIcon, IonLabel, IonModal, IonButtons, ModalController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToggle, IonToolbar, IonButton, IonDatetime, IonItem, IonIcon, IonModal, IonButtons, ModalController } from '@ionic/angular/standalone';
 import { BasePage } from '../../main/base/base.page';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
 import { Gasto } from 'src/app/core/models/gasto.model';
@@ -9,9 +9,7 @@ import { ItemInputData, ItemInputListData } from 'src/app/models/ItemInputData.m
 import { SelectorSimpleComponent } from "src/app/component/input/selector-simple/selector-simple.component";
 import { CatalogoTipoGasto, validarCuotasConRango } from 'src/app/utils/Utils';
 import { InputSimpleComponent } from "src/app/component/input/input-simple/input-simple.component";
-import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
 import { EmptyBaseComponent } from "src/app/component/card/empty-base/empty-base.component";
-import { RouterLink } from '@angular/router';
 import { DetalleItemModel } from 'src/app/core/models/detalle-item.model';
 import { Categoria } from 'src/app/core/models/categoria.model';
 import { GastoRecurrente } from 'src/app/core/models/gasto_recurrente.model';
@@ -23,9 +21,9 @@ import { ButtonSimpleComponent } from "src/app/component/input/button-simple/but
   styleUrls: ['./update-payment.page.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, RouterLink, IonToolbar, CommonModule, FormsModule, IonModal, IonButtons,
-    BannerTopComponent, IonFooter, SelectorSimpleComponent, InputSimpleComponent, IonButton, ModalBaseComponent,
-    IonDatetime, IonItem, IonIcon, IonLabel, EmptyBaseComponent, IonToggle, ButtonSimpleComponent]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonModal, IonButtons,
+    BannerTopComponent, SelectorSimpleComponent, InputSimpleComponent, IonButton,
+    IonDatetime, IonItem, IonIcon, EmptyBaseComponent, IonToggle, ButtonSimpleComponent]
 })
 export class UpdatePaymentPage extends BasePage implements OnInit {
   toolBar = {

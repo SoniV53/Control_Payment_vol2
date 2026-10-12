@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Input, Output } from '@angular/core';
 import { IonInput } from "@ionic/angular/standalone";
 import { FormsModule, NG_VALUE_ACCESSOR} from '@angular/forms';
 import { ValueAccessorBase } from '../../form/value-accessor';
@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class InputSimpleComponent extends ValueAccessorBase<string> implements OnInit {
+export class InputSimpleComponent extends ValueAccessorBase<string> {
  
   @Input() label: string = "";
   @Input() placeholder: string = "";
@@ -30,8 +30,6 @@ export class InputSimpleComponent extends ValueAccessorBase<string> implements O
   @Output() blurInput: EventEmitter<string> = new EventEmitter<any>();
   @Output() ionChangeInput: EventEmitter<string> = new EventEmitter<any>();
   @Output() keyEnter: EventEmitter<string> = new EventEmitter<any>();
-
-  ngOnInit() { }
 
   onInput(event: any) {
     this.value = event.detail.value;

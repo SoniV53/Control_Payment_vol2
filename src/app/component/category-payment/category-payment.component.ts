@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DetailsPaymentComponent } from "../details-payment/details-payment.component";
 import { CommonModule } from '@angular/common';
 import { Gasto } from 'src/app/core/models/gasto.model';
@@ -15,7 +15,7 @@ import { DetalleRecurrenteComponent } from "../card/detalle-recurrente/detalle-r
   styleUrls: ['./category-payment.component.scss'],
   imports: [IonIcon, IonItem, DetailsPaymentComponent, CommonModule, DetalleRecurrenteComponent, IonAccordion, IonAccordionGroup, IonLabel],
 })
-export class CategoryPaymentComponent implements OnInit {
+export class CategoryPaymentComponent {
 
   @Input() dataGasto: Gasto[] = []
   @Input() dataCategoria?: Categoria
@@ -39,9 +39,6 @@ export class CategoryPaymentComponent implements OnInit {
   textMostrar = '+';
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
   onClickMostrar() {
     this.mostrar = !this.mostrar;

@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonItem, IonGrid, IonRow, IonCol, IonDatetime, IonIcon } from '@ionic/angular/standalone';
-import { CardOptionComponent } from "../../../component/card/card-option/card-option.component";
+import { IonContent, IonDatetime, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { calendarOutline, chevronDownOutline, addOutline, listOutline, pieChartOutline, timeOutline, receiptOutline, walletOutline, arrowUpOutline, arrowDownOutline } from 'ionicons/icons';
 
@@ -29,10 +28,9 @@ addIcons({
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonDatetime, IonCol, IonRow, IonGrid, IonItem, IonContent, IonIcon,
-    CommonModule, FormsModule, CardOptionComponent, ModalBaseComponent]
+  imports: [IonDatetime, IonContent, IonIcon, CommonModule, FormsModule, ModalBaseComponent]
 })
-export class HomePage extends BasePage implements OnInit {
+export class HomePage extends BasePage {
 
   dateSelect: String = ""
   value = '';
@@ -43,11 +41,6 @@ export class HomePage extends BasePage implements OnInit {
   // Variables para el Dashboard UI
   totalGastos: number = 0;
   recentExpenses: any[] = []; 
-
- 
-
-  ngOnInit() {
-  }
 
   async ionViewWillEnter() {
     this.dateSelect = this.getFormatDate();

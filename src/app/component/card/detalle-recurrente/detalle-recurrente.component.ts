@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IonToggle, IonItem, IonIcon, IonLabel, IonButton } from "@ionic/angular/standalone";
+import { IonToggle, IonIcon, IonLabel, IonButton } from "@ionic/angular/standalone";
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { formatearMonto, getFragmentDate, getIconPath, getNameMonth } from 'src/app/utils/Utils';
 @Component({
@@ -8,7 +8,7 @@ import { formatearMonto, getFragmentDate, getIconPath, getNameMonth } from 'src/
   templateUrl: './detalle-recurrente.component.html',
   styleUrls: ['./detalle-recurrente.component.scss'],
   standalone: true,
-  imports: [IonToggle, CommonModule, IonItem, IonIcon, IonLabel, IonButton],
+  imports: [IonToggle, CommonModule, IonIcon, IonLabel, IonButton],
 })
 export class DetalleRecurrenteComponent implements OnInit {
   @Input() gastoData?: Gasto

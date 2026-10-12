@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { IonHeader, IonItem, IonToolbar, IonProgressBar, IonTitle } from '@ionic/angular/standalone';
+import { IonItem, IonProgressBar } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { NavController } from '@ionic/angular';
 
@@ -7,7 +7,7 @@ import { NavController } from '@ionic/angular';
   selector: 'app-banner-top',
   templateUrl: './banner-top.component.html',
   styleUrls: ['./banner-top.component.scss'],
-  imports: [IonTitle, IonProgressBar, IonToolbar, CommonModule, IonHeader, IonItem],
+  imports: [IonProgressBar, CommonModule, IonItem],
 })
 export class BannerTopComponent implements OnInit {
   @Input() toolBarData = {

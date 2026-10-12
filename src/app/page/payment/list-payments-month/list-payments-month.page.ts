@@ -1,8 +1,7 @@
-﻿import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BannerTopComponent } from "../../../component/card/banner-top/banner-top.component";
-import { CategoryPaymentComponent } from "src/app/component/category-payment/category-payment.component";
 import { BasePage } from '../../main/base/base.page';
 import { IonicModule } from "@ionic/angular";
 import { ModalBaseComponent } from "src/app/component/modal-base/modal-base.component";
@@ -28,9 +27,7 @@ import { ChipsFilterComponent } from 'src/app/component/filter/chips-filter/chip
     CommonModule,
     FormsModule,
     BannerTopComponent,
-    CategoryPaymentComponent,
     ModalBaseComponent,
-    IonItem,
     IonContent,
     IonDatetime,
     IonIcon,
@@ -45,7 +42,7 @@ import { ChipsFilterComponent } from 'src/app/component/filter/chips-filter/chip
     ModalTemplateComponent
 ]
 })
-export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy {
+export class ListPaymentsMonthPage extends BasePage {
 
   toolBar = {
     title: "Noviembre | 2024",
@@ -78,13 +75,6 @@ export class ListPaymentsMonthPage extends BasePage implements OnInit, OnDestroy
 
 
  
-
-  async ngOnInit() {
-  }
-
-  ngOnDestroy(): void {
-
-  }
 
   ionViewDidLeave() {
     this.closePopupClick();

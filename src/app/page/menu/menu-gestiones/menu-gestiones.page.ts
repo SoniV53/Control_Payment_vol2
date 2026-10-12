@@ -1,12 +1,10 @@
-﻿import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonFooter, IonCol, IonIcon, IonItem, IonLabel } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonFooter, IonIcon, IonItem, IonLabel } from '@ionic/angular/standalone';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
-import { CardOptionComponent } from "src/app/component/card/card-option/card-option.component";
 import { BasePage } from '../../main/base/base.page';
 import { RouterLink } from '@angular/router';
-import { Title } from '@angular/platform-browser';
 import { addIcons } from 'ionicons';
 import { calendarOutline, syncOutline, pieChartOutline, pricetagsOutline, timeOutline, barChartOutline, chevronForwardOutline } from 'ionicons/icons';
 
@@ -25,9 +23,9 @@ addIcons({
   templateUrl: './menu-gestiones.page.html',
   styleUrls: ['./menu-gestiones.page.scss'],
   standalone: true,
-  imports: [IonFooter, IonContent, IonHeader, IonToolbar, IonIcon, IonItem, IonLabel, CommonModule, FormsModule, BannerTopComponent, CardOptionComponent, RouterLink],
+  imports: [IonFooter, IonContent, IonHeader, IonToolbar, IonIcon, IonItem, IonLabel, CommonModule, FormsModule, BannerTopComponent, RouterLink],
 })
-export class MenuGestionesPage extends BasePage implements OnInit {
+export class MenuGestionesPage extends BasePage {
 
   toolBar = {
     title: "Gestiones",
@@ -51,9 +49,6 @@ export class MenuGestionesPage extends BasePage implements OnInit {
       ]
     },
   ]
-
-  ngOnInit() {
-  }
 
 }
 

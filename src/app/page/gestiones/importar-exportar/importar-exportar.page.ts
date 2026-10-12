@@ -1,7 +1,7 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonIcon } from '@ionic/angular/standalone';
 import { BannerTopComponent } from "src/app/component/card/banner-top/banner-top.component";
 import { CustomTabsComponent } from "src/app/component/custom-tabs/custom-tabs.component";
 import { ImportRow } from 'src/app/core/models/import-row.model';
@@ -18,12 +18,12 @@ import { CsvProgressStepComponent } from 'src/app/component/import-export/csv-pr
   styleUrls: ['./importar-exportar.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonIcon,
+    IonContent, IonHeader, IonIcon,
     CommonModule, FormsModule, BannerTopComponent, CustomTabsComponent,
     CsvInputStepComponent, CsvPreviewStepComponent, CsvProgressStepComponent
   ]
 })
-export class ImportarExportarPage extends BasePage implements OnInit {
+export class ImportarExportarPage extends BasePage {
   toolBar = {
     title: "Datos",
     description: "Importa o exporta tus gastos en formato CSV.",
@@ -46,8 +46,6 @@ export class ImportarExportarPage extends BasePage implements OnInit {
   exportError = '';
 
   private importExportService = inject(GastoImportExportService);
-
-  ngOnInit() { }
 
   // --- IMPORT FLOW ---
   async handleCsvLoaded(csvText: string) {

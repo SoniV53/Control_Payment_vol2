@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule } from '@angular/forms';
-import { IonContent, IonInput, IonHeader, IonToolbar, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent } from '@ionic/angular/standalone';
 import { BannerTopComponent } from "../../../component/card/banner-top/banner-top.component";
 import { BasePage } from '../../main/base/base.page';
 import { GastoRecurrente } from 'src/app/core/models/gasto_recurrente.model';
 import { Categoria } from 'src/app/core/models/categoria.model';
-import { CategoryPaymentComponent } from "src/app/component/category-payment/category-payment.component";
 import { Gasto } from 'src/app/core/models/gasto.model';
 import { CatalogoTipoGasto } from 'src/app/utils/Utils';
 import { IonicModule, ToastController, AlertController } from '@ionic/angular';
@@ -34,12 +32,12 @@ import { ModalEditarRecurrenteComponent } from 'src/app/component/recurrentes/mo
   styleUrls: ['./add-payment.page.scss'],
   standalone: true,
   imports: [
-    IonicModule, CommonModule, FormsModule, BannerTopComponent, CategoryPaymentComponent,
+    IonicModule, CommonModule, FormsModule, BannerTopComponent,
     CustomTabsComponent, EmptyStateComponent, RecurrentesBlockComponent, CategoryBlockComponent,
     ModalDetalleCuotasComponent, ModalEditarCuotaComponent, ModalEditarRecurrenteComponent
   ]
 })
-export class AddPaymentPage extends BasePage implements OnInit {
+export class AddPaymentPage extends BasePage {
   toolBar = {
     title: "Gastos Automaticos",
     description: "Administra tus gastos recurrentes y cuotas."
@@ -83,9 +81,6 @@ export class AddPaymentPage extends BasePage implements OnInit {
     private dbService: DatabaseServiceService
   ) {
     super(router, myApp, gastoService, fb, categoriaService, controlService, toastController, navCtrl, alertController);
-  }
-
-  ngOnInit() {
   }
 
   async ionViewWillEnter() {

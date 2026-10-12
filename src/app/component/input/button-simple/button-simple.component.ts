@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IonButton } from "@ionic/angular/standalone";
 
 @Component({
@@ -8,7 +8,7 @@ import { IonButton } from "@ionic/angular/standalone";
   styleUrls: ['./button-simple.component.scss'],
   imports: [IonButton,CommonModule],
 })
-export class ButtonSimpleComponent implements OnInit {
+export class ButtonSimpleComponent {
   @Input() tipo: 'primary' | 'delete' = 'primary'
   @Input() isLeftbtnHiden: boolean = false;
   @Input() isRightbtnHiden: boolean = false;
@@ -27,8 +27,6 @@ export class ButtonSimpleComponent implements OnInit {
   // --color: var(--ion-background-color);
 
   constructor() { }
-
-  ngOnInit() { }
 
   colorStyle(color: string): string {
     return color ? `${color}` : `var(--ion-background-color)`

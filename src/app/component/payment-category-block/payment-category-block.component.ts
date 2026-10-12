@@ -5,8 +5,6 @@ import { IonList, IonItemSliding, IonItem, IonItemOptions, IonItemOption, IonIco
 import { getIconPath } from 'src/app/utils/Utils';
 import { ModalTemplateComponent } from 'src/app/component/modal/modal-template/modal-template.component';
 import { FormsModule } from '@angular/forms';
-import { InputSimpleComponent } from 'src/app/component/input/input-simple/input-simple.component';
-import { RouterLink } from '@angular/router';
 import { DynamicFormComponent } from 'src/app/component/form/dynamic-form/dynamic-form.component';
 import { ItemInputData } from 'src/app/models/ItemInputData.model';
 import { NavCtrl } from 'src/app/services/nav-ctrl';
@@ -16,7 +14,7 @@ import { NavCtrl } from 'src/app/services/nav-ctrl';
   templateUrl: './payment-category-block.component.html',
   styleUrls: ['./payment-category-block.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ModalTemplateComponent, InputSimpleComponent, RouterLink, DynamicFormComponent, IonList, IonItemSliding, IonItem, IonItemOptions, IonItemOption, IonIcon, IonTitle, IonToggle, IonLabel, IonButton],
+  imports: [CommonModule, FormsModule, ModalTemplateComponent, DynamicFormComponent, IonList, IonItemSliding, IonItem, IonItemOptions, IonItemOption, IonIcon, IonTitle, IonToggle, IonLabel, IonButton],
   encapsulation: ViewEncapsulation.None
 })
 export class PaymentCategoryBlockComponent {
