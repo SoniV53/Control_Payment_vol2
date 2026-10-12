@@ -13,8 +13,13 @@ import { getIconPath } from 'src/app/utils/Utils';
 })
 export class RecurrentesBlockComponent {
   @Input() grupo: any;
+  @Input() isCollapsed: boolean = false;
   @Output() toggleActivo = new EventEmitter<{ item: any, event: any }>();
   @Output() editarRecurrente = new EventEmitter<any>();
+
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
+  }
 
   getIcon(icon: string) {
     return getIconPath(icon, 'assets/ionicons/bar-chart-outline.svg');

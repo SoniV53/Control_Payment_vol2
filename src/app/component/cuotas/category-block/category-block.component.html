@@ -1,13 +1,16 @@
-<div class="category-block">
-  <div class="block-header">
+<div class="category-block" [class.is-collapsed]="isCollapsed">
+  <div class="block-header" (click)="toggleCollapse()">
     <div class="title-wrap">
       <ion-icon [src]="getIcon(grupo.icono || '')"></ion-icon>
       <h2>{{ grupo.nombre }}</h2>
       <span class="count-badge">{{ grupo.items.length }}</span>
     </div>
+    <div class="header-right">
+      <ion-icon class="collapse-icon" [src]="getIcon(isCollapsed ? 'chevron-down-outline' : 'chevron-up-outline')"></ion-icon>
+    </div>
   </div>
 
-  <div class="block-card">
+  <div class="block-card" *ngIf="!isCollapsed">
     <ng-container *ngIf="estado === 'progreso'">
       <div class="cuota-item" *ngFor="let item of grupo.items; let last = last" [class.no-border]="last">
 

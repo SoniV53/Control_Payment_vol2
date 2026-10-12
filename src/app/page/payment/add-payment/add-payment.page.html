@@ -9,22 +9,36 @@
   <app-custom-tabs 
     [tabs]="misTabs" 
     [selectedTabId]="tabEstado" 
-    (tabSelected)="tabEstado = $event">
+    (tabSelected)="tabEstado = $event; aplicarFiltros()">
   </app-custom-tabs>
+
+  <div class="premium-filters-wrapper content-filters">
+    <div class="filter-top-row">
+      <div class="search-bar-custom">
+        <ion-icon [src]="getIcon('search-outline')"></ion-icon>
+        <input type="text" placeholder="Buscar gastos..." [(ngModel)]="textoBusqueda" (keyup)="aplicarFiltros()">
+      </div>
+    </div>
+    <app-chips-filter 
+      [chips]="chipList" 
+      [activeChipId]="categoriaSeleccionada" 
+      (chipChanged)="categoriaSeleccionada = $event; aplicarFiltros()">
+    </app-chips-filter>
+  </div>
 
   <div [ngSwitch]="tabEstado">
 
     <!-- RECURRENTES -->
     <div *ngSwitchCase="'recurrente'">
       <app-empty-state 
-        *ngIf="gruposRecurrentes.length === 0" 
+        *ngIf="gruposRecurrentesFiltrados.length === 0" 
         icon="folder-open-outline" 
-        title="No tienes gastos recurrentes" 
-        subtitle="Cuando registres gastos recurrentes aparecerán aquí.">
+        [title]="textoBusqueda || categoriaSeleccionada !== 'todas' ? 'No se encontraron resultados' : 'No tienes gastos recurrentes'" 
+        [subtitle]="textoBusqueda || categoriaSeleccionada !== 'todas' ? 'Prueba con otro término de búsqueda o categoría.' : 'Cuando registres gastos recurrentes aparecerán aquí.'">
       </app-empty-state>
 
       <app-recurrentes-block 
-        *ngFor="let grupo of gruposRecurrentes" 
+        *ngFor="let grupo of gruposRecurrentesFiltrados" 
         [grupo]="grupo"
         (toggleActivo)="changeToggleRecurrente($event)"
         (editarRecurrente)="clickItemRecurrente($event)">
@@ -34,14 +48,14 @@
     <!-- CUOTAS -->
     <div *ngSwitchCase="'cuota'">
       <app-empty-state 
-        *ngIf="gruposProgreso.length === 0" 
+        *ngIf="gruposProgresoFiltrados.length === 0" 
         icon="wallet-outline" 
-        title="No tienes cuotas en progreso" 
-        subtitle="Cuando registres un gasto en cuotas aparecerá aquí.">
+        [title]="textoBusqueda || categoriaSeleccionada !== 'todas' ? 'No se encontraron resultados' : 'No tienes cuotas en progreso'" 
+        [subtitle]="textoBusqueda || categoriaSeleccionada !== 'todas' ? 'Prueba con otro término de búsqueda o categoría.' : 'Cuando registres un gasto en cuotas aparecerá aquí.'">
       </app-empty-state>
 
       <app-category-block 
-        *ngFor="let g of gruposProgreso" 
+        *ngFor="let g of gruposProgresoFiltrados" 
         [grupo]="g" 
         estado="progreso"
         (clickItem)="abrirGestionCuotas($event)"

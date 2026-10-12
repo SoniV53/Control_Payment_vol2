@@ -1,16 +1,19 @@
-<div class="category-block" *ngIf="grupo">
+<div class="category-block" *ngIf="grupo" [class.is-collapsed]="isCollapsed">
   <!-- Block Header -->
-  <div class="block-header">
+  <div class="block-header" (click)="toggleCollapse()">
     <div class="title-wrap">
       <ion-icon [src]="getIcon(grupo.categoria.icono || 'pricetag')"></ion-icon>
       <h2>{{ grupo.categoria.nombre | titlecase }}</h2>
       <span class="count-badge">{{ grupo.totalCantidad }}</span>
     </div>
-    <span class="total-text">GTQ {{ grupo.totalMonto | number:'1.2-2' }}</span>
+    <div class="header-right">
+      <span class="total-text">GTQ {{ grupo.totalMonto | number:'1.2-2' }}</span>
+      <ion-icon class="collapse-icon" [src]="getIcon(isCollapsed ? 'chevron-down-outline' : 'chevron-up-outline')"></ion-icon>
+    </div>
   </div>
 
   <!-- Unified Card -->
-  <div class="block-card">
+  <div class="block-card" *ngIf="!isCollapsed">
     <div class="sub-item" *ngFor="let item of grupo.recurrentes; let last = last" [class.no-border]="last" (click)="onEdit(item)">
       
       <!-- Main Data Row -->

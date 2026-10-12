@@ -26,6 +26,7 @@ import { CategoryBlockComponent } from 'src/app/component/cuotas/category-block/
 import { ModalDetalleCuotasComponent } from 'src/app/component/cuotas/modal-detalle-cuotas/modal-detalle-cuotas.component';
 import { ModalEditarCuotaComponent } from 'src/app/component/cuotas/modal-editar-cuota/modal-editar-cuota.component';
 import { ModalEditarRecurrenteComponent } from 'src/app/component/recurrentes/modal-editar-recurrente/modal-editar-recurrente.component';
+import { ChipsFilterComponent } from 'src/app/component/filter/chips-filter/chips-filter.component';
 
 @Component({
   selector: 'app-add-payment',
@@ -35,7 +36,8 @@ import { ModalEditarRecurrenteComponent } from 'src/app/component/recurrentes/mo
   imports: [
     IonicModule, CommonModule, FormsModule, BannerTopComponent,
     CustomTabsComponent, EmptyStateComponent, RecurrentesBlockComponent, CategoryBlockComponent,
-    ModalDetalleCuotasComponent, ModalEditarCuotaComponent, ModalEditarRecurrenteComponent
+    ModalDetalleCuotasComponent, ModalEditarCuotaComponent, ModalEditarRecurrenteComponent,
+    ChipsFilterComponent
   ]
 })
 export class AddPaymentPage extends BasePage {
@@ -48,6 +50,13 @@ export class AddPaymentPage extends BasePage {
   listCategoria: Categoria[] = [];
   gruposProgreso: any[] = [];
   gruposRecurrentes: any[] = [];
+
+  // Filtros de búsqueda y categoría
+  textoBusqueda: string = '';
+  categoriaSeleccionada: string = 'todas';
+  chipList: any[] = [];
+  gruposRecurrentesFiltrados: any[] = [];
+  gruposProgresoFiltrados: any[] = [];
 
   // Tabs
   tabEstado = 'recurrente';
@@ -104,6 +113,10 @@ export class AddPaymentPage extends BasePage {
     return this.baseService(async () => {
       this.listCategoria = await this.categoriaService.getCategoriasActivas();
       this.categoriasMapped = this.listCategoria.map(c => ({ code: c.id, value: c.nombre, icon: c.icono }));
+      this.chipList = [
+        { id: 'todas', label: 'Todas' },
+        ...this.listCategoria.map(c => ({ id: c.id!.toString(), label: c.nombre }))
+      ];
     }, async () => {
       this.getAlertError('No se pudieron cargar.');
     }, async () => {
@@ -126,12 +139,13 @@ export class AddPaymentPage extends BasePage {
       this.gruposRecurrentes = this.listCategoria
         .filter(c => c.dataGasto && c.dataGasto.length > 0)
         .map(c => ({
-          categoria: { icono: c.icono, nombre: c.nombre },
+          categoria: { id: c.id, icono: c.icono, nombre: c.nombre },
           totalCantidad: c.dataGasto!.length,
           totalMonto: c.dataGasto!.reduce((sum, g) => sum + (g.monto || 0), 0),
           recurrentes: c.dataGasto
         }));
       
+      this.aplicarFiltros();
       this.actualizarTabs();
 
     }, async () => {
@@ -149,7 +163,7 @@ export class AddPaymentPage extends BasePage {
 
         const gruposMap = data.reduce((acc: any, cur: any) => {
           const cat = cur.cat_nombre || 'Sin Categoría';
-          if (!acc[cat]) acc[cat] = { nombre: cat, icono: cur.cat_icono, items: [] };
+          if (!acc[cat]) acc[cat] = { id: cur.categoria_id, nombre: cat, icono: cur.cat_icono, items: [] };
           acc[cat].items.push(cur);
           return acc;
         }, {});
@@ -161,12 +175,59 @@ export class AddPaymentPage extends BasePage {
           items: g.items.filter((i: any) => i.pagadas < i.cuotas)
         })).filter((g: any) => g.items.length > 0);
 
+        this.aplicarFiltros();
         this.actualizarTabs();
 
       },
       async () => { this.getAlertError('No se pudieron cargar las cuotas.'); },
       async () => { this.dissmissLoader(); }
     );
+  }
+
+  aplicarFiltros() {
+    const busqueda = this.textoBusqueda.trim().toLowerCase();
+
+    // 1. Filtrar Recurrentes
+    this.gruposRecurrentesFiltrados = this.gruposRecurrentes.map(grupo => {
+      if (this.categoriaSeleccionada !== 'todas' && grupo.categoria?.id?.toString() !== this.categoriaSeleccionada) {
+        return null;
+      }
+
+      const itemsFiltrados = (grupo.recurrentes || []).filter((r: any) => {
+        if (!busqueda) return true;
+        return (r.titulo && r.titulo.toLowerCase().includes(busqueda)) ||
+               (grupo.categoria?.nombre && grupo.categoria.nombre.toLowerCase().includes(busqueda));
+      });
+
+      if (itemsFiltrados.length === 0) return null;
+
+      return {
+        ...grupo,
+        recurrentes: itemsFiltrados,
+        totalCantidad: itemsFiltrados.length,
+        totalMonto: itemsFiltrados.reduce((sum: number, item: any) => sum + (item.monto || 0), 0)
+      };
+    }).filter(g => g !== null);
+
+    // 2. Filtrar Cuotas
+    this.gruposProgresoFiltrados = this.gruposProgreso.map(grupo => {
+      if (this.categoriaSeleccionada !== 'todas' && grupo.id?.toString() !== this.categoriaSeleccionada) {
+        return null;
+      }
+
+      const itemsFiltrados = (grupo.items || []).filter((item: any) => {
+        if (!busqueda) return true;
+        return (item.titulo && item.titulo.toLowerCase().includes(busqueda)) ||
+               (grupo.nombre && grupo.nombre.toLowerCase().includes(busqueda));
+      });
+
+      if (itemsFiltrados.length === 0) return null;
+
+      return {
+        ...grupo,
+        items: itemsFiltrados
+      };
+    }).filter(g => g !== null);
   }
 
   // --- Lógica Recurrentes ---
@@ -525,6 +586,10 @@ export class AddPaymentPage extends BasePage {
   }
 
   // Util
+  override getIcon(icon: string) {
+    return `assets/ionicons/${icon}.svg`;
+  }
+
   modelAToModelB(a: GastoRecurrente): any {
     return {
       id: a.id,

@@ -14,10 +14,15 @@ import { getIconPath } from 'src/app/utils/Utils';
 export class CategoryBlockComponent {
   @Input() grupo: any;
   @Input() estado: 'progreso' | 'pagados' = 'progreso';
+  @Input() isCollapsed: boolean = false;
 
   @Output() clickItem = new EventEmitter<any>();
   @Output() editItem = new EventEmitter<any>();
   @Output() deleteItem = new EventEmitter<any>();
+
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
+  }
 
   getIcon(icon: string) {
     return getIconPath(icon, 'assets/ionicons/bar-chart-outline.svg');
